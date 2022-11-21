@@ -1,5 +1,10 @@
 ## Local Commands
 # Build and run commands for vue development
+build:
+	docker build -t element-front .
+	
+run:
+	docker run --env-file='.env' -p 8080:8080 element-front
 
 build-dev:
 	npm install -g @vue/cli
