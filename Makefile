@@ -4,6 +4,7 @@
 build-dev:
 	npm install -g @vue/cli
 	npm update -g @vue/cli
+	npm install
 
 run-dev:
 	cd element-front && npm run serve
