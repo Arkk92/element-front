@@ -1,41 +1,47 @@
 <template>
   <div class="room">
-    <BoardVue>
-      grid="{{board?.getGrid()}}"
-    </BoardVue>
+    <a v-on:click="forceUpdateRoom()">Actualizar!!!</a>
+    {{board}}
   </div>
 </template>
 
 <script lang="ts">
-import Board from '@/models/board';
+//import Board from '@/models/board';
 import { defineComponent } from 'vue';
-import BoardVue from './Board.vue';
+//import BoardVue from './Board.vue';
+import ClientSocket from '@/sockets/client'
+//import Room from '@/models/room';
+
+const socket = ClientSocket.setupSocketConnection();
 
 export default defineComponent({
-  name: 'Room',
+  name: 'RoomComponent',
   components: {
-    BoardVue
+    //BoardVue
   },
-  props: {
-    board: Board
+  data() {
+    return {
+      board: ""
+    }
+  },
+  mounted(){
+    const socket = ClientSocket.setupSocketConnection();
+
+    socket.on("gameUpdate", (data) => {
+      console.log(data)
+      this.board = data
+    })
+  },
+  methods: {
+    forceUpdateRoom(): void {
+      alert("Foece update game!!")
+      socket.emit('forceGameUpdate');
+    }
   }
 })
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
+
 </style>
