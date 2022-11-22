@@ -9,11 +9,13 @@ export interface ServerToClientEvents {
 
 export interface ClientToServerEvents {
     forceGameUpdate: () => void;
+    joinRoom: (a: string) => void;
+    movePlayerSage: (player: number, row: string, column: string) => void;
 }
 
 class ClientSocket {
 
-    private static URL: string | null = null;
+    private static URL: string = "ws://localhost:3000";
 
     constructor(){}
 
@@ -24,7 +26,7 @@ class ClientSocket {
         } else {
             socket = io(this.URL, {
                 transports: ["websocket"]
-            })
+            }).connect()
         }
         return socket;
     }
