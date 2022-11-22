@@ -1,31 +1,34 @@
 <template>
-  <div class="board">
-    <table>
-      <tr v-for="row in grid?.getHeight()">
-        <td v-for="column in grid?.getWidth()">
-          <PieceVue>
-            string_representation="{{grid?.getGridCellByPosition({row: row, column: column}).string_representation}}"
-          </PieceVue>
+  <div class="room">
+    <table v-if="data_ready">
+      <tr v-for="row in grid!.cells" :key="row">
+        <td v-for="cell in row" :key="cell" width="20px">
+          {{cell.string_representation}}
         </td>
       </tr>
-    </table>
+    </table>    
   </div>
 </template>
 
 <script lang="ts">
-import Grid from "@/models/grid";
-import { defineComponent } from "vue";
-import ElementPoolManager from "@/models/element_pool_manager"
-import PieceVue from "./Piece.vue";
+import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: 'Board',
-  components: {
-    PieceVue
-  },
+  name: 'BoardConmponent',
   props: {
-    grid: Grid,
-    element_pool: ElementPoolManager    
+    board: Object
+  },
+  data() {
+    return {
+      grid: null,
+      data_ready: false,
+      
+    }
+  },
+  mounted(){
+    this.grid = this.board!.grid;
+
+    this.data_ready = true;
   }
 })
 </script>
