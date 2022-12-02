@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@types/uuid": "^9.0.0",
+    "bootstrap-vue": "^2.23.1",
     "uuid": "^9.0.0"
   }
 }
