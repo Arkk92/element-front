@@ -1,7 +1,8 @@
 {
   "dependencies": {
+    "@popperjs/core": "^2.11.6",
     "@types/uuid": "^9.0.0",
-    "bootstrap-vue": "^2.23.1",
+    "bootstrap": "^5.2.3",
     "uuid": "^9.0.0"
   }
 }
