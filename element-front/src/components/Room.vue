@@ -1,7 +1,7 @@
 <template>
   <div class="room">
     2 Player game:
-    <button v-on:click="startQueueSearch('queue2')">{{queueStatus}}</button>
+    <button v-on:click="startQueueSearch('queue2')">{{ queueStatus }}</button>
     <br>
     <br>
     <button v-on:click="forceUpdateRoom()">Actualizar</button>
@@ -17,6 +17,14 @@
       <br>
       Turn: Player {{ game.turn_player.player_number + 1 }}, Status:
     </div>
+    <button class="btn btn-primary" data-bs-target="#collapseTarget" data-bs-toggle="collapse">
+      Bootstrap collapse
+    </button>
+    <div class="collapse py-2" id="collapseTarget">
+      This is the toggle-able content!
+    </div>
+
+
     {{ room }}
   </div>
 </template>
@@ -48,6 +56,8 @@ export default defineComponent({
     }
   },
   mounted() {
+
+
     SocketInstance.on("gameUpdate", (data) => {
       console.log(data)
 
