@@ -11,16 +11,18 @@
 </template>
 
 <script lang="ts">
+import { BoardModel } from '@/game/models/board';
+import { GridModel } from '@/game/models/grid';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: 'BoardConmponent',
+  name: 'BoardComponent',
   props: {
-    board: Object
+    board: BoardModel,
   },
   data() {
     return {
-      grid: null,
+      grid: new GridModel(),
       data_ready: false,
       
     }
