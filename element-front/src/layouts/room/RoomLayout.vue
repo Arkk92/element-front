@@ -38,10 +38,12 @@ export default defineComponent({
     SocketInstance.on("gameUpdate", (data) => {
       console.log(data)
 
-      const room: RoomModel = new RoomModelMap().toDomain(data.room);
-      Object.assign(this.roomData, room);
-
-      this.data_ready = true;
+      if(data != null){
+        const room: RoomModel = new RoomModelMap().toDomain(data.room);
+        Object.assign(this.roomData, room);
+  
+        this.data_ready = true;
+      }
     })
   },
 

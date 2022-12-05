@@ -1,42 +1,5 @@
-import { ElementTypes } from "@/game/models/elements/elements";
 import { io, Socket } from "socket.io-client";
-
-export enum QueueTypes {
-    queue2 = 'queue2',
-    queue3 = 'queue3',
-    queue4 = 'queue4'
-}
-
-export type JoinQueue = {
-    queue: QueueTypes
-}
-export type JoinGame = {
-    roomId: string
-}
-
-export type DrawElements = {
-    roomId: string
-    elements: Array<ElementTypes>
-}
-
-
-
-export interface ServerToClientEvents {
-    noArg: () => void;
-    basicEmit: (a: number, b: string, c: number) => void;
-    withAck: (d: string, callback: (e: number) => void) => void;
-    gameUpdate: (data: any) => void;
-    gameFound: (roomId: string) => void;
-}
-
-export interface ClientToServerEvents {
-    forceGameUpdate: (roomId: string) => void;
-    joinRoom: (a: string) => void;
-    movePlayerSage: (player: number, row: string, column: string) => void;
-    onQueue: (data: JoinQueue) => void;
-    joinGame: (data: JoinGame) => void;
-    drawElements: (data: DrawElements) => void;
-}
+import { ClientToServerEvents, ServerToClientEvents } from "./socketUtils";
 
 class ClientSocket {
 

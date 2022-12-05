@@ -56,8 +56,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { JoinQueue, QueueTypes } from '@/sockets/client'
 import { SocketInstance } from '@/main'
+import { GameFound, Queue } from '@/sockets/socketUtils';
 
 export default defineComponent({
   name: 'QueueComponent',
@@ -76,19 +76,15 @@ export default defineComponent({
   },
   mounted() {
 
-    SocketInstance.on("gameFound", (roomId: string) => {
-      this.roomId = roomId;
+    SocketInstance.on("gameFound", (data: GameFound) => {
+      this.roomId = data.roomId;
       this.queueStatus = "Game found";
     })
   },
   methods: {
     startQueueSearch(): void {
 
-      const queueData: JoinQueue = {
-        queue: this.queueType as QueueTypes
-      };
-
-      SocketInstance.emit("onQueue", queueData);
+      SocketInstance.emit("onQueue", this.queueType as Queue);
       this.queueStatus = "Looking for a game...";
     },
     cancelQueue(): void {
