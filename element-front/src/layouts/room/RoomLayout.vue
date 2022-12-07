@@ -6,7 +6,11 @@
           :turn="roomData.game.turn" />
       </div>
       <div class="col">
-        <BoardLayout :board="roomData.game.board"/>
+        <GameLayout
+        :game="roomData.game"
+        :is-user-turn="isCurrentUserTurn()"
+        :room-id="roomData.uuid"
+        ></GameLayout>
       </div>
     </div>
   </div>
@@ -17,7 +21,7 @@ import { defineComponent } from 'vue';
 import { SocketInstance } from '@/main';
 import { RoomModel, RoomModelMap } from '@/game/models/room';
 import UserLayout from './UserLayout.vue';
-import BoardLayout from './boardLayout.vue';
+import GameLayout from './gameLayout.vue';
 
 
 let room: RoomModel;
@@ -26,7 +30,7 @@ export default defineComponent({
   name: 'RoomLayout',
   components: {
     UserLayout,
-    BoardLayout
+    GameLayout
 },
   data() {
     return {
@@ -75,8 +79,10 @@ export default defineComponent({
         }
       }
       return "";
-
     },
+    isCurrentUserTurn(): boolean {
+      return this.getUserId() === this.getTurnUserId();
+    }
   }
 })
 </script>
