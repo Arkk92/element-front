@@ -1,14 +1,12 @@
 <template>
   <div class="room-layout">
-    <button v-on:click="forceUpdateRoom()">Actualizar</button>
     <div class="row" v-if="data_ready">
       <div class="col-md-3">
         <UserLayout :user-list="roomData.user_list" :current-user-id="getUserId()" :turn-user-id="getTurnUserId()"
           :turn="roomData.game.turn" />
       </div>
       <div class="col">
-        <Board :board="roomData.game.board">
-        </Board>
+        <BoardLayout :board="roomData.game.board"/>
       </div>
     </div>
   </div>
@@ -18,8 +16,8 @@
 import { defineComponent } from 'vue';
 import { SocketInstance } from '@/main';
 import { RoomModel, RoomModelMap } from '@/game/models/room';
-import Board from '@/components/Board.vue';
-import UserLayout from '../UserLayout.vue';
+import UserLayout from './UserLayout.vue';
+import BoardLayout from './boardLayout.vue';
 
 
 let room: RoomModel;
@@ -27,9 +25,9 @@ let room: RoomModel;
 export default defineComponent({
   name: 'RoomLayout',
   components: {
-    Board,
-    UserLayout
-  },
+    UserLayout,
+    BoardLayout
+},
   data() {
     return {
       username: "Username",

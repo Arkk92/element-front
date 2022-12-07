@@ -8,7 +8,7 @@
     </div>
     <div v-else>
       <button type="button" class="btn btn-secondary" disabled>
-        Room ID: {{roomId}}
+        Room ID: {{ roomId }}
       </button>
     </div>
     <!-- Modals -->
@@ -48,10 +48,18 @@
                 v-on:click="startQueueSearch()">Play!</a>
             </div>
             <div class="row" v-else>
-              Searching for a game...
+              <div class="col-3">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
+              <div class="col">
+                Waiting for other people to join the room...
+              </div>
               <button type="button" class="btn btn btn-danger" v-on:click="cancelQueue()">
                 <i class="bi-x-circle-fill" role="img" aria-label="CancelQueue"></i>
                 Cancel</button>
+
             </div>
           </div>
           <div class="modal-body" v-else>
@@ -129,7 +137,7 @@ export default defineComponent({
       return style_str;
     },
 
-    closeModal(){
+    closeModal() {
       this.queueStatus = "Find game";
       this.queueType = "none";
       this.roomId = "";
