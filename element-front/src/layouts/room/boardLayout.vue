@@ -55,7 +55,7 @@
       </div>
     </div>
     <div class="row">
-      <Board :board="board">
+      <Board :board="board" :players="players">
       </Board>
     </div>
   </div>
@@ -73,6 +73,7 @@ export default defineComponent({
   },
   props: {
     board: BoardModel,
+    players: Array,
   },
   data() {
     return {

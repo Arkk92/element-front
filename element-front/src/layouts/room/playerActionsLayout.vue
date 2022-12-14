@@ -1,10 +1,20 @@
 <template>
   <div class="player-actions-layout">
-    <div v-if="isTurnState('Drawing')">
+    <div v-if="isDrawingElements()">
       <DrawElementsAction
       :element-pool-manager="elementPoolManager"
       :room-id="roomId"
       ></DrawElementsAction>
+    </div>
+    <div v-else-if="isMovementsAvailable()">
+      <MovesAvailables
+      :turn="turn"
+      :room-id="roomId"
+      @selectedElement="onSelectedElementEvent"
+      ></MovesAvailables>
+    </div>
+    <div v-else>
+      END OF TURN
     </div>
   </div>
 </template>
@@ -12,38 +22,58 @@
 <script lang="ts">
 import { ElementPoolManagerModel } from '@/game/models/element_pool';
 import { TurnModel, TurnStates } from '@/game/models/turn';
+import MovesAvailables from '@/components/MovesAvailables.vue'
 import DrawElementsAction from '@/components/DrawElements.vue'
 import { defineComponent } from 'vue';
-
-type TurnStatesStr = 'Drawing' | 'Moves available' | 'End turn'
+import { ElementTypes } from '@/game/models/elements/elements';
+import { SocketInstance } from '@/main';
+import { PieceModel } from '@/game/models/pieces/pieces';
 
 export default defineComponent({
   name: 'PlayerActionsLayout',
   components: {
+    MovesAvailables,
     DrawElementsAction,
+  },
+  enums: {
+    TurnStates,
   },
   props: {
     turn: TurnModel,
     elementPoolManager: ElementPoolManagerModel,
     roomId: String,
+    clickedCell: null,
   },
   data() {
     return {
+      selectedElement: 'None',
     }
   },
-
   methods: {
-    isTurnState(state: TurnStatesStr): boolean {
-      switch (this.turn?.state) {
-        case TurnStates.DrawingElements:
-          return state == 'Drawing';
-        case TurnStates.MovesAvailables:
-          return state == 'Moves available';
-        case TurnStates.EndTurn:
-          return state == 'End turn';
-      }
-      return false;
+    isDrawingElements(): boolean {
+      return this.turn!.state == TurnStates.DrawingElements;
     },
+    isMovementsAvailable(): boolean {
+      return this.turn!.state == TurnStates.MovesAvailables;
+    },
+    isEndTurn(): boolean {
+      return this.turn!.state == TurnStates.EndTurn;
+    },
+    onSelectedElementEvent(element: ElementTypes): void {
+      this.selectedElement = element;
+    }
+  },
+  watch: {
+    clickedCell(value){
+      if((value !== null) && (this.selectedElement !== 'None')){
+        const placeElement = {
+          roomId: this.roomId as string,
+          element: this.selectedElement as ElementTypes,
+          position: (value as PieceModel).position,
+        }
+        SocketInstance.emit('placeElement', placeElement)
+      }
+    }
   }
 })
 </script>

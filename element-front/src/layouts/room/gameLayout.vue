@@ -1,27 +1,30 @@
 <template>
   <div class="game-layout">
     <div class="row">
-      <Board :board="game?.board"></Board>
+      <BoardLayout :board="game?.board" :players="game?.player_list"></BoardLayout>
     </div>
     <div class="row" v-if="isUserTurn">
-      <PlayerActionsLayout :element-pool-manager="game?.board.elementPool" :turn="game?.turn" :room-id="roomId">
+      <PlayerActionsLayout :element-pool-manager="game?.board.elementPool" :turn="game?.turn" :room-id="roomId"
+        :clickedCell="boardClickedElement">
       </PlayerActionsLayout>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import Board from '@/components/Board.vue';
 import { GameModel } from '@/game/models/game';
+import { PieceModel } from '@/game/models/pieces/pieces';
+import { EmptyPieceCreator } from '@/game/models/pieces_factory';
 import { defineComponent } from 'vue';
+import BoardLayout from './boardLayout.vue';
 import PlayerActionsLayout from './playerActionsLayout.vue';
 
 
 export default defineComponent({
   name: 'GameLayout',
   components: {
-    Board,
-    PlayerActionsLayout
+    PlayerActionsLayout,
+    BoardLayout
   },
   props: {
     game: GameModel,
@@ -30,8 +33,14 @@ export default defineComponent({
   },
   data() {
     return {
+      boardClickedElement: new EmptyPieceCreator().createPieceModel(),
     }
   },
+  methods: {
+    onBoardClickEvent(piece: PieceModel): void {
+      this.boardClickedElement = piece;
+    }
+  }
 })
 </script>
 
