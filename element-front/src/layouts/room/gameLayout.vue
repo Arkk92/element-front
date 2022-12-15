@@ -1,7 +1,7 @@
 <template>
   <div class="game-layout">
     <div class="row">
-      <BoardLayout :board="game?.board" :players="game?.player_list"></BoardLayout>
+      <BoardLayout :board="game?.board" :players="game?.player_list" @clickedCell="onBoardClickEvent"></BoardLayout>
     </div>
     <div class="row" v-if="isUserTurn">
       <PlayerActionsLayout :element-pool-manager="game?.board.elementPool" :turn="game?.turn" :room-id="roomId"
@@ -39,6 +39,8 @@ export default defineComponent({
   methods: {
     onBoardClickEvent(piece: PieceModel): void {
       this.boardClickedElement = piece;
+      console.log("He clickao!")
+      console.log(piece);
     }
   }
 })

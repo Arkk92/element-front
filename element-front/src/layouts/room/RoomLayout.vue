@@ -6,11 +6,11 @@
           :turn="roomData.game.turn" />
       </div>
       <div class="col">
-        <GameLayout
-        :game="roomData.game"
-        :is-user-turn="isCurrentUserTurn()"
-        :room-id="roomData.uuid"
-        ></GameLayout>
+        <GameLayout :game="roomData.game" :is-user-turn="isCurrentUserTurn()" :room-id="roomData.uuid"></GameLayout>
+      </div>
+      <div class="col">
+        <!-- <ChatLayout>
+        </ChatLayout> -->
       </div>
     </div>
   </div>
@@ -31,7 +31,7 @@ export default defineComponent({
   components: {
     UserLayout,
     GameLayout
-},
+  },
   data() {
     return {
       username: "Username",

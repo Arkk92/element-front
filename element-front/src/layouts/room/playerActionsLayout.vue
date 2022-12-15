@@ -10,7 +10,6 @@
       <MovesAvailables
       :turn="turn"
       :room-id="roomId"
-      @selectedElement="onSelectedElementEvent"
       ></MovesAvailables>
     </div>
     <div v-else>
@@ -25,9 +24,6 @@ import { TurnModel, TurnStates } from '@/game/models/turn';
 import MovesAvailables from '@/components/MovesAvailables.vue'
 import DrawElementsAction from '@/components/DrawElements.vue'
 import { defineComponent } from 'vue';
-import { ElementTypes } from '@/game/models/elements/elements';
-import { SocketInstance } from '@/main';
-import { PieceModel } from '@/game/models/pieces/pieces';
 
 export default defineComponent({
   name: 'PlayerActionsLayout',
@@ -58,21 +54,6 @@ export default defineComponent({
     },
     isEndTurn(): boolean {
       return this.turn!.state == TurnStates.EndTurn;
-    },
-    onSelectedElementEvent(element: ElementTypes): void {
-      this.selectedElement = element;
-    }
-  },
-  watch: {
-    clickedCell(value){
-      if((value !== null) && (this.selectedElement !== 'None')){
-        const placeElement = {
-          roomId: this.roomId as string,
-          element: this.selectedElement as ElementTypes,
-          position: (value as PieceModel).position,
-        }
-        SocketInstance.emit('placeElement', placeElement)
-      }
     }
   }
 })
