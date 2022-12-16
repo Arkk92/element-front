@@ -9,11 +9,8 @@
       </div>
     </div>
     <div class="row align-items-center">
-      <div class="col">
-        Fire:
-      </div>
-      <div class="col-3">
-        <div class="circle fire"></div>
+      <div class="col element-div">
+        <img class="element" :src="require('@/assets/elements/Fire.png')">
       </div>
       <div class="col">
         x{{ countElementsDrawn(ElementTypes.Fire) }}
@@ -28,11 +25,8 @@
       </div>
     </div>
     <div class="row align-items-center">
-      <div class="col">
-        Water:
-      </div>
-      <div class="col-3">
-        <div class="circle water"></div>
+      <div class="col element-div">
+        <img class="element" :src="require('@/assets/elements/Water.png')">
       </div>
       <div class="col">
         x{{ countElementsDrawn(ElementTypes.Water) }}
@@ -47,11 +41,8 @@
       </div>
     </div>
     <div class="row align-items-center">
-      <div class="col">
-        Earth:
-      </div>
-      <div class="col-3">
-        <div class="circle earth"></div>
+      <div class="col element-div">
+        <img class="element" :src="require('@/assets/elements/Earth.png')">
       </div>
       <div class="col">
         x{{ countElementsDrawn(ElementTypes.Earth) }}
@@ -66,11 +57,8 @@
       </div>
     </div>
     <div class="row align-items-center">
-      <div class="col">
-        Wind:
-      </div>
-      <div class="col-3">
-        <div class="circle wind"></div>
+      <div class="col element-div">
+        <img class="element" :src="require('@/assets/elements/Wind.png')">
       </div>
       <div class="col">
         x{{ countElementsDrawn(ElementTypes.Wind) }}
@@ -168,30 +156,17 @@ export default defineComponent({
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.circle {
-  width: 20px;
-  height: 20px;
-  -webkit-border-radius: 25px;
-  -moz-border-radius: 25px;
+.element {
+  height: 40px;
+  width: 40px;
   border: solid;
   border-width: 1px;
-  border-radius: 25px;
+  border-radius: 40px;
+  vertical-align: middle;
   text-align: center;
 }
 
-.fire {
-  background: red;
-}
-
-.wind {
-  background: white;
-}
-
-.water {
-  background: blue;
-}
-
-.earth {
-  background: brown;
+.element-div{
+  text-align: center;
 }
 </style>

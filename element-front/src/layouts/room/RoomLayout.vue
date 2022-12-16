@@ -42,8 +42,8 @@ export default defineComponent({
   },
   mounted() {
     SocketInstance.on("gameUpdate", (data) => {
-      // console.log("Game update: ")
-      // console.log(data)
+      console.log("Game update: ")
+      console.log(data)
 
       if (data != null) {
         room = new RoomModelMap().toDomain(data.room);

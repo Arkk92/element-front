@@ -1,5 +1,8 @@
 <template>
   <div class="empty-piece border border-dark border-1 cells" style="padding: 0;" v-if="data_ready">
+    <div class="cells" :class="moveAvailable ? 'moveAvailable' : ''" v-on:click="emptySelected()">
+
+    </div>
 
     <!-- <img class="empty" :src="getImage()"> -->
 
@@ -8,6 +11,8 @@
 
 <script lang="ts">
 import { EmptyModel } from '@/game/models/pieces/empty';
+import { Position, PositionUtils } from '@/game/utils/position_utils';
+import { Emitter } from '@/main';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -18,14 +23,29 @@ export default defineComponent({
   data() {
     return {
       data_ready: false,
+      moveAvailable: false,
     }
   },
   mounted() {
     this.data_ready = true;
+
+    Emitter.on('sageSelectedPosition', (position) => {
+      this.moveAvailable = PositionUtils.isStrictPosition(this.piece!.position, position as Position)
+        
+    })
+
+    Emitter.on('sageUnselected', () => {
+      this.moveAvailable = false;
+    })
   },
   methods: {
     getImage(): any {
       return require('@/assets/pieces/Empty.png');
+    },
+    emptySelected(): void {
+      if(this.moveAvailable){
+        Emitter.emit('sagePositionDestination', this.piece!.position )
+      }
     }
   }
 })
@@ -41,6 +61,10 @@ export default defineComponent({
   position: relative;
   aspect-ratio: 1/1;
 
+}
+.moveAvailable {
+  background-color: red;
+  opacity: 20%;
 }
 
 .empty {

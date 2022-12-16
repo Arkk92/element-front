@@ -1,73 +1,62 @@
 <template>
   <div class="moves-available-action">
-    <div class="row">
-    <div class="row align-items-center">
-      <div class="col">
-        Available elements to place: {{ turn?.chosen_elements.length }}
+    <div class="row justify-content-center">
+      <div class="row align-items-center justify-content-center">
+        <div class="col">
+          Available elements to place: {{ turn?.chosen_elements.length }}
+        </div>
+        <div class="col">
+          Sage movements: {{ turn?.available_sage_moves }}
+        </div>
       </div>
-      <div class="col">
-        Sage movements: {{ turn?.available_sage_moves }}
+      <div class="row align-items-center justify-content-center" v-if="turn?.chosen_elements.includes(ElementTypes.Fire)"
+        :class="isSelectedElement(ElementTypes.Fire) ? 'border border-primary border-3 rounded-pill' : ''"
+        v-on:click="selectElement(ElementTypes.Fire)">
+        <div class="col element-div">
+          <img class="element" :src="require('@/assets/elements/Fire.png')">
+        </div>
+        <div class="col">
+          x{{ countElements(ElementTypes.Fire) }}
+        </div>
       </div>
-    </div>
-    <div class="row align-items-center" v-if="turn?.chosen_elements.includes(ElementTypes.Fire)"
-      :class="isSelectedElement(ElementTypes.Fire) ? 'border border-primary border-3 rounded-pill' : ''"
-      v-on:click="selectElement(ElementTypes.Fire)">
-      <div class="col">
-        Fire:
-      </div>
-      <div class="col-3">
-        <div class="circle fire"></div>
-      </div>
-      <div class="col">
-        x{{ countElements(ElementTypes.Fire) }}
-      </div>
-    </div>
 
-    <div class="row align-items-center" v-if="turn?.chosen_elements.includes(ElementTypes.Water)"
-      :class="isSelectedElement(ElementTypes.Water) ? 'border border-primary border-3 rounded-pill' : ''"
-      v-on:click="selectElement(ElementTypes.Water)">
-      <div class="col">
-        Water:
-      </div>
-      <div class="col-3">
-        <div class="circle water"></div>
-      </div>
-      <div class="col">
-        x{{ countElements(ElementTypes.Water) }}
-      </div>
-    </div>
+      <div class="row align-items-center justify-content-center" v-if="turn?.chosen_elements.includes(ElementTypes.Water)"
+        :class="isSelectedElement(ElementTypes.Water) ? 'border border-primary border-3 rounded-pill' : ''"
+        v-on:click="selectElement(ElementTypes.Water)">
 
-    <div class="row align-items-center" v-if="turn?.chosen_elements.includes(ElementTypes.Earth)"
-      :class="isSelectedElement(ElementTypes.Earth) ? 'border border-primary border-3 rounded-pill' : ''"
-      v-on:click="selectElement(ElementTypes.Earth)">
-      <div class="col">
-        Earth:
+        <div class="col element-div">
+          <img class="element" :src="require('@/assets/elements/Water.png')">
+        </div>
+        <div class="col">
+          x{{ countElements(ElementTypes.Water) }}
+        </div>
       </div>
-      <div class="col-3">
-        <div class="circle earth"></div>
-      </div>
-      <div class="col">
-        x{{ countElements(ElementTypes.Earth) }}
-      </div>
-    </div>
 
-    <div class="row align-items-center" v-if="turn?.chosen_elements.includes(ElementTypes.Wind)"
-      :class="isSelectedElement(ElementTypes.Wind) ? 'border border-primary border-3 rounded-pill' : ''"
-      v-on:click="selectElement(ElementTypes.Wind)">
-      <div class="col">
-        Wind:
+      <div class="row align-items-center justify-content-center" v-if="turn?.chosen_elements.includes(ElementTypes.Earth)"
+        :class="isSelectedElement(ElementTypes.Earth) ? 'border border-primary border-3 rounded-pill' : ''"
+        v-on:click="selectElement(ElementTypes.Earth)">
+        <div class="col element-div">
+          <img class="element" :src="require('@/assets/elements/Earth.png')">
+        </div>
+        <div class="col">
+          x{{ countElements(ElementTypes.Earth) }}
+        </div>
       </div>
-      <div class="col-3">
-        <div class="circle wind"></div>
-      </div>
-      <div class="col">
-        x{{ countElements(ElementTypes.Wind) }}
+
+      <div class="row align-items-center justify-content-center" v-if="turn?.chosen_elements.includes(ElementTypes.Wind)"
+        :class="isSelectedElement(ElementTypes.Wind) ? 'border border-primary border-3 rounded-pill' : ''"
+        v-on:click="selectElement(ElementTypes.Wind)">
+        <div class="col element-div">
+          <img class="element" :src="require('@/assets/elements/Wind.png')">
+        </div>
+        <div class="col">
+          x{{ countElements(ElementTypes.Wind) }}
+        </div>
       </div>
     </div>
-  </div>
-  <div class="row">
-    <button class="btn btn-primary" v-on:click="endTurn()">End turn</button>
-  </div>
+    <div class="row align-items-center justify-content-center">
+      <button class="btn btn-primary" v-on:click="endTurn()">End turn</button>
+    </div>
 
 
   </div>
@@ -77,10 +66,12 @@
 import { ElementTypes } from '@/game/models/elements/elements';
 import { TurnModel } from '@/game/models/turn';
 import { SocketInstance } from '@/main';
-import { EndTurn, PlaceElement } from '@/sockets/socketUtils';
+import { EndTurn, MoveSage, PlaceElement } from '@/sockets/socketUtils';
 import { defineComponent } from 'vue';
 import { Emitter } from '@/main';
 import { PieceModel } from '@/game/models/pieces/pieces';
+import { Position } from '@/game/utils/position_utils';
+import { PlayerModel } from '@/game/models/player';
 
 const MIN_SAGE_MOVEMENTS: number = 2;
 
@@ -95,14 +86,15 @@ export default defineComponent({
   name: 'MovesAvailablesAction',
   props: {
     turn: TurnModel,
-    roomId: String
+    roomId: String,
+    player: PlayerModel,
   },
   enums: {
     ElementTypes,
   },
   mounted() {
     Emitter.on('clickedCell', piece => {
-      if(this.selectedElement !== NoneElement.None){
+      if (this.selectedElement !== NoneElement.None) {
         const data: PlaceElement = {
           roomId: this.roomId!,
           element: this.selectedElement,
@@ -110,9 +102,26 @@ export default defineComponent({
         }
         SocketInstance.emit('placeElement', data);
         this.selectedElement = NoneElement.None
+        if (this.isEndOfTurn()) {
+          this.endTurn();
+        }
       }
     });
-    
+
+    Emitter.on('sagePositionDestination', (position) => {
+      if (this.sageMovements > 0) {
+        const data: MoveSage = {
+          roomId: this.roomId!,
+          position: position as Position,
+          player: this.player!
+        }
+        SocketInstance.emit('moveSage', data);
+        if (this.isEndOfTurn()) {
+          this.endTurn();
+        }
+      }
+    })
+
   },
   data() {
     return {
@@ -153,6 +162,9 @@ export default defineComponent({
         roomId: this.roomId!
       }
       SocketInstance.emit('endTurn', data);
+    },
+    isEndOfTurn(): boolean {
+      return this.sageMovements == 0 && this.elementList.length == 0;
     }
 
   }
@@ -161,30 +173,17 @@ export default defineComponent({
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.circle {
-  width: 20px;
-  height: 20px;
-  -webkit-border-radius: 25px;
-  -moz-border-radius: 25px;
+.element {
+  height: 40px;
+  width: 40px;
   border: solid;
   border-width: 1px;
-  border-radius: 25px;
+  border-radius: 40px;
+  vertical-align: middle;
   text-align: center;
 }
 
-.fire {
-  background: red;
-}
-
-.wind {
-  background: white;
-}
-
-.water {
-  background: blue;
-}
-
-.earth {
-  background: brown;
+.element-div {
+  text-align: right;
 }
 </style>

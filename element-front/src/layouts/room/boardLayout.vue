@@ -2,60 +2,59 @@
   <div class="board-layout">
     <div class="row">
       <div class="col">
-        <div class="row align-items-center">
+
+        <div class="row">
+  
           <div class="col">
-            Fire:
-          </div>
-          <div class="col-3">
-            <div class="circle fire"></div>
+            <div class="row align-items-center">
+              <div class="col element-div">
+                <img class="element" :src="require('@/assets/elements/Fire.png')">
+              </div>
+              <div class="col">
+                x{{ board?.elementPool.fire.amount }}
+              </div>
+            </div>
           </div>
           <div class="col">
-            x{{ board?.elementPool.fire.amount }}
+            <div class="row align-items-center">
+              <div class="col element-div">
+                <img class="element" :src="require('@/assets/elements/Water.png')">
+              </div>
+              <div class="col">
+                x{{ board?.elementPool.water.amount }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="row align-items-center">
+              <div class="col element-div">
+                <img class="element" :src="require('@/assets/elements/Earth.png')">
+              </div>
+              <div class="col">
+                x{{ board?.elementPool.earth.amount }}
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="row align-items-center">
+              <div class="col element-div">
+                <img class="element" :src="require('@/assets/elements/Wind.png')">
+              </div>
+              <div class="col">
+                x{{ board?.elementPool.wind.amount }}
+              </div>
+            </div>
           </div>
         </div>
       </div>
       <div class="col">
-        <div class="row align-items-center">
-          <div class="col">
-            Water:
-          </div>
-          <div class="col-3">
-            <div class="circle water"></div>
-          </div>
-          <div class="col">
-            x{{ board?.elementPool.water.amount }}
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="row align-items-center">
-          <div class="col">
-            Earth:
-          </div>
-          <div class="col-3">
-            <div class="circle earth"></div>
-          </div>
-          <div class="col">
-            x{{ board?.elementPool.earth.amount }}
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="row align-items-center">
-          <div class="col">
-            Wind:
-          </div>
-          <div class="col-3">
-            <div class="circle wind"></div>
-          </div>
-          <div class="col">
-            x{{ board?.elementPool.wind.amount }}
-          </div>
-        </div>
+        LEGEND!
       </div>
     </div>
     <div class="row">
-      <Board :board="board" :players="players">
+      <Board :board="board" :players="players" :current-player="currentPlayer">
       </Board>
     </div>
   </div>
@@ -74,6 +73,7 @@ export default defineComponent({
   props: {
     board: BoardModel,
     players: Array,
+    currentPlayer: Number,
   },
   data() {
     return {
@@ -84,30 +84,19 @@ export default defineComponent({
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.circle {
-  width: 20px;
-  height: 20px;
-  -webkit-border-radius: 25px;
-  -moz-border-radius: 25px;
+.element {
+  height: 40px;
+  width: 40px;
   border: solid;
   border-width: 1px;
-  border-radius: 25px;
+  border-radius: 40px;
+  vertical-align: middle;
   text-align: center;
 }
 
-.fire {
-  background: red;
+.element-div {
+  
 }
 
-.wind {
-  background: white;
-}
 
-.water {
-  background: blue;
-}
-
-.earth {
-  background: brown;
-}
 </style>

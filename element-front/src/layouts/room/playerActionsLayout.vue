@@ -10,6 +10,7 @@
       <MovesAvailables
       :turn="turn"
       :room-id="roomId"
+      :player="player"
       ></MovesAvailables>
     </div>
     <div v-else>
@@ -24,6 +25,7 @@ import { TurnModel, TurnStates } from '@/game/models/turn';
 import MovesAvailables from '@/components/MovesAvailables.vue'
 import DrawElementsAction from '@/components/DrawElements.vue'
 import { defineComponent } from 'vue';
+import { PlayerModel } from '@/game/models/player';
 
 export default defineComponent({
   name: 'PlayerActionsLayout',
@@ -38,7 +40,7 @@ export default defineComponent({
     turn: TurnModel,
     elementPoolManager: ElementPoolManagerModel,
     roomId: String,
-    clickedCell: null,
+    player: PlayerModel,
   },
   data() {
     return {

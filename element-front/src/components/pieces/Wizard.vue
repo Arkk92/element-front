@@ -1,8 +1,9 @@
 <template>
   <div class="wizard-piece col border border-dark border-1 cells" style="padding: 0;" v-if="data_ready">
 
-    <img class="pieces shinning-fade" :src="getShine()" :style="currentWizardTurn==true ? 'visibility: visible' : 'visibility: hidden' ">
-    <img class="pieces" :src="getImage()">
+    <img v-if="playerNumber == currentPlayer" class="pieces shinning-fade" :src="getShine()">
+    <img v-if="selected" class="pieces" :src="getSelectedShadow()">
+    <img class="pieces" :src="getImage()" v-on:click="sageSelected()">
 
 
   </div>
@@ -18,19 +19,16 @@ export default defineComponent({
   props: {
     piece: SageModel,
     playerNumber: Number,
+    currentPlayer: Number,
   },
   data() {
     return {
       data_ready: false,
-      currentWizardTurn: false,
+      selected: false,
     }
   },
   mounted() {
     this.data_ready = true;
-
-    Emitter.on('turnPlayerNumber', (playerNumber) => {
-      this.updateCurrentWizard(playerNumber as number);
-    });
   },
   methods: {
     getImage(): any {
@@ -46,17 +44,21 @@ export default defineComponent({
       }
     },
     getShine(): any {
-      return require('@/assets/wizards/Wizard_shine.png')
+      return require('@/assets/wizards/Wizard_shine.png');
     },
-    updateCurrentWizard(playerNumber: number): void {
-      console.log("update wizard!" + playerNumber)
-      console.log("current wizard: "+this.playerNumber)
-      if(playerNumber == this.playerNumber!){
-        this.currentWizardTurn = true;
-      }else{
-        this.currentWizardTurn = false;
+    getSelectedShadow(): any {
+      return require('@/assets/wizards/Wizard_selected.png');
+    },
+    sageSelected(): void {
+      if(this.playerNumber == this.currentPlayer){
+        if(this.selected){
+          this.selected = false;
+          Emitter.emit('sageUnselected');
+        }else {
+          this.selected = true;
+          Emitter.emit('sageSelectedPosition', this.piece?.position);
+        }
       }
-      console.log("currentWizardTurn: "+ this.currentWizardTurn)
     }
     
   }

@@ -3,7 +3,8 @@
     <div class="row" v-for="row in board!.grid!.cells" :key="row">
       <div class="col cell-div" v-for="cell in row" :key="cell" v-on:click="cellClicked(cell)">
         <Wizard v-if="cell.type == PieceTypes.Sage" :piece="cell"
-          :player-number="getPlayerNumberBySage(cell as SageModel)" />
+          :player-number="getPlayerNumberBySage(cell as SageModel)"
+          :current-player="currentPlayer" />
         <Element v-else-if="cell.type == PieceTypes.Element" :piece="cell" />
         <Empty v-else :piece="cell" />
 
@@ -37,6 +38,7 @@ export default defineComponent({
   props: {
     board: BoardModel,
     players: Array as PropType<Array<PlayerModel>>,
+    currentPlayer: Number,
   },
   data() {
     return {
@@ -46,6 +48,7 @@ export default defineComponent({
   },
   mounted() {
     this.data_ready = true;
+    
   },
   methods: {
     getPlayerNumberBySage(sage: SageModel): number | null {
