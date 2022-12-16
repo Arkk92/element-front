@@ -1,7 +1,7 @@
 <template>
   <div class="empty-piece border border-dark border-1 cells" style="padding: 0;" v-if="data_ready">
 
-    <img class="empty" :src="getImage()">
+    <!-- <img class="empty" :src="getImage()"> -->
 
   </div>
 </template>

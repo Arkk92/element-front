@@ -6,7 +6,7 @@
           :turn="roomData.game.turn" />
       </div>
       <div class="col">
-        <GameLayout :game="roomData.game" :is-user-turn="isCurrentUserTurn()" :room-id="roomData.uuid"></GameLayout>
+        <GameLayout :game="roomData.game" :is-user-turn="isCurrentUserTurn()" :current-player-id="getPlayerIdByUserId(getUserId())" :room-id="roomData.uuid"></GameLayout>
       </div>
       <div class="col">
         <!-- <ChatLayout>
@@ -42,14 +42,16 @@ export default defineComponent({
   },
   mounted() {
     SocketInstance.on("gameUpdate", (data) => {
-      console.log("Game update: ")
-      console.log(data)
+      // console.log("Game update: ")
+      // console.log(data)
 
       if (data != null) {
         room = new RoomModelMap().toDomain(data.room);
         this.roomData = room;
         this.turn_player_uuid = data.player_turn_uuid;
         this.data_ready = true;
+
+
       }
     }),
       SocketInstance.on('error', (data) => {
@@ -82,7 +84,16 @@ export default defineComponent({
     },
     isCurrentUserTurn(): boolean {
       return this.getUserId() === this.getTurnUserId();
+    },
+    getPlayerIdByUserId(userId: string): string {
+      for( let user of this.roomData.user_to_player_map){
+        if(userId === user.user_uuid){
+          return user.player_uuid;
+        }
+      }
+      return ""
     }
+
   }
 })
 </script>

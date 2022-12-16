@@ -1,5 +1,6 @@
 <template>
   <div class="moves-available-action">
+    <div class="row">
     <div class="row align-items-center">
       <div class="col">
         Available elements to place: {{ turn?.chosen_elements.length }}
@@ -63,6 +64,10 @@
         x{{ countElements(ElementTypes.Wind) }}
       </div>
     </div>
+  </div>
+  <div class="row">
+    <button class="btn btn-primary" v-on:click="endTurn()">End turn</button>
+  </div>
 
 
   </div>
@@ -72,7 +77,7 @@
 import { ElementTypes } from '@/game/models/elements/elements';
 import { TurnModel } from '@/game/models/turn';
 import { SocketInstance } from '@/main';
-import { PlaceElement } from '@/sockets/socketUtils';
+import { EndTurn, PlaceElement } from '@/sockets/socketUtils';
 import { defineComponent } from 'vue';
 import { Emitter } from '@/main';
 import { PieceModel } from '@/game/models/pieces/pieces';
@@ -142,6 +147,12 @@ export default defineComponent({
     },
     isSelectedElement(element: ElementTypes): boolean {
       return element === this.selectedElement;
+    },
+    endTurn(): void {
+      const data: EndTurn = {
+        roomId: this.roomId!
+      }
+      SocketInstance.emit('endTurn', data);
     }
 
   }

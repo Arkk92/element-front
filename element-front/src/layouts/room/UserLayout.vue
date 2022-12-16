@@ -45,7 +45,7 @@ export default defineComponent({
       this.users = this.userList;
     }
   },
-  methods: {
+  methods: {        
     getTurnState(): string {
       switch (this.turn?.state) {
         case TurnStates.DrawingElements:

@@ -17,7 +17,7 @@ import { BoardModel } from '@/game/models/board';
 import { PieceModel, PieceTypes } from '@/game/models/pieces/pieces';
 import { SageModel } from '@/game/models/pieces/sage';
 import { PlayerModel } from '@/game/models/player';
-import { defineComponent } from 'vue';
+import { defineComponent, PropType } from 'vue';
 import Wizard from './pieces/Wizard.vue';
 import Empty from './pieces/Empty.vue';
 import Element from './pieces/Element.vue';
@@ -36,7 +36,7 @@ export default defineComponent({
   },
   props: {
     board: BoardModel,
-    players: Array,
+    players: Array as PropType<Array<PlayerModel>>,
   },
   data() {
     return {
@@ -61,7 +61,6 @@ export default defineComponent({
       return 0;
     },
     cellClicked(piece: PieceModel): void {
-
       Emitter.emit('clickedCell', piece);
     }
   }
