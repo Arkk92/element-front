@@ -6,7 +6,7 @@
           :player-number="getPlayerNumberBySage(cell as SageModel)"
           :current-player="currentPlayer" />
         <Element v-else-if="cell.type == PieceTypes.Element" :piece="cell" />
-        <Empty v-else :piece="cell" />
+        <Empty v-else :piece="cell" :grid="board!.grid"/>
 
       </div>
     </div>

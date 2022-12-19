@@ -2,6 +2,9 @@
   <div class="element-piece col border border-dark border-1 cells" style="padding: 0;" v-if="data_ready">
 
     <img class="pieces" :src="getImage()">
+    <span v-if="isWind()" class="bottom-left" style="z-index: 1000;">
+      {{(piece as WindModel).stacked_winds}}
+    </span>
 
   </div>
 </template>
@@ -10,6 +13,7 @@
 import { ElementModel, ElementTypes } from '@/game/models/elements/elements';
 import { defineComponent } from 'vue';
 import type { PropType } from 'vue'
+import { WindModel } from '@/game/models/elements/wind';
 
 export default defineComponent({
   name: 'ElementPieceComponent',
@@ -23,6 +27,7 @@ export default defineComponent({
   },
   mounted() {
     this.data_ready = true;
+
   },
   methods: {
     getImage(): any {
@@ -36,8 +41,11 @@ export default defineComponent({
         case ElementTypes.Wind:
           return require('@/assets/elements/Wind.png');
       }
+    },
+    isWind(): boolean {
+      return this.piece?.element_type == ElementTypes.Wind
     }
-  }
+  },
 })
 </script>
 
@@ -64,5 +72,11 @@ export default defineComponent({
   position: absolute;
   bottom: 0%;
   left: 0%;
+}
+
+.bottom-left {
+  position: absolute;
+  bottom: -5px;
+  left: 0px;
 }
 </style>

@@ -10,15 +10,18 @@
 </template>
 
 <script lang="ts">
+import { MovementManager } from '@/game/controllers/movement_manager';
+import { GridModel } from '@/game/models/grid';
 import { EmptyModel } from '@/game/models/pieces/empty';
-import { Position, PositionUtils } from '@/game/utils/position_utils';
+import { Position } from '@/game/utils/position_utils';
 import { Emitter } from '@/main';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'EmptyPieceComponent',
   props: {
-    piece: EmptyModel
+    piece: EmptyModel,
+    grid: GridModel,
   },
   data() {
     return {
@@ -30,13 +33,13 @@ export default defineComponent({
     this.data_ready = true;
 
     Emitter.on('sageSelectedPosition', (position) => {
-      this.moveAvailable = PositionUtils.isStrictPosition(this.piece!.position, position as Position)
-        
-    })
+      this.moveAvailable = MovementManager.isSageMoveValid(this.grid!, position as Position, this.piece!.position);
+    });
 
     Emitter.on('sageUnselected', () => {
       this.moveAvailable = false;
-    })
+    });
+
   },
   methods: {
     getImage(): any {

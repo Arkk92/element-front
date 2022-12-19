@@ -2,8 +2,8 @@ import { ElementTypes } from "@/game/models/elements/elements";
 import { IPlayerModel } from "@/game/models/player";
 import { RoomModel } from "@/game/models/room";
 import { Position } from "@/game/utils/position_utils";
-import { Reaction } from "@/sockets/schemas/player_actions";
-import { PrivateServerResponse, PublicServerResponse } from "@/sockets/schemas/server_response";
+import { Reaction } from "@/schemas/player_actions";
+import { PrivateServerResponse, PublicServerResponse } from "@/schemas/server_response";
 
 export interface ServerToClientEvents {
   error: (response: PrivateServerResponse | null) => void;
@@ -69,6 +69,6 @@ export type PlaceElement = {
 
 export type MoveSage = {
   roomId: string
-  player: IPlayerModel
+  playerId: string
   position: Position
 }

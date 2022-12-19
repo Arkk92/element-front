@@ -58,7 +58,6 @@
       <button class="btn btn-primary" v-on:click="endTurn()">End turn</button>
     </div>
 
-
   </div>
 </template>
 
@@ -72,8 +71,6 @@ import { Emitter } from '@/main';
 import { PieceModel } from '@/game/models/pieces/pieces';
 import { Position } from '@/game/utils/position_utils';
 import { PlayerModel } from '@/game/models/player';
-
-const MIN_SAGE_MOVEMENTS: number = 2;
 
 // eslint-disable-next-line
 enum NoneElement {
@@ -102,23 +99,17 @@ export default defineComponent({
         }
         SocketInstance.emit('placeElement', data);
         this.selectedElement = NoneElement.None
-        if (this.isEndOfTurn()) {
-          this.endTurn();
-        }
       }
     });
 
     Emitter.on('sagePositionDestination', (position) => {
-      if (this.sageMovements > 0) {
+      if (this.turn!.available_sage_moves > 0) {
         const data: MoveSage = {
           roomId: this.roomId!,
           position: position as Position,
-          player: this.player!
+          playerId: this.player!.uuid
         }
         SocketInstance.emit('moveSage', data);
-        if (this.isEndOfTurn()) {
-          this.endTurn();
-        }
       }
     })
 
@@ -126,7 +117,6 @@ export default defineComponent({
   data() {
     return {
       selectedElement: NoneElement.None as Elements,
-      sageMovements: MIN_SAGE_MOVEMENTS,
       elementList: [] as Array<ElementTypes>,
     }
   },
@@ -164,9 +154,8 @@ export default defineComponent({
       SocketInstance.emit('endTurn', data);
     },
     isEndOfTurn(): boolean {
-      return this.sageMovements == 0 && this.elementList.length == 0;
+      return this.turn!.available_sage_moves == 0 && this.turn!.chosen_elements.length == 0;
     }
-
   }
 })
 </script>

@@ -61,10 +61,6 @@ export default defineComponent({
   },
 
   methods: {
-    forceUpdateRoom(): void {
-      SocketInstance.emit('joinRoom', 'test');
-      SocketInstance.emit('forceGameUpdate', "room1");
-    },
     getUserId(): string {
       for (let user of this.roomData.user_list) {
         if (user.socket_id === SocketInstance.id) {
