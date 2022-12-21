@@ -9,6 +9,7 @@ export interface ServerToClientEvents {
   error: (response: PrivateServerResponse | null) => void;
   gameUpdate: (response: PublicServerResponse | null) => void;
   gameFound: (response: GameFound) => void;
+  chat: (response: ChatServerToClient) => void;
   
   // Testing porpouses
   boardMovement: (response: {}) => void;
@@ -17,11 +18,13 @@ export interface ServerToClientEvents {
 
 export interface ClientToServerEvents {
   onQueue: (queue: Queue) => void;
+  cancelQueue: (queue: Queue) => void;
   joinGame: (data: JoinGame) => void;
   endTurn: (data: EndTurn) => void;
   drawElements: (data: DrawElements) => void;
   placeElement: (data: PlaceElement) => void;
   moveSage: (data: MoveSage) => void;
+  chat: (data: ChatClientToServer) => void;
 
   // Testing porpouses
   joinRoom: (data: any) => void;
@@ -71,4 +74,13 @@ export type MoveSage = {
   roomId: string
   playerId: string
   position: Position
+}
+
+export type ChatClientToServer = {
+  roomId: string,
+  message: string
+}
+
+export type ChatServerToClient = {
+  message: string
 }
