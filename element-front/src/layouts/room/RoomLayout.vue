@@ -9,6 +9,8 @@
         <GameLayout :game="roomData.game" :is-user-turn="isCurrentUserTurn()" :current-player-id="getPlayerIdByUserId(getUserId())" :room-id="roomData.uuid"></GameLayout>
       </div>
       <div class="col">
+        <ChatLayout :room-id="roomData.uuid"></ChatLayout>
+
         <!-- <ChatLayout>
         </ChatLayout> -->
       </div>
@@ -22,6 +24,7 @@ import { SocketInstance } from '@/main';
 import { RoomModel, RoomModelMap } from '@/game/models/room';
 import UserLayout from './UserLayout.vue';
 import GameLayout from './gameLayout.vue';
+import ChatLayout from './chatLayout.vue';
 
 
 let room: RoomModel;
@@ -30,7 +33,8 @@ export default defineComponent({
   name: 'RoomLayout',
   components: {
     UserLayout,
-    GameLayout
+    GameLayout,
+    ChatLayout
   },
   data() {
     return {
