@@ -14,6 +14,7 @@ import { ElementModel, ElementTypes } from '@/game/models/elements/elements';
 import { defineComponent } from 'vue';
 import type { PropType } from 'vue'
 import { WindModel } from '@/game/models/elements/wind';
+import { EarthModel } from '@/game/models/elements/earth';
 
 export default defineComponent({
   name: 'ElementPieceComponent',
@@ -37,6 +38,9 @@ export default defineComponent({
         case ElementTypes.Water:
           return require('@/assets/elements/Water.png');
         case ElementTypes.Earth:
+          if((this.piece! as EarthModel).is_mountain || (this.piece! as EarthModel).is_range){
+            return require('@/assets/elements/Mountain.png');  
+          }
           return require('@/assets/elements/Earth.png');
         case ElementTypes.Wind:
           return require('@/assets/elements/Wind.png');
