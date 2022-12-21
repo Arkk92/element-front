@@ -13,7 +13,7 @@
     <div class="writtingBoxDiv">
       <input type="text" v-on:keyup.enter="onEnter" v-model="inputText" class="form-control" aria-label="message…" placeholder="Write message…">
 
-      <button type="button" class="btn btn-outline-dark" v-on:click="sendMessage()"><i class="bi bi-send" aria-hidden="true"></i></button>
+      <button type="button" class="btn btn-outline-dark" v-on:click="sendMessage"><i class="bi bi-send" aria-hidden="true"></i></button>
     </div>
   </div>
 </template>
