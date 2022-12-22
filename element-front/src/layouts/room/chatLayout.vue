@@ -4,7 +4,7 @@
       Chat
     </div>
     <div class="messages">
-      <div class="message" v-for="message in messages" :key="message" v-bind:class="{ 'ownerMessage': isOwnerMessage(message) }">
+      <div class="message small p-2 mb-1 rounded-3 ms-3" v-for="message in messages" :key="message" v-bind:class="{ 'ownerMessage me-3 bg-primary text-white': isOwnerMessage(message) }">
         <p style="margin: 0">
         {{message}}
         </p>
