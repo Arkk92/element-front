@@ -136,7 +136,7 @@ export default defineComponent({
 
 .form-control {
   display: block;
-  width: 80%;
+  width: 100%;
   padding: 0.375rem 0.75rem;
   font-size: 14px;
   font-weight: 400;
