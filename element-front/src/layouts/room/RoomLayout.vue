@@ -1,4 +1,7 @@
 <template>
+<div class="alert alert-danger" role="alert" v-show="showingError">
+  {{error}}
+</div>
   <div class="room-layout">
     <div class="row" v-if="data_ready">
       <div class="col-md-3">
@@ -42,6 +45,8 @@ export default defineComponent({
       data_ready: false,
       roomData: room,
       turn_player_uuid: "",
+      error: "",
+      showingError: false,
     }
   },
   mounted() {
@@ -58,8 +63,16 @@ export default defineComponent({
 
       }
     }),
-      SocketInstance.on('error', (data) => {
+      SocketInstance.on('error', async (data) => {
         console.log(data);
+        if(data) {
+          this.error = data.message as string;
+          this.showingError = true;
+        }
+        setTimeout(() => {
+          this.error = "";
+          this.showingError = false;
+        }, 5000)
       })
 
   },
