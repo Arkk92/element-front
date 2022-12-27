@@ -1,5 +1,6 @@
 <template>
-  <div class="element-piece col border border-dark border-1 cells" style="padding: 0;" v-if="data_ready">
+  <div class="element-piece col border border-dark border-1 cells" style="padding: 0;" v-if="data_ready"
+  :class="isRiver ? 'moveAvailable': ''" >
 
     <img class="pieces" :src="getImage()">
     <span v-if="isWind()" class="bottom-left" style="z-index: 1000;">
@@ -15,12 +16,15 @@ import { defineComponent } from 'vue';
 import type { PropType } from 'vue'
 import { WindModel } from '@/game/models/elements/wind';
 import { EarthModel } from '@/game/models/elements/earth';
+import { Emitter } from '@/main';
+import { Position, PositionUtils } from '@/game/utils/position_utils';
 
 export default defineComponent({
   name: 'ElementPieceComponent',
   data() {
     return {
       data_ready: false,
+      isRiver: false,
     }
   },
   props: {
@@ -29,6 +33,13 @@ export default defineComponent({
   mounted() {
     this.data_ready = true;
 
+    Emitter.on('riverHighlight', (position) => {
+      if(PositionUtils.isSamePosition(this.piece!.position, position as Position)){
+        this.isRiver = true;
+      }
+      
+      
+    })
   },
   methods: {
     getImage(): any {
@@ -82,5 +93,9 @@ export default defineComponent({
   position: absolute;
   bottom: -5px;
   left: 0px;
+}
+.moveAvailable {
+  background-color: red;
+  opacity: 20%;
 }
 </style>
