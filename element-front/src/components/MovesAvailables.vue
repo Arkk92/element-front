@@ -75,6 +75,7 @@ import { Emitter } from '@/main';
 import { PieceModel } from '@/game/models/pieces/pieces';
 import { Position } from '@/game/utils/position_utils';
 import { PlayerModel } from '@/game/models/player';
+import { WaterReaction } from '@/schemas/player_actions';
 
 // eslint-disable-next-line
 enum NoneElement {
@@ -83,9 +84,12 @@ enum NoneElement {
 }
 type Elements = ElementTypes | NoneElement;
 
+type River = Array<Position>
+
 type ClickedData = {
   piece: PieceModel,
-  river: Array<Position>
+  oldRiver?: River,
+  newRiver?: River
 }
 
 export default defineComponent({
@@ -103,14 +107,18 @@ export default defineComponent({
       if (this.selectedElement === NoneElement.None) {
         return;
       }
-      
+
       let data: PlaceElement = {
         roomId: this.roomId!,
         element: this.selectedElement,
         position: (clickedData as ClickedData).piece.position,
       };
-      if((clickedData as ClickedData).river != null ){
-        data.reaction = (clickedData as ClickedData).river
+      if (((clickedData as ClickedData).oldRiver != null) && (clickedData as ClickedData).newRiver != null) {
+        const waterReaction: WaterReaction = new WaterReaction(
+          (clickedData as ClickedData).oldRiver!,
+          (clickedData as ClickedData).newRiver!
+        )
+        data.reaction = waterReaction;
       }
       console.log(data)
       SocketInstance.emit('placeElement', data);

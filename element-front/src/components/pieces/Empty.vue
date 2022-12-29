@@ -1,7 +1,7 @@
 <template>
   <div class="empty-piece border border-dark border-1 cells" style="padding: 0;" v-if="data_ready">
-    <div class="cells" :class="moveAvailable ? 'moveAvailable' : ''" v-on:click="emptySelected()">
-
+    <div class="cells" :class="getEmptyType()" v-on:click="emptySelected()">
+      
     </div>
 
     <!-- <img class="empty" :src="getImage()"> -->
@@ -13,9 +13,11 @@
 import { MovementManager } from '@/game/controllers/movement_manager';
 import { GridModel } from '@/game/models/grid';
 import { EmptyModel } from '@/game/models/pieces/empty';
-import { Position } from '@/game/utils/position_utils';
+import { Position, PositionUtils } from '@/game/utils/position_utils';
 import { Emitter } from '@/main';
 import { defineComponent } from 'vue';
+
+type EmptyType = 'None' | 'Red' | 'Blue'
 
 export default defineComponent({
   name: 'EmptyPieceComponent',
@@ -26,18 +28,30 @@ export default defineComponent({
   data() {
     return {
       data_ready: false,
-      moveAvailable: false,
+      state: 'None' as EmptyType
     }
   },
   mounted() {
     this.data_ready = true;
 
     Emitter.on('sageSelectedPosition', (position) => {
-      this.moveAvailable = MovementManager.isSageMoveValid(this.grid!, position as Position, this.piece!.position);
+      if(MovementManager.isSageMoveValid(this.grid!, position as Position, this.piece!.position)){
+        this.state = 'Red';
+      }
     });
 
     Emitter.on('sageUnselected', () => {
-      this.moveAvailable = false;
+      this.state = this.state == 'Red' ? 'None' : this.state;
+    });
+
+    Emitter.on('oldRiverDisplay', (river) => {
+      if ((river as Array<Position>).filter(water => PositionUtils.isSamePosition(water, this.piece!.position)).length > 0) {
+        this.state = 'Blue';
+      }
+    });
+
+    Emitter.on('oldRiverDisplayOff', () => {
+      this.state = this.state == 'Blue' ? 'None' : this.state;
     });
 
   },
@@ -46,9 +60,25 @@ export default defineComponent({
       return require('@/assets/pieces/Empty.png');
     },
     emptySelected(): void {
-      if(this.moveAvailable){
+      if(this.state == 'Red'){
         Emitter.emit('sagePositionDestination', this.piece!.position )
       }
+    },
+    getEmptyType(): string {
+      let cssClass: string;
+      console.log(this.state)
+      switch(this.state){
+        case 'Blue':
+          cssClass = 'oldRiver';
+          break;
+        case 'Red':
+          cssClass = 'moveAvailable';
+          break;
+        default:
+          cssClass = '';
+          break;
+      }
+      return cssClass;
     }
   }
 })
@@ -67,6 +97,11 @@ export default defineComponent({
 }
 .moveAvailable {
   background-color: red;
+  opacity: 20%;
+}
+
+.oldRiver {
+  background-color: blue;
   opacity: 20%;
 }
 
