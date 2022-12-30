@@ -1,7 +1,8 @@
 <template>
-  <div class="element-piece col border border-dark border-1 cells" style="padding: 0;" v-if="data_ready">
+  <div class="element-piece col border border-dark border-1 cells" style="padding: 0;" v-if="data_ready"
+  :class="getCssClass()" >
 
-    <img class="pieces" :src="getImage()">
+    <img class="pieces" :src="getImage()" style="opacity: 100%;">
     <span v-if="isWind()" class="bottom-left" style="z-index: 1000;">
       {{(piece as WindModel).stacked_winds}}
     </span>
@@ -15,12 +16,18 @@ import { defineComponent } from 'vue';
 import type { PropType } from 'vue'
 import { WindModel } from '@/game/models/elements/wind';
 import { EarthModel } from '@/game/models/elements/earth';
+import { Emitter } from '@/main';
+import { Position, PositionUtils } from '@/game/utils/position_utils';
+
+type WaterType = 'RiverHead' | 'River'
+type ElementFrontType = 'None' | WaterType
 
 export default defineComponent({
   name: 'ElementPieceComponent',
   data() {
     return {
       data_ready: false,
+      state: 'None' as ElementFrontType
     }
   },
   props: {
@@ -29,6 +36,17 @@ export default defineComponent({
   mounted() {
     this.data_ready = true;
 
+    Emitter.on('riverHighlight', (position) => {
+      if(PositionUtils.isSamePosition(this.piece!.position, position as Position)){
+        this.state = 'River';
+      }
+    })
+
+    Emitter.on('riverHead', (position) => {
+      if(PositionUtils.isSamePosition(this.piece!.position, position as Position)){
+        this.state = 'RiverHead';
+      }
+    })
   },
   methods: {
     getImage(): any {
@@ -48,6 +66,22 @@ export default defineComponent({
     },
     isWind(): boolean {
       return this.piece?.element_type == ElementTypes.Wind
+    },
+
+    getCssClass(): string {
+      let cssClass: string;
+      switch(this.state){
+        case 'River':
+          cssClass = 'moveAvailable';
+          break;
+        case 'RiverHead':
+          cssClass = 'shinning-fade';
+          break;
+        default:
+          cssClass = '';
+          break;
+      }
+      return cssClass;
     }
   },
 })
@@ -67,6 +101,7 @@ export default defineComponent({
   aspect-ratio: 1/1;
 
 }
+ 
 
 .pieces {
   box-sizing: border-box;
@@ -82,5 +117,21 @@ export default defineComponent({
   position: absolute;
   bottom: -5px;
   left: 0px;
+}
+.moveAvailable {
+  background-color: red;
+  opacity: 20%;
+}
+
+.riverHead {
+  background-color: blue;
+  opacity: 20%;
+}
+
+.shinning-fade { animation: fadeIn 2s; animation-iteration-count: infinite; }
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
 }
 </style>

@@ -9,7 +9,8 @@
           Sage movements: {{ turn?.available_sage_moves }}
         </div>
       </div>
-      <div class="row align-items-center justify-content-center" v-if="turn?.chosen_elements.includes(ElementTypes.Fire)"
+      <div class="row align-items-center justify-content-center"
+        v-if="turn?.chosen_elements.includes(ElementTypes.Fire)"
         :class="isSelectedElement(ElementTypes.Fire) ? 'border border-primary border-3 rounded-pill' : ''"
         v-on:click="selectElement(ElementTypes.Fire)">
         <div class="col element-div">
@@ -20,7 +21,8 @@
         </div>
       </div>
 
-      <div class="row align-items-center justify-content-center" v-if="turn?.chosen_elements.includes(ElementTypes.Water)"
+      <div class="row align-items-center justify-content-center"
+        v-if="turn?.chosen_elements.includes(ElementTypes.Water)"
         :class="isSelectedElement(ElementTypes.Water) ? 'border border-primary border-3 rounded-pill' : ''"
         v-on:click="selectElement(ElementTypes.Water)">
 
@@ -32,7 +34,8 @@
         </div>
       </div>
 
-      <div class="row align-items-center justify-content-center" v-if="turn?.chosen_elements.includes(ElementTypes.Earth)"
+      <div class="row align-items-center justify-content-center"
+        v-if="turn?.chosen_elements.includes(ElementTypes.Earth)"
         :class="isSelectedElement(ElementTypes.Earth) ? 'border border-primary border-3 rounded-pill' : ''"
         v-on:click="selectElement(ElementTypes.Earth)">
         <div class="col element-div">
@@ -43,7 +46,8 @@
         </div>
       </div>
 
-      <div class="row align-items-center justify-content-center" v-if="turn?.chosen_elements.includes(ElementTypes.Wind)"
+      <div class="row align-items-center justify-content-center"
+        v-if="turn?.chosen_elements.includes(ElementTypes.Wind)"
         :class="isSelectedElement(ElementTypes.Wind) ? 'border border-primary border-3 rounded-pill' : ''"
         v-on:click="selectElement(ElementTypes.Wind)">
         <div class="col element-div">
@@ -71,6 +75,7 @@ import { Emitter } from '@/main';
 import { PieceModel } from '@/game/models/pieces/pieces';
 import { Position } from '@/game/utils/position_utils';
 import { PlayerModel } from '@/game/models/player';
+import { WaterReaction } from '@/schemas/player_actions';
 
 // eslint-disable-next-line
 enum NoneElement {
@@ -78,6 +83,14 @@ enum NoneElement {
   None = 'None'
 }
 type Elements = ElementTypes | NoneElement;
+
+type River = Array<Position>
+
+type ClickedData = {
+  piece: PieceModel,
+  oldRiver?: River,
+  newRiver?: River
+}
 
 export default defineComponent({
   name: 'MovesAvailablesAction',
@@ -90,16 +103,27 @@ export default defineComponent({
     ElementTypes,
   },
   mounted() {
-    Emitter.on('clickedCell', piece => {
-      if (this.selectedElement !== NoneElement.None) {
-        const data: PlaceElement = {
-          roomId: this.roomId!,
-          element: this.selectedElement,
-          position: (piece as PieceModel).position,
-        }
-        SocketInstance.emit('placeElement', data);
-        this.selectedElement = NoneElement.None
+    Emitter.on('clickedCell', clickedData => {
+      if (this.selectedElement === NoneElement.None) {
+        return;
       }
+
+      let data: PlaceElement = {
+        roomId: this.roomId!,
+        element: this.selectedElement,
+        position: (clickedData as ClickedData).piece.position,
+      };
+      if (((clickedData as ClickedData).oldRiver != null) && (clickedData as ClickedData).newRiver != null) {
+        const waterReaction: WaterReaction = new WaterReaction(
+          (clickedData as ClickedData).oldRiver!,
+          (clickedData as ClickedData).newRiver!
+        )
+        data.reaction = waterReaction;
+      }
+      console.log(data)
+      SocketInstance.emit('placeElement', data);
+      this.selectedElement = NoneElement.None
+
     });
 
     Emitter.on('sagePositionDestination', (position) => {
@@ -141,8 +165,9 @@ export default defineComponent({
           break;
         default:
           this.selectedElement = NoneElement.None;
-          break;
+          return;
       }
+      Emitter.emit('elementSelected', this.selectedElement);
     },
     isSelectedElement(element: ElementTypes): boolean {
       return element === this.selectedElement;
