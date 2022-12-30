@@ -19,6 +19,16 @@
       </div>
     </div>
   </div>
+<div class="info" v-if="!data_ready">
+<div>
+  <h1 class="sweet-title">
+    <span data-text="Element Board Game">Element Board Game</span>
+    <br>
+    <span data-text="Now online!">Now online!</span>
+  </h1>
+</div>
+  <a href="https://ratherdashinggames.com/games/element.html" target="_blank">Find the rules here!</a>
+</div>
 </template>
 
 <script lang="ts">
@@ -113,5 +123,47 @@ export default defineComponent({
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 80vh;
+}
 
+.sweet-title {
+  order: 2;
+  color: #00afd1;
+  font-weight: 900;
+  text-transform: uppercase;
+  font-size: clamp(3rem, 10vw, 6rem);
+  line-height: 0.75em;
+  text-align: center;
+  text-shadow: 3px 1px 1px #00f9ff, 2px 2px 1px #002136, 4px 2px 1px #00f9ff,
+    3px 3px 1px #002136, 5px 3px 1px #00f9ff, 4px 4px 1px #002136,
+    6px 4px 1px #00f9ff, 5px 5px 1px #002136, 7px 5px 1px #00f9ff,
+    6px 6px 1px #002136, 8px 6px 1px #00f9ff, 7px 7px 1px #002136,
+    9px 7px 1px #00f9ff;
+
+  span {
+    display: block;
+    position: relative;
+
+    &:before {
+      content: attr(data-text);
+      position: absolute;
+      text-shadow: 2px 2px 1px #e94aa1, -1px -1px 1px #c736f9,
+        -2px 2px 1px #e94aa1, 1px -1px 1px #f736f9;
+      z-index: 1;
+    }
+
+    &:nth-child(1) {
+      padding-right: 2.25rem;
+    }
+
+    &:nth-child(2) {
+      padding-left: 2.25rem;
+    }
+  }
+}
 </style>
