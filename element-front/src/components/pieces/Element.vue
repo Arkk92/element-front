@@ -119,8 +119,8 @@ export default defineComponent({
   left: 0px;
 }
 .moveAvailable {
-  background-color: red;
-  opacity: 20%;
+  border-color: red !important;
+  background-color: rgba(252, 146, 146, 0.959);
 }
 
 .riverHead {
