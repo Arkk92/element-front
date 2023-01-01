@@ -17,6 +17,6 @@ export type PrivateServerResponse = MessageHeader & {
 
 export type PublicServerResponse = MessageHeader & {
     room: IRoomModel;
-    winner?: number | null;
+    winner?: string | null;
     player_turn_uuid: string;
 }
