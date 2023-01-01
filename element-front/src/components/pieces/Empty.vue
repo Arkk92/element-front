@@ -66,7 +66,6 @@ export default defineComponent({
     },
     getEmptyType(): string {
       let cssClass: string;
-      console.log(this.state)
       switch(this.state){
         case 'Blue':
           cssClass = 'oldRiver';

@@ -39,7 +39,7 @@ export default defineComponent({
         roomId: this.localRoomId,
         elements: [ElementTypes.Fire, ElementTypes.Water],
       }
-      console.log(elements);
+      //console.log(elements);
       SocketInstance.emit('drawElements', elements)
     }
   }

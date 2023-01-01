@@ -42,7 +42,7 @@ export default defineComponent({
   },
   mounted() {
     SocketInstance.on("chat", (data: ChatServerToClient) => {
-      console.log(data)
+      
       if (this.messages) {
         this.messages.push(data.message as string)
       } else {
