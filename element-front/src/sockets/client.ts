@@ -3,7 +3,7 @@ import { ClientToServerEvents, ServerToClientEvents } from "./socketUtils";
 
 class ClientSocket {
 
-    private static URL: string = process.env.BACKEND_SOCKET_PATH;
+    private static URL: string = process.env.VUE_APP_BACKEND_SOCKET_PATH;
 
     constructor() { }
 
