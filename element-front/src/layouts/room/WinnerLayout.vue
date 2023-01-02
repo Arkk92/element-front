@@ -19,7 +19,7 @@
           </div>
 
           <div class="modal-footer">
-            <Queue />
+            
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
               v-on:click="closeModal()">Close</button>
           </div>
@@ -30,7 +30,6 @@
 </template>
 
 <script lang="ts">
-import Queue from '@/components/Queue.vue';
 import { RoomModel } from '@/game/models/room';
 import { defineComponent, PropType } from 'vue';
 import { Modal } from 'bootstrap'
@@ -38,7 +37,7 @@ import { Modal } from 'bootstrap'
 export default defineComponent({
   name: 'WinnerLayout',
   components: {
-    Queue
+    
   },
   props: {
     isGameOver: Boolean,

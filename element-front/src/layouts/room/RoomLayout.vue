@@ -82,7 +82,7 @@ export default defineComponent({
       }
     }),
       SocketInstance.on('error', async (data) => {
-        console.log(data);
+        //console.log(data);
         if (data) {
           this.error = data.message as string;
           this.showingError = true;

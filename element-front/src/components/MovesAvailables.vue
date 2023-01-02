@@ -120,9 +120,9 @@ export default defineComponent({
         )
         data.reaction = waterReaction;
       }
-      console.log(data)
+      //console.log(data)
       SocketInstance.emit('placeElement', data);
-      
+      this.selectedElement = NoneElement.None;
 
     });
 
