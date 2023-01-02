@@ -8,7 +8,7 @@ class ClientSocket {
     constructor() { }
 
     static setupSocketConnection(): Socket<ServerToClientEvents, ClientToServerEvents> {
-        console.log(this.URL)
+        
         let socket: Socket<ServerToClientEvents, ClientToServerEvents>;
         if (this.URL == null) {
             socket = io();
