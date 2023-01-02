@@ -122,7 +122,7 @@ export default defineComponent({
       }
       console.log(data)
       SocketInstance.emit('placeElement', data);
-      this.selectedElement = NoneElement.None
+      
 
     });
 
