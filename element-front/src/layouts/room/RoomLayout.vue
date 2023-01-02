@@ -91,7 +91,11 @@ export default defineComponent({
           this.error = "";
           this.showingError = false;
         }, 5000)
-      })
+      }),
+
+      SocketInstance.on("connect_error", (err) => {
+        console.log(`connect_error due to ${err.message}`);
+});
 
   },
 
