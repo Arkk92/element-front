@@ -12,6 +12,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 export const SocketInstance = ClientSocket.setupSocketConnection();
 export const Emitter = mitt();
 
+console.log(process.env.VUE_APP_TITLE);
 const app = createApp(App)
 app.use(enums)
 app.mount('#app')
