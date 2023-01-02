@@ -12,3 +12,6 @@ build-dev:
 
 run-dev:
 	cd element-front && npm run serve
+
+deploy-local:
+	cd element-front && npm run build
