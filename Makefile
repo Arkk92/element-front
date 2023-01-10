@@ -4,7 +4,7 @@ build:
 	docker build -t element-front .
 	
 run:
-	docker run -p 8080:8080 element-front
+	docker run --env-file='element-front/.env' -p 8080:8080 element-front
 
 
 build-dev:
