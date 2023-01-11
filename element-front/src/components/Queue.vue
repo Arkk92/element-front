@@ -42,6 +42,17 @@
                 </a>
               </div>
             </div>
+            <div class="row">
+              Drawing type:
+              <div class="btn-group" role="group" aria-label="Game types button group">
+                <a type="button" class="btn btn-outline-primary active" v-on:click="drawType = 'random'">Random
+                </a>
+
+                <a type="button" class="btn btn-outline-primary disabled" v-on:click="drawType = 'selectable'">Selectable
+                </a>
+              </div>
+
+            </div>
             <hr>
             <div class="row" v-if="(queueStatus === 'Find game')">
               <a type="button" class="btn btn btn-success" :class="queueType === 'none' ? 'disabled' : ''"
@@ -84,8 +95,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { SocketInstance } from '@/main'
-import { GameFound, Queue } from '@/sockets/socketUtils';
+import { Emitter, SocketInstance } from '@/main'
+import { GameFound, Queue, DrawType } from '@/sockets/socketUtils';
 
 type QueueStatus = "Find game" | "Game found" | "Searching game..." | "Playing";
 type QueueTypes = 'none' | 'queue2' | 'queue3' | 'queue4'
@@ -102,6 +113,7 @@ export default defineComponent({
       queueStatus: "Find game" as QueueStatus,
       queueType: "none" as QueueTypes,
       roomId: "",
+      drawType: 'random' as DrawType,
 
     }
   },
@@ -110,12 +122,13 @@ export default defineComponent({
     SocketInstance.on("gameFound", (data: GameFound) => {
       this.roomId = data.roomId;
       this.queueStatus = 'Game found';
+      Emitter.emit('drawType', this.drawType);
     })
   },
   methods: {
     startQueueSearch(): void {
 
-      SocketInstance.emit("onQueue", this.queueType as Queue);
+      SocketInstance.emit("onQueue", this.queueType as Queue, this.drawType as DrawType);
       this.queueStatus = 'Searching game...';
     },
     joinGame(): void {

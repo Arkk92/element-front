@@ -10,14 +10,14 @@ export interface ServerToClientEvents {
   gameUpdate: (response: PublicServerResponse | null) => void;
   gameFound: (response: GameFound) => void;
   chat: (response: ChatServerToClient) => void;
-  
+
   // Testing porpouses
   boardMovement: (response: {}) => void;
   testUpdate: (response: {}) => void;
 }
 
 export interface ClientToServerEvents {
-  onQueue: (queue: Queue) => void;
+  onQueue: (queue: Queue, draw: DrawType) => void;
   cancelQueue: (queue: Queue) => void;
   joinGame: (data: JoinGame) => void;
   endTurn: (data: EndTurn) => void;
@@ -39,6 +39,8 @@ export interface InterServerEvents {
 export interface SocketData {
 
 }
+
+export type DrawType = 'random' | 'selectable'
 
 export enum Queue {
   queue2 = 'queue2',
