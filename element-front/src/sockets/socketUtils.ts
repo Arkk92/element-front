@@ -1,6 +1,5 @@
 import { ElementTypes } from "@/game/models/elements/elements";
-import { IPlayerModel } from "@/game/models/player";
-import { RoomModel } from "@/game/models/room";
+import { UserModel } from "@/game/models/user";
 import { Position } from "@/game/utils/position_utils";
 import { Reaction } from "@/schemas/player_actions";
 import { PrivateServerResponse, PublicServerResponse } from "@/schemas/server_response";
@@ -17,7 +16,7 @@ export interface ServerToClientEvents {
 }
 
 export interface ClientToServerEvents {
-  onQueue: (queue: Queue, draw: DrawType) => void;
+  onQueue: (queue: Queue) => void;
   cancelQueue: (queue: Queue) => void;
   joinGame: (data: JoinGame) => void;
   endTurn: (data: EndTurn) => void;
@@ -40,8 +39,6 @@ export interface SocketData {
 
 }
 
-export type DrawType = 'random' | 'selectable'
-
 export enum Queue {
   queue2 = 'queue2',
   queue3 = 'queue3',
@@ -54,6 +51,7 @@ export type GameFound = {
 
 export type JoinGame = {
   roomId: string
+  username: string
 }
 
 export type EndTurn = {
@@ -62,7 +60,7 @@ export type EndTurn = {
 
 export type DrawElements = {
   roomId: string
-  elements: Array<ElementTypes>
+  numOfElements: number
 }
 
 export type PlaceElement = {
@@ -84,5 +82,6 @@ export type ChatClientToServer = {
 }
 
 export type ChatServerToClient = {
+  user: UserModel,
   message: string
 }

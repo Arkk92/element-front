@@ -2,7 +2,7 @@
   <div class="upper-nav-bar">
     <div class="row">
       <div class="col">
-        {{username}}
+        Welcome, {{username}}
       </div>
       <div class="col">
         <QueueVue/>
@@ -15,6 +15,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import QueueVue from '@/components/Queue.vue';
+import { Emitter } from '@/main';
 
 export default defineComponent({
   name: 'UpperNavBarComponent',
@@ -23,11 +24,13 @@ export default defineComponent({
   },
   data() {
     return {
-      username: "Username"
+      username: "Guest"
     }
   },
   mounted() {
-
+    Emitter.on('usernameChange', (username)=> {
+      this.username = username as string
+    })
   },
 })
 </script>
