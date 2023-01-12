@@ -4,16 +4,19 @@
       Chat
     </div>
     <div class="messages">
-      <div class="message small p-2 mb-1 rounded-3 ms-3" v-for="message in messages" :key="message" v-bind:class="{ 'ownerMessage me-3 bg-primary text-white': isOwnerMessage(message) }">
+      <div class="message small p-2 mb-1 rounded-3 ms-3" v-for="message in messages" :key="message"
+        v-bind:class="{ 'ownerMessage me-3 bg-primary text-white': isOwnerMessage(message) }">
         <p style="margin: 0">
-        {{message}}
+          {{message.user.name}} : {{ message.message }}
         </p>
       </div>
     </div>
     <div class="writtingBoxDiv">
-      <input type="text" v-on:keyup.enter="onEnter" v-model="inputText" class="form-control" aria-label="message…" placeholder="Write message…">
+      <input type="text" v-on:keyup.enter="onEnter" v-model="inputText" class="form-control" aria-label="message…"
+        placeholder="Write message…">
 
-      <button type="button" class="btn btn-outline-dark" v-on:click="sendMessage"><i class="bi bi-send" aria-hidden="true"></i></button>
+      <button type="button" class="btn btn-outline-dark" v-on:click="sendMessage"><i class="bi bi-send"
+          aria-hidden="true"></i></button>
     </div>
   </div>
 </template>
@@ -23,18 +26,23 @@
 import { defineComponent } from 'vue';
 import { SocketInstance } from '@/main';
 import { ChatServerToClient, ChatClientToServer } from '@/sockets/socketUtils';
+import { UserModel } from '@/game/models/user';
 
+type MessageType = {
+  user: UserModel
+  message: string
+}
 
 export default defineComponent({
   name: 'ChatLayout',
   components: {
-    
+
   },
   props: {
     roomId: String,
   },
   data() {
-    let messages: string[] = [];
+    let messages: MessageType[] = [];
     return {
       messages,
       inputText: ''
@@ -42,17 +50,17 @@ export default defineComponent({
   },
   mounted() {
     SocketInstance.on("chat", (data: ChatServerToClient) => {
-      
-      if (this.messages) {
-        this.messages.push(data.message as string)
-      } else {
-        this.messages = [data.message as string]
+      if(this.messages){
+        this.messages.push({ user: data.user, message: data.message })
+      }else{
+        this.messages = [{ user: data.user, message: data.message }]
       }
+
     })
   },
   methods: {
     onEnter() {
-       this.sendMessage();
+      this.sendMessage();
     },
     sendMessage() {
       let message: ChatClientToServer = {
@@ -63,8 +71,8 @@ export default defineComponent({
       this.inputText = '';
     },
 
-    isOwnerMessage(message) {
-      if(message.includes(SocketInstance.id.slice(0,5))) return true;
+    isOwnerMessage(message: MessageType) {
+      if (message.user.socket_id == SocketInstance.id) return true;
       return false;
     }
   }
@@ -79,6 +87,7 @@ export default defineComponent({
 
 
 }
+
 .message {
   display: flex;
   justify-content: left;
@@ -91,12 +100,14 @@ export default defineComponent({
   max-width: 50%;
   padding: 2px;
 }
+
 .message:before {
   border-bottom-right-radius: 0.8rem 0.7rem;
   border-left: 1rem solid #e5e5ea;
   left: -0.35rem;
   transform: translate(0, -0.1rem);
 }
+
 .message::after {
   background-color: #fff;
   border-bottom-right-radius: 0.5rem;
@@ -104,13 +115,15 @@ export default defineComponent({
   transform: translate(-30px, -2px);
   width: 10px;
 }
+
 .ownerMessage {
   justify-content: right;
   align-self: flex-end;
   background-color: #248bf5;
-  color: #fff;  
+  color: #fff;
   margin: 0.25rem 0 0;
 }
+
 .ownerMessage::before {
   border-bottom-left-radius: 0.8rem 0.7rem;
   border-right: 1rem solid #248bf5;
@@ -122,11 +135,13 @@ export default defineComponent({
   background-color: #fff;
   border-bottom-left-radius: 0.5rem;
   right: -40px;
-  transform:translate(-30px, -2px);
+  transform: translate(-30px, -2px);
   width: 10px;
 }
+
 .messages {
-  height: 70vh;;
+  height: 70vh;
+  ;
   border: solid 1px #bdbbbb;
   border-radius: 2%;
   overflow-y: scroll;
@@ -156,6 +171,7 @@ export default defineComponent({
   outline: 0;
   box-shadow: inherit;
 }
+
 .chat-layout {
   height: 100%;
 }

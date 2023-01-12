@@ -10,7 +10,7 @@
             <img class="wizardSmall" :src="getImage(getPlayerNumberByUserId(user.uuid))">
           </div>
           
-          <h5 class="col">{{ user.uuid }}</h5>
+          <h5 class="col">{{ user.name }}</h5>
         </div>
         <p class="mb-1" v-if="user.uuid === turnUserId">{{ getTurnState() }}</p>
         <p class="mb-1" v-else>Waiting...</p>

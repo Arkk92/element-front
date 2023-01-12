@@ -22,6 +22,19 @@
           </div>
           <div class="modal-body" v-if="queueStatus !== 'Game found'">
             <div class="row">
+              <div class="col">
+                Nickname:
+              </div>
+              <div class="col">
+                <input type="text" class="form-control" v-model="username">
+                <div v-if="usernameError !=''">
+                <span style="color:red">{{ usernameError }}</span>
+                </div>
+              </div>
+              
+            </div>
+            <br>
+            <div class="row">
               Select the type of game you want to play:
               <br>
             </div>
@@ -42,18 +55,6 @@
                 </a>
               </div>
             </div>
-            <!-- <div class="row">
-              Drawing type:
-              <div class="btn-group" role="group" aria-label="Game types button group">
-                <a type="button" class="btn btn-outline-primary active" v-on:click="drawType = 'random'">Random
-                </a>
-
-                <a type="button" class="btn btn-outline-primary disabled" v-on:click="drawType = 'selectable'">Selectable
-                </a>
-              </div>
-
-            </div>
-            -->
             <hr>
             <div class="row" v-if="(queueStatus === 'Find game')">
               <a type="button" class="btn btn btn-success" :class="queueType === 'none' ? 'disabled' : ''"
@@ -115,6 +116,8 @@ export default defineComponent({
       queueType: "none" as QueueTypes,
       roomId: "",
       drawType: 'random',
+      username: "Guest-"+SocketInstance.id.slice(0, 4),
+      usernameError: '',
 
     }
   },
@@ -126,6 +129,11 @@ export default defineComponent({
       Emitter.emit('drawType', this.drawType);
     })
   },
+  watch: {
+    username() {
+      this.checkUserName();
+    }
+  },
   methods: {
     startQueueSearch(): void {
 
@@ -133,8 +141,9 @@ export default defineComponent({
       this.queueStatus = 'Searching game...';
     },
     joinGame(): void {
-      SocketInstance.emit("joinGame", { roomId: this.roomId })
+      SocketInstance.emit("joinGame", { roomId: this.roomId, username: this.username })
       this.queueStatus = 'Playing';
+      Emitter.emit('usernameChange', this.username)
     },
 
     cancelQueue(): void {
@@ -156,6 +165,13 @@ export default defineComponent({
       this.queueType = "none";
       this.roomId = "";
       this.cancelQueue();
+    },
+
+    checkUserName(){
+      this.usernameError = '';
+      if((this.username.length < 3) || (this.username.length > 10)){
+        this.usernameError = 'The length of the Nickname must be between 3 to 10 characters.'
+      }
     }
 
 
