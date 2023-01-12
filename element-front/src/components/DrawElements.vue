@@ -99,7 +99,7 @@
 import { ElementTypes } from '@/game/models/elements/elements';
 import { ElementPoolManagerModel, ElementPoolModel } from '@/game/models/element_pool';
 import { Emitter, SocketInstance } from '@/main';
-import { DrawElements, DrawType } from '@/sockets/socketUtils';
+import { DrawElements } from '@/sockets/socketUtils';
 import { defineComponent } from 'vue';
 
 const MAX_ALLOWED_ELEMENTS: number = 3;
@@ -118,12 +118,12 @@ export default defineComponent({
     return {
       sageMovements: MIN_SAGE_MOVEMENTS,
       elementList: [] as Array<ElementTypes>,
-      drawType: 'random' as DrawType,
+      drawType: 'random',
     }
   },
   mounted() {
     Emitter.on('drawType', (drawType => {
-      this.drawType = drawType as DrawType;
+      this.drawType = drawType as string;
     }))
   },
   methods: {
@@ -168,7 +168,7 @@ export default defineComponent({
     drawElements(): void {
       const data: DrawElements = {
         roomId: this.roomId!,
-        elements: this.elementList
+        numOfElements: this.elementList.length
       };
       SocketInstance.emit('drawElements', data)
     }
