@@ -116,7 +116,7 @@ export default defineComponent({
       queueType: "none" as QueueTypes,
       roomId: "",
       drawType: 'random',
-      username: "Guest-"+SocketInstance.id.slice(0, 4),
+      username: "Guest",
       usernameError: '',
 
     }
@@ -141,6 +141,9 @@ export default defineComponent({
       this.queueStatus = 'Searching game...';
     },
     joinGame(): void {
+      if(this.username === 'Guest'){
+        this.username += "-"+SocketInstance.id.slice(0, 4);
+      }
       SocketInstance.emit("joinGame", { roomId: this.roomId, username: this.username })
       this.queueStatus = 'Playing';
       Emitter.emit('usernameChange', this.username)
