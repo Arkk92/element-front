@@ -132,8 +132,8 @@ export default defineComponent({
     })
 
     SocketInstance.on('userAuthData', (data: UserAuthData) => {
-      this.cookies.set("roomId", data.roomUuid);
-      this.cookies.set("userId", data.userUuid);
+      this.cookies.set("roomId", data.roomUuid, 60*60);
+      this.cookies.set("userId", data.userUuid, 60*60);
     })
   },
   watch: {
