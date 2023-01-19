@@ -6,7 +6,7 @@
   <div class="room-layout">
     <div class="row" v-if="data_ready">
       <div class="col-md-3">
-        <UserLayout :user-list="roomData.user_list" :current-user-id="getUserId()" :turn-user-id="getTurnUserId()"
+        <UserLayout :user-list="roomData.user_list" :turn-user-id="getTurnUserId()"
           :turn="roomData.game.turn" :user-to-player-map="roomData.user_to_player_map" :player-list="roomData.game.player_list" />
       </div>
       <div class="col">
@@ -33,6 +33,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { useCookies } from "vue3-cookies";
 import { SocketInstance } from '@/main';
 import { RoomModel, RoomModelMap } from '@/game/models/room';
 import UserLayout from './UserLayout.vue';
@@ -51,6 +52,10 @@ export default defineComponent({
     ChatLayout,
     WinnerLayout
   },
+  setup() {
+    const { cookies } = useCookies();
+    return { cookies };
+  },
   data() {
     return {
       username: "Username",
@@ -65,16 +70,19 @@ export default defineComponent({
   },
   mounted() {
     SocketInstance.on("gameUpdate", (data) => {
-      /*console.log("Game update: ")
-      console.log(data)*/
+      // console.log("Game update: ")
+      // console.log(data)
 
       if (data != null) {
         room = new RoomModelMap().toDomain(data.room);
         this.roomData = room;
         this.turn_player_uuid = data.player_turn_uuid;
+
         if (data.winner != null) {
           this.isGameOver = true;
           this.winner = data.winner!
+          this.cookies.remove('roomId');
+          this.cookies.remove('userId');
         }
         this.data_ready = true;
 
@@ -101,12 +109,7 @@ export default defineComponent({
 
   methods: {
     getUserId(): string {
-      for (let user of this.roomData.user_list) {
-        if (user.socket_id === SocketInstance.id) {
-          return user.uuid;
-        }
-      }
-      return "";
+      return this.cookies.get("userId");
     },
     getTurnUserId(): string {
 
