@@ -17,7 +17,8 @@
     "request": "^2.79.0",
     "vue": "^3.2.13",
     "vue-class-component": "^8.0.0-0",
-    "vue-enums": "^1.0.0"
+    "vue-enums": "^1.0.0",
+    "vue3-cookies": "^1.0.6"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
