@@ -1,8 +1,8 @@
 <template>
   <div class="user-layout">
     User list:
-    <div class="list-group">
-      <a class="list-group-item list-group-item-action disabled" v-for="user in users" :key="user"
+    <div class="list-group" v-if="data_ready">
+      <a class="list-group-item list-group-item-action disabled" v-for="user in userList" :key="user"
         :class="(user.uuid === currentUserId) ? 'active' : ''"
         :aria-current="(user.uuid === currentUserId) ? 'true' : 'false'">
         <div class="row justify-content-between">
@@ -27,14 +27,18 @@ import { UserModel } from '@/game/models/user';
 import { TurnModel, TurnStates } from '@/game/models/turn';
 import { PlayerModel } from '@/game/models/player';
 import { UserToPlayerMap } from '@/game/models/room';
+import { useCookies } from "vue3-cookies";
 
 export default defineComponent({
   name: 'UserLayout',
   components: {
   },
+  setup() {
+    const { cookies } = useCookies();
+    return { cookies };
+  },
   props: {
     userList: Array as PropType<Array<UserModel>>,
-    currentUserId: String,
     playerList: Array as PropType<Array<PlayerModel>>,
     userToPlayerMap: Array as PropType<Array<UserToPlayerMap>>,
     turnUserId: String,
@@ -45,11 +49,13 @@ export default defineComponent({
       username: "Username",
       data_ready: false,
       users: new Array<UserModel>(),
+      currentUserId: '',
     }
   },
   mounted() {
     if (this.userList != null) {
-      this.users = this.userList;
+      this.currentUserId = this.cookies.get('userId');
+      this.data_ready = true;
     }
   },
   methods: {

@@ -98,7 +98,8 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { Emitter, SocketInstance } from '@/main'
-import { GameFound, Queue } from '@/sockets/socketUtils';
+import { GameFound, Queue, UserAuthData } from '@/sockets/socketUtils';
+import { useCookies } from "vue3-cookies";
 
 type QueueStatus = "Find game" | "Game found" | "Searching game..." | "Playing";
 type QueueTypes = 'none' | 'queue2' | 'queue3' | 'queue4'
@@ -108,7 +109,8 @@ export default defineComponent({
   components: {
   },
   setup() {
-
+    const { cookies } = useCookies();
+    return { cookies };
   },
   data() {
     return {
@@ -127,6 +129,11 @@ export default defineComponent({
       this.roomId = data.roomId;
       this.queueStatus = 'Game found';
       Emitter.emit('drawType', this.drawType);
+    })
+
+    SocketInstance.on('userAuthData', (data: UserAuthData) => {
+      this.cookies.set("roomId", data.roomUuid, 60*60);
+      this.cookies.set("userId", data.userUuid, 60*60);
     })
   },
   watch: {
