@@ -25,6 +25,7 @@ export interface ClientToServerEvents {
   placeElement: (data: PlaceElement) => void;
   moveSage: (data: MoveSage) => void;
   chat: (data: ChatClientToServer) => void;
+  forfeit: (userId: string) => void;
 
   // Testing porpouses
   joinRoom: (data: any) => void;
