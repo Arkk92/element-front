@@ -33,6 +33,7 @@
 import { defineComponent } from 'vue';
 import { SocketInstance } from '@/main'
 import { useCookies } from "vue3-cookies";
+import { ForfeitData } from '@/sockets/socketUtils';
 
 
 export default defineComponent({
@@ -59,7 +60,8 @@ export default defineComponent({
   methods: {
 
     giveUpButton() {
-      SocketInstance.emit('forfeit', this.cookies.get('userId'));
+      const data: ForfeitData = {userId: this.cookies.get('userId'), roomId: this.cookies.get('roomId')}
+      SocketInstance.emit('forfeit', data);
       this.cookies.remove('roomId')
       this.cookies.remove('userId')
       window.location.reload();
