@@ -81,8 +81,11 @@ export default defineComponent({
         if (data.winner != null) {
           this.isGameOver = true;
           this.winner = data.winner!
-          this.cookies.remove('roomId');
-          this.cookies.remove('userId');
+          setTimeout(() => { 
+            this.cookies.remove('roomId');
+            this.cookies.remove('userId');
+          }, 2000);
+
         }
         this.data_ready = true;
 

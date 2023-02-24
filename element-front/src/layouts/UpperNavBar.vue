@@ -7,6 +7,11 @@
       <div class="col">
         <QueueVue/>
       </div>
+      <div class="col">
+        <ForfeitBtn
+        :show="forfeitBtnShow"
+        />
+      </div>
     </div>
     
   </div>
@@ -16,20 +21,24 @@
 import { defineComponent } from 'vue';
 import QueueVue from '@/components/Queue.vue';
 import { Emitter } from '@/main';
+import ForfeitBtn from '@/components/ForfeitBtn.vue';
 
 export default defineComponent({
   name: 'UpperNavBarComponent',
   components: {
-    QueueVue
-  },
+    QueueVue,
+    ForfeitBtn
+},
   data() {
     return {
-      username: "Guest"
+      username: "Guest",
+      forfeitBtnShow: false,
     }
   },
   mounted() {
     Emitter.on('usernameChange', (username)=> {
-      this.username = username as string
+      this.username = username as string;
+      this.forfeitBtnShow = true;
     })
   },
 })
