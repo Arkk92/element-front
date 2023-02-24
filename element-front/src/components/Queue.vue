@@ -125,6 +125,13 @@ export default defineComponent({
   },
   mounted() {
 
+    if(this.cookies.get("roomId") != null){
+      this.roomId = this.cookies.get("roomId")
+    }
+    if( this.roomId !== ""){
+      this.queueStatus = 'Playing';
+    }
+
     SocketInstance.on("gameFound", (data: GameFound) => {
       this.roomId = data.roomId;
       this.queueStatus = 'Game found';
