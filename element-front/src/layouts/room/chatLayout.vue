@@ -1,13 +1,11 @@
 <template>
   <div class="chat-layout">
-    <div>
-      Chat
-    </div>
+    <div class="backdrop"></div>
     <div class="messages">
       <div class="message small p-2 mb-1 rounded-3 ms-3" v-for="message in messages" :key="message"
         v-bind:class="{ 'ownerMessage me-3 bg-primary text-white': isOwnerMessage(message) }">
         <p style="margin: 0">
-          {{message.user.name}} : {{ message.message }}
+          {{ message.user.name }} : {{ message.message }}
         </p>
       </div>
     </div>
@@ -15,7 +13,7 @@
       <input type="text" v-on:keyup.enter="onEnter" v-model="inputText" class="form-control" aria-label="message…"
         placeholder="Write message…">
 
-      <button type="button" class="btn btn-outline-dark" v-on:click="sendMessage"><i class="bi bi-send"
+      <button type="button" class="btn btn-light btn-placement" v-on:click="sendMessage"><i class="bi bi-send"
           aria-hidden="true"></i></button>
     </div>
   </div>
@@ -50,9 +48,9 @@ export default defineComponent({
   },
   mounted() {
     SocketInstance.on("chat", (data: ChatServerToClient) => {
-      if(this.messages){
+      if (this.messages) {
         this.messages.push({ user: data.user, message: data.message })
-      }else{
+      } else {
         this.messages = [{ user: data.user, message: data.message }]
       }
 
@@ -82,9 +80,14 @@ export default defineComponent({
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .chat-layout {
-  display: flex;
-  flex-direction: column;
-
+  position: relative;
+  display: block;
+  overflow: hidden;
+  padding-top: 5%;
+  padding-bottom: 5%;
+  padding-left: 2%;
+  padding-right: 2%;
+  height: 100%;
 
 }
 
@@ -140,25 +143,47 @@ export default defineComponent({
 }
 
 .messages {
-  height: 70vh;
-  ;
+  position: relative;
+  height: 95%;
   border: solid 1px #bdbbbb;
   border-radius: 2%;
   overflow-y: scroll;
-  display: flex;
-  flex-direction: column
+  display: block;
+  padding: 2px;
+  z-index: 3;
+}
+
+.backdrop {
+  position: absolute;
+  height: 100%;
+  left: 0;
+  right: 0;
+  top: 1%;
+  bottom: 1%;
+  background: black;
+  opacity: 0.5;
+  z-index: 2;
+}
+
+.writtingBoxDiv {
+  position: relative;
+  bottom: 1%;
+  height: 7%;
+  width: 100%;
+  z-index: 3;
 }
 
 .form-control {
+  position: absolute;
   display: block;
-  width: 100%;
-  padding: 0.375rem 0.75rem;
+  width: 74%;
+  height: 100%;
   font-size: 14px;
   font-weight: 400;
   line-height: 1.5;
-  color: #222;
-  background-color: #fff;
+  color: black;
   background-clip: padding-box;
+  background-color: white;
   border: 1px solid #ccc;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -176,7 +201,11 @@ export default defineComponent({
   height: 100%;
 }
 
-.writtingBoxDiv {
-  display: flex;
+.btn-placement {
+  position: absolute;
+  width: 25%;
+  height: 100%;
+  top: 0;
+  right: 0;
 }
 </style>

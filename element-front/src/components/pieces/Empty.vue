@@ -1,7 +1,7 @@
 <template>
-  <div class="empty-piece border border-dark border-1 cells" style="padding: 0;" v-if="data_ready">
+  <div class="empty-piece cells" style="padding: 0;" v-if="data_ready">
     <div class="cells" :class="getEmptyType()" v-on:click="emptySelected()">
-      
+      <img class="boxMarker" :src="getImage()">
     </div>
 
     <!-- <img class="empty" :src="getImage()"> -->
@@ -17,7 +17,7 @@ import { Position, PositionUtils } from '@/game/utils/position_utils';
 import { Emitter } from '@/main';
 import { defineComponent } from 'vue';
 
-type EmptyType = 'None' | 'Red' | 'Blue'
+type EmptyType = 'None' | 'Red' | 'Blue' | 'Yellow'
 
 export default defineComponent({
   name: 'EmptyPieceComponent',
@@ -35,7 +35,7 @@ export default defineComponent({
     this.data_ready = true;
 
     Emitter.on('sageSelectedPosition', (position) => {
-      if(MovementManager.isSageMoveValid(this.grid!, position as Position, this.piece!.position)){
+      if (MovementManager.isSageMoveValid(this.grid!, position as Position, this.piece!.position)) {
         this.state = 'Red';
       }
     });
@@ -46,32 +46,39 @@ export default defineComponent({
 
     Emitter.on('oldRiverDisplay', (river) => {
       if ((river as Array<Position>).filter(water => PositionUtils.isSamePosition(water, this.piece!.position)).length > 0) {
-        this.state = 'Blue';
+        this.state = 'Red';
       }
     });
 
-    Emitter.on('oldRiverDisplayOff', () => {
-      this.state = this.state == 'Blue' ? 'None' : this.state;
+    Emitter.on('NewRiverAvailablePlacement', (position) => {
+      if((PositionUtils.isStrictOrthogonalPosition(this.piece!.position, position as Position)&&(this.state == 'None'))){
+        this.state = 'Yellow';
+      } else{
+        this.state = this.state == 'Yellow' ? 'None' : this.state;
+      }
     });
 
   },
   methods: {
     getImage(): any {
-      return require('@/assets/pieces/Empty.png');
+      return require('@/assets/icons/boxMarker.png');
     },
     emptySelected(): void {
-      if(this.state == 'Red'){
-        Emitter.emit('sagePositionDestination', this.piece!.position )
+      if (this.state == 'Red') {
+        Emitter.emit('sagePositionDestination', this.piece!.position)
       }
     },
     getEmptyType(): string {
       let cssClass: string;
-      switch(this.state){
+      switch (this.state) {
         case 'Blue':
-          cssClass = 'oldRiver';
+          cssClass = 'moveAvailable';
           break;
         case 'Red':
-          cssClass = 'moveAvailable';
+          cssClass = 'oldRiver';
+          break;
+        case 'Yellow':
+          cssClass = 'availableCell';
           break;
         default:
           cssClass = '';
@@ -87,21 +94,23 @@ export default defineComponent({
 <style scoped>
 .cells {
   width: 100%;
-  max-width: 64px;
-  max-height: 64px;
+  height: 100%;
   text-align: center;
   position: relative;
   aspect-ratio: 1/1;
 
 }
-.moveAvailable {
-  background-color: red;
-  opacity: 20%;
-}
 
 .oldRiver {
-  background-color: blue;
-  opacity: 20%;
+  background-color: rgba(255, 0, 0, 0.2);
+}
+
+.moveAvailable {
+  background-color: rgba(76, 0, 255, 0.2);
+}
+
+.availableCell {
+  background-color: rgba(255, 255, 0, 0.2);
 }
 
 .empty {
@@ -112,5 +121,44 @@ export default defineComponent({
   position: absolute;
   bottom: 0%;
   left: 0%;
+}
+.boxMarker {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+}
+
+.boxMarker:hover {
+  /* background-color: yellow; */
+  opacity: 1;
+  animation: hoverResizing 1s;
+  animation-iteration-count: infinite;
+  
+}
+
+.boxMarker:active {
+  opacity: 1;
+  animation: hoverResizing 1s;
+  animation-iteration-count: infinite;
+
+}
+
+@keyframes hoverResizing {
+  0% {
+    width: 100%;
+    height: 100%;
+  }
+  50% {
+    width: 70%;
+    height: 70%;
+  }
+  100% {
+    width: 100%;
+    height: 100%;
+  }
 }
 </style>

@@ -1,46 +1,66 @@
 <template>
-  <div class="alert alert-danger" role="alert" v-show="showingError">
+  <!-- <div class="alert alert-danger" role="alert" v-show="showingError">
     {{ error }}
-  </div>
-
-  <div class="room-layout">
-    <div class="row" v-if="data_ready">
-      <div class="col-md-3">
-        <UserLayout :user-list="roomData.user_list" :turn-user-id="getTurnUserId()"
-          :turn="roomData.game.turn" :user-to-player-map="roomData.user_to_player_map" :player-list="roomData.game.player_list" />
+  </div> -->
+  <div class="room-container">
+    <div class="background-video-div">
+      <video class="background-video" autoplay muted loop id="background-video" playbackRate="1">
+        <!-- <source src="@/assets/background/background-animated.mp4" type="video/mp4"> -->
+        <source src="@/assets/background/mystical-background.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div v-if="data_ready" class="room-layout">
+  
+      <div class="container-fluid full-height-container">
+        <div class="row custom-row">
+          <div class="col side-col overlay-column">
+            <UserLayout class="user-layout-column" :user-list="roomData.user_list" :turn-user-id="getTurnUserId()"
+              :turn="roomData.game.turn" :user-to-player-map="roomData.user_to_player_map"
+              :player-list="roomData.game.player_list" />
+            <Logger class="logger-layout-column" />
+          </div>
+          <div class="col center-col overlay-column d-flex justify-content-center align-items-center">
+            <GameLayout :game="roomData.game" :is-user-turn="isCurrentUserTurn()"
+              :current-player-id="getPlayerIdByUserId(getUserId())" :room-id="roomData.uuid"></GameLayout>
+          </div>
+          <div class="col side-col overlay-column">
+            <div class="chat-layout-wrapper">
+  
+              <ChatLayout :room-id="roomData.uuid"></ChatLayout>
+            </div>
+            <div class="player-action-layout">
+  
+              <PlayerActionsLayout v-if="isCurrentUserTurn()" :element-pool-manager="roomData.game.board.elementPool"
+                :turn="roomData.game.turn" :room-id="roomData.uuid" :player="getPlayerIdByUserId(getUserId())">
+              </PlayerActionsLayout>
+  
+            </div>
+          </div>
+          <WinnerLayout v-if="isGameOver" :current-user="getUserId()" :room="roomData" :winner="winner"></WinnerLayout>
+        </div>
       </div>
-      <div class="col">
-        <GameLayout :game="roomData.game" :is-user-turn="isCurrentUserTurn()"
-          :current-player-id="getPlayerIdByUserId(getUserId())" :room-id="roomData.uuid"></GameLayout>
+  
+    </div>
+    <div class="room-layout" v-else>
+      <div class="info-game-title-wrapper">
+        <span class="mystical-text" data-text="Element Online">Element Online</span>
       </div>
-      <div class="col">
-        <ChatLayout :room-id="roomData.uuid"></ChatLayout>
-      </div>
-      <WinnerLayout v-if="isGameOver" :current-user="getUserId()" :room="roomData" :winner="winner"></WinnerLayout>
+      <!-- <a href="https://ratherdashinggames.com/games/element.html" target="_blank">Find the rules here!</a> -->
     </div>
   </div>
-<div class="info" v-if="!data_ready">
-<div>
-  <h1 class="sweet-title">
-    <span data-text="Element Board Game">Element Board Game</span>
-    <br>
-    <span data-text="Now online!">Now online!</span>
-  </h1>
-</div>
-  <a href="https://ratherdashinggames.com/games/element.html" target="_blank">Find the rules here!</a>
-</div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { useCookies } from "vue3-cookies";
-import { SocketInstance } from '@/main';
+import { Emitter, SocketInstance } from '@/main';
 import { RoomModel, RoomModelMap } from '@/game/models/room';
 import UserLayout from './UserLayout.vue';
 import GameLayout from './gameLayout.vue';
 import ChatLayout from './chatLayout.vue';
 import WinnerLayout from './WinnerLayout.vue';
-
+import PlayerActionsLayout from './playerActionsLayout.vue';
+import Logger from '@/composables/Logger.vue';
 
 let room: RoomModel;
 
@@ -50,7 +70,9 @@ export default defineComponent({
     UserLayout,
     GameLayout,
     ChatLayout,
-    WinnerLayout
+    WinnerLayout,
+    PlayerActionsLayout,
+    Logger
   },
   setup() {
     const { cookies } = useCookies();
@@ -69,6 +91,7 @@ export default defineComponent({
     }
   },
   mounted() {
+
     SocketInstance.on("gameUpdate", (data) => {
       // console.log("Game update: ")
       // console.log(data)
@@ -81,7 +104,7 @@ export default defineComponent({
         if (data.winner != null) {
           this.isGameOver = true;
           this.winner = data.winner!
-          setTimeout(() => { 
+          setTimeout(() => {
             this.cookies.remove('roomId');
             this.cookies.remove('userId');
           }, 2000);
@@ -93,20 +116,15 @@ export default defineComponent({
       }
     }),
       SocketInstance.on('error', async (data) => {
-        //console.log(data);
         if (data) {
-          this.error = data.message as string;
-          this.showingError = true;
+          Emitter.emit('errorLog', data.message)
+          Emitter.emit('resetPlayerMenu');
         }
-        setTimeout(() => {
-          this.error = "";
-          this.showingError = false;
-        }, 5000)
       }),
 
       SocketInstance.on("connect_error", (err) => {
         console.log(`connect_error due to ${err.message}`);
-});
+      });
 
   },
 
@@ -142,46 +160,127 @@ export default defineComponent({
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .info {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  height: 80vh;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
-.sweet-title {
-  order: 2;
-  color: #00afd1;
-  font-weight: 900;
+.room-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.room-info-background-image {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.info-game-title-wrapper {
+  position: absolute;
+  width: 100%;
+  height: 30%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.room-layout {
+  background-color: #1b2126;
+  width: 100%;
+  min-height: 100%;
+  max-height: 100%;
+}
+
+.background-video-div {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+}
+
+.background-video {
+  position: relative;
+  top: 0;
+  min-width: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  
+}
+
+.overlay-column {
+  z-index: 1000;
+}
+
+.custom-row {
+  height: 100%;
+  width: 100%;
+}
+
+.center-col {
+  height: 100%;
+}
+
+.side-col {
+  flex: 0 0 15%;
+  /* Each column takes 15% of the row's width */
+  max-width: 15%;
+  height: 100%
+}
+
+.full-height-container {
+  position: absolute;
+  height: 100%;
+}
+
+.chat-layout-wrapper {
+  position: relative;
+  height: 60%;
+}
+
+.player-action-layout {
+  position: relative;
+  height: 40%;
+}
+
+.user-layout-column {
+  height: 60%;
+  width: 100%;
+}
+
+.logger-layout-column {
+  height: 40%;
+  width: 100%;
+}
+
+.mystical-text {
+  font-family: 'Cinzel', serif;
+  font-weight: bold;
+  /* Use Cinzel font */
+  font-size: 48px;
+  /* Adjust size as needed */
+  color: #FFD700;
+  /* Light Gold color */
+  text-shadow: 2px 2px 5px #4B0082;
+  /* Deep purple shadow */
   text-transform: uppercase;
-  font-size: clamp(3rem, 10vw, 6rem);
-  line-height: 0.75em;
   text-align: center;
-  text-shadow: 3px 1px 1px #00f9ff, 2px 2px 1px #002136, 4px 2px 1px #00f9ff,
-    3px 3px 1px #002136, 5px 3px 1px #00f9ff, 4px 4px 1px #002136,
-    6px 4px 1px #00f9ff, 5px 5px 1px #002136, 7px 5px 1px #00f9ff,
-    6px 6px 1px #002136, 8px 6px 1px #00f9ff, 7px 7px 1px #002136,
-    9px 7px 1px #00f9ff;
-
-  span {
-    display: block;
-    position: relative;
-
-    &:before {
-      content: attr(data-text);
-      position: absolute;
-      text-shadow: 2px 2px 1px #e94aa1, -1px -1px 1px #c736f9,
-        -2px 2px 1px #e94aa1, 1px -1px 1px #f736f9;
-      z-index: 1;
-    }
-
-    &:nth-child(1) {
-      padding-right: 2.25rem;
-    }
-
-    &:nth-child(2) {
-      padding-left: 2.25rem;
-    }
-  }
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
 }
 </style>

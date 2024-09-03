@@ -1,10 +1,10 @@
 <template>
   <div class="queue">
     <!-- Button trigger modal -->
-    <div v-if="(queueStatus == 'Find game')">
-      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#queueSelectorModal">
-        {{ queueStatus }}
-      </button>
+    <div v-if="(queueStatus == 'Play')">
+      <div class="rock-button-container" data-bs-toggle="modal" data-bs-target="#queueSelectorModal">
+        <RockButton :button-width="'100%'" :button-height="'100%'" :padding="'0px 0px 0px 0px'" :text="queueStatus" />
+      </div>
     </div>
     <div v-else>
       <button type="button" class="btn btn-secondary" disabled>
@@ -57,7 +57,7 @@
                 </div>
               </div>
               <hr>
-              <div class="row" v-if="(queueStatus === 'Find game')">
+              <div class="row" v-if="(queueStatus === 'Play')">
                 <a type="button" class="btn btn btn-success" :class="queueType === 'none' ? 'disabled' : ''"
                   v-on:click="startQueueSearch()">Play!</a>
               </div>
@@ -102,13 +102,15 @@ import { defineComponent } from 'vue';
 import { Emitter, SocketInstance } from '@/main'
 import { GameFound, Queue, UserAuthData } from '@/sockets/socketUtils';
 import { useCookies } from "vue3-cookies";
+import RockButton from './RockButton.vue';
 
-type QueueStatus = "Find game" | "Game found" | "Searching game..." | "Playing";
+type QueueStatus = "Play" | "Game found" | "Searching game..." | "Playing";
 type QueueTypes = 'none' | 'queue2' | 'queue3' | 'queue4'
 
 export default defineComponent({
   name: 'QueueComponent',
   components: {
+    RockButton
   },
   setup() {
     const { cookies } = useCookies();
@@ -116,7 +118,7 @@ export default defineComponent({
   },
   data() {
     return {
-      queueStatus: "Find game" as QueueStatus,
+      queueStatus: "Play" as QueueStatus,
       queueType: "none" as QueueTypes,
       roomId: "",
       drawType: 'random',
@@ -166,7 +168,7 @@ export default defineComponent({
     },
 
     cancelQueue(): void {
-      this.queueStatus = 'Find game';
+      this.queueStatus = 'Play';
     },
 
     getModelQueueButtonsStyle(queue: string): string {
@@ -180,7 +182,7 @@ export default defineComponent({
     },
 
     closeModal() {
-      this.queueStatus = "Find game";
+      this.queueStatus = "Play";
       this.queueType = "none";
       this.roomId = "";
       this.cancelQueue();
@@ -200,4 +202,23 @@ export default defineComponent({
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.rock-button-container {
+  position: absolute;
+  top: 10%;
+  right: 5%;
+  width: 40%;
+  height: 85%;
+}
+@media only screen and (max-width: 1786px) {
+  .rock-button-container {
+    position: absolute;
+  top: 10%;
+  right: 5%;
+  width: 60%;
+  height: 85%;
+  }
+}
+.queue {
+  height: 100%;
+}
 </style>

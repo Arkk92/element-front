@@ -22,5 +22,14 @@ export default defineComponent({
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+.room {
+  display: inline-block;
+  overflow: hidden;
+  position: fixed;
+  top: 6%;
+  width: 100%;
+  height: 88%;
+  /* min-height: calc(100vh - 120px); 
+  max-height: calc(100vh - 120px);  */
+}
 </style>
