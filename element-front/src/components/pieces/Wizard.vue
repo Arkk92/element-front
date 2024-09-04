@@ -94,8 +94,9 @@ export default defineComponent({
   max-height: 120%;
   max-width: 100%;
   bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
+  /* transform: translateX(-50%); */
+  animation: floatAndBreathe 4s infinite ease-in-out;
 }
 
 .shinning-fade { animation: fadeIn 2s; animation-iteration-count: infinite; }
@@ -145,5 +146,49 @@ export default defineComponent({
     height: 100%;
   }
 }
+
+/* Wizard standing by animation */
+@keyframes float {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@keyframes breathe {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes floatAndBreathe {
+    0% {
+        transform: translateY(0) scale(1);
+    }
+    25% {
+        transform: translateY(-5px) scale(1.03);
+    }
+    50% {
+        transform: translateY(0) scale(1.05);
+    }
+    75% {
+        transform: translateY(-5px) scale(1.03);
+    }
+    100% {
+        transform: translateY(0) scale(1);
+    }
+}
+
 
 </style>
