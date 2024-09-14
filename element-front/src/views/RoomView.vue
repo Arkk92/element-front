@@ -26,9 +26,9 @@ export default defineComponent({
   display: inline-block;
   overflow: hidden;
   position: fixed;
-  top: 6%;
+  top: 0%;
   width: 100%;
-  height: 88%;
+  height: 100%;
   /* min-height: calc(100vh - 120px); 
   max-height: calc(100vh - 120px);  */
 }

@@ -1,18 +1,18 @@
 <template>
-  <div class="queue">
+  <div class="about-us">
     <!-- Button trigger modal -->
-    <div v-if="(queueStatus == 'Play')">
-      <div class="rock-button-container" data-bs-toggle="modal" data-bs-target="#queueSelectorModal">
-        <RockButton :button-width="'100%'" :button-height="'100%'" :padding="'0px 0px 0px 0px'" :text="queueStatus" />
-      </div>
+    <div>
+      <!-- <NavButton :text="queueStatus" data-bs-toggle="modal" data-bs-target="#queueSelectorModal"/> -->
+      <NavButton v-on:click="isMenuOpen = true" :text="'About Us'" :disabled="true"/>
     </div>
-    <div v-else>
+
+    <!-- <div v-else>
       <button type="button" class="btn btn-secondary" disabled>
         Room ID: {{ roomId }}
       </button>
-    </div>
+    </div> -->
     <!-- Modals -->
-    <teleport to="body">
+    <!-- <teleport to="body">
       <div class="modal fade" id="queueSelectorModal" tabindex="-1" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog">
@@ -93,8 +93,9 @@
           </div>
         </div>
       </div>
-    </teleport>
+    </teleport> -->
   </div>
+  <!-- <PlayMenuModal :isOpen="isMenuOpen" @close="isMenuOpen = false" @start-game="startLookingForGame"  @select="handleSelect" /> -->
 </template>
 
 <script lang="ts">
@@ -102,19 +103,24 @@ import { defineComponent } from 'vue';
 import { Emitter, SocketInstance } from '@/main'
 import { GameFound, Queue, UserAuthData } from '@/sockets/socketUtils';
 import { useCookies } from "vue3-cookies";
-import RockButton from './RockButton.vue';
+import NavButton from '@/components/NavButton.vue';
+// import PlayMenuModal from './PlayMenuModal.vue';
 
 type QueueStatus = "Play" | "Game found" | "Searching game..." | "Playing";
 type QueueTypes = 'none' | 'queue2' | 'queue3' | 'queue4'
 
 export default defineComponent({
-  name: 'QueueComponent',
+  name: 'AboutUsComponent',
   components: {
-    RockButton
+    NavButton,
+    // PlayMenuModal
   },
   setup() {
     const { cookies } = useCookies();
-    return { cookies };
+
+    return {
+      cookies
+    };
   },
   data() {
     return {
@@ -124,6 +130,7 @@ export default defineComponent({
       drawType: 'random',
       username: "Guest",
       usernameError: '',
+      isMenuOpen: false,
 
     }
   },
@@ -160,7 +167,7 @@ export default defineComponent({
     },
     joinGame(): void {
       if (this.username === 'Guest') {
-        this.username += "-" + SocketInstance.id.slice(0, 4);
+        this.username += "-" + SocketInstance!.id.slice(0, 4);
       }
       SocketInstance.emit("joinGame", { roomId: this.roomId, username: this.username })
       this.queueStatus = 'Playing';
@@ -193,6 +200,18 @@ export default defineComponent({
       if ((this.username.length < 3) || (this.username.length > 10)) {
         this.usernameError = 'The length of the Nickname must be between 3 to 10 characters.'
       }
+    },
+
+    handleSelect(option: string) {
+      console.log('Selected option:', option);
+      this.isMenuOpen = false;
+    },
+
+    startLookingForGame(numPlayers: number){
+      console.log(`Looking for a game room for ${numPlayers} players...`);
+      this.isMenuOpen = false;
+      this.queueStatus = 'Searching game...';
+      SocketInstance.emit("onQueue", this.queueType as Queue);
     }
 
 
@@ -202,23 +221,9 @@ export default defineComponent({
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.rock-button-container {
-  position: absolute;
-  top: 10%;
-  right: 5%;
-  width: 40%;
-  height: 85%;
-}
-@media only screen and (max-width: 1786px) {
-  .rock-button-container {
-    position: absolute;
-  top: 10%;
-  right: 5%;
-  width: 60%;
-  height: 85%;
-  }
-}
-.queue {
+.about-us {
+  position: relative;
+  width: 100%;
   height: 100%;
 }
 </style>

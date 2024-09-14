@@ -71,14 +71,14 @@ export default defineComponent({
     });
 
     Emitter.on('sagePositionDestination', (position) => {
-      if(this.turn!.state == TurnStates.MovesAvailables){
+      if (this.turn!.state == TurnStates.MovesAvailables) {
         PlacementUtils.placeSage(this.turn!, this.player!, position as Position, this.roomId!)
       } else {
         Emitter.emit('errorLog', "Move is not allowed until cast")
       }
     })
 
-    Emitter.on('resetPlayerMenu', ()=>{
+    Emitter.on('resetPlayerMenu', () => {
       this.resetElementView = true;
     })
   },
@@ -133,17 +133,19 @@ export default defineComponent({
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.button-group-container{
+.button-group-container {
   width: 100%;
   height: 100%;
   z-index: 100;
 }
+
 .elements-and-moves-container {
   position: relative;
   max-height: 85%;
   min-height: 85%;
   width: 100%;
   height: 100%;
+  z-index: 3;
 }
 
 .all-elements-container {

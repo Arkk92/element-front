@@ -2,7 +2,7 @@
   <div class="footer-nav-bar">
     <div class="row align-items-center" style="height: 100%;">
       <div class="col">
-        <span class="welcome-message message">Element Online v2.0.0</span>
+        <span class="welcome-message mystical-link">Element Online v2.0.0</span>
       </div>
     </div>
     
@@ -36,8 +36,9 @@ export default defineComponent({
   width: 100%;
   z-index: 2000;
   height: 100%;
-  background-image: url("@/assets/header/footerNavHeader.jpg");
-  background-position: center;
+  background: linear-gradient(to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
+  /* background-image: url("@/assets/header/footerNavHeader.jpg");
+  background-position: center; */
   height: 6%; /* Sets the image height to 60px */
   object-fit: fill; /* Ensures the image covers the specified height and width */
 }
@@ -47,20 +48,16 @@ export default defineComponent({
 
 }
 
-.message {
-  font-family: 'Cinzel', serif;
-  color: #D4AF37;
-  font-weight: bold;
-  font-size: large;
-  /* Soft Gold color for buttons or specific text */
-
-  /* Ensure background doesn't override */
-  
-  /* Gold border to enhance button design */
-  padding: 10px 20px;
-  /* Make the text stand out more */
+.mystical-link {
+  position: relative;
+  font-family: 'Palatino', 'Garamond', 'Georgia', 'Times New Roman', serif;
+  font-size: 24px;
+  color: #d4af37;
+  /* Golden mystical color */
+  text-decoration: none;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+  text-shadow: 0 0 8px rgba(212, 175, 55, 0.8), 0 0 15px rgba(255, 255, 255, 0.2);
   letter-spacing: 1px;
-  /* Slight letter spacing for a classic feel */
-  cursor: pointer;
+  cursor: default;
 }
 </style>

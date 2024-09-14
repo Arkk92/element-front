@@ -1,41 +1,72 @@
 <template>
   <div class="upper-nav-bar">
     <div class="welcome-message-container">
-      <span class="welcome-message message">Welcome, {{ username }}</span>
+      <span class="welcome-message mystical-link">Welcome, {{ username }}</span>
     </div>
-    <div class="queue-container">
-      <QueueVue />
-    </div>
-    <div class="forfeit-container">
-      <ForfeitBtn :show="forfeitBtnShow" class="forfeit-btn-alignment"/>
+    <div class="menu-container">
+      <NavButton  v-on:click="isMenuOpen = true" :text="'Menu'" />
     </div>
   </div>
+  <InGameMenuModal :isOpen="isMenuOpen" @close="isMenuOpen = false" @select="handleSelect" />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import QueueVue from '@/components/Queue.vue';
-import { Emitter } from '@/main';
-import ForfeitBtn from '@/components/ForfeitBtn.vue';
+import { Emitter, SocketInstance } from '@/main';
+import NavButton from '@/components/NavButton.vue';
+import InGameMenuModal from '@/components/InGameMenuModal.vue';
+import { ForfeitData } from '@/sockets/socketUtils';
+import { useCookies } from 'vue3-cookies';
+
+type InGameMenuSelectOptions ='Forfeit' |'Options' |'Exit';
 
 export default defineComponent({
   name: 'UpperNavBarComponent',
   components: {
-    QueueVue,
-    ForfeitBtn
+    NavButton,
+    InGameMenuModal
+  },
+  setup() {
+    const { cookies } = useCookies();
+    return { cookies };
   },
   data() {
     return {
       username: "Guest",
-      forfeitBtnShow: false,
+      menuButtonShow: false,
+      isMenuOpen: false,
     }
   },
   mounted() {
     Emitter.on('usernameChange', (username) => {
       this.username = username as string;
-      this.forfeitBtnShow = true;
+      this.menuButtonShow = true;
     })
   },
+  methods: {
+    handleSelect(option: InGameMenuSelectOptions) {
+      console.log('Selected option:', option);
+      switch (option) {
+        case 'Forfeit':
+          this.forfeit()
+          break;
+        case 'Options':
+          break;
+        
+        default:
+          /* Do nothing */
+          break;
+      }
+      this.isMenuOpen = false;
+    },
+    forfeit(){
+      const data: ForfeitData = { userId: this.cookies.get('userId'), roomId: this.cookies.get('roomId') }
+      SocketInstance.emit('forfeit', data);
+      this.cookies.remove('roomId')
+      this.cookies.remove('userId')
+      window.location.reload();
+    }
+  }
 })
 </script>
 
@@ -45,32 +76,29 @@ export default defineComponent({
   position: fixed;
   width: 100%;
   z-index: 1000;
-  background-image: url("@/assets/header/upperNavHeader3.jpg");
-  background-position: center;
+  /* background-image: url("@/assets/header/upperNavHeader3.jpg");
+  background-position: center; */
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
   height: 6%;
-  object-fit: fill;
+  /* object-fit: fill; */
   /* Ensures the image covers the specified height and width */
 }
+
 .welcome-message-container {
   position: absolute;
   width: 33%;
   height: 100%;
   top: 25%;
 }
-.queue-container {
-  position: absolute;
-  width: 33%;
-  height: 100%;
-  left: 33%;
-}
 
-.forfeit-container {
+.menu-container {
   position: absolute;
-  width: 33%;
+  width: 10%;
   height: 100%;
   right: 0%;
 }
-.forfeit-btn-alignment{
+
+.forfeit-btn-alignment {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -87,20 +115,16 @@ export default defineComponent({
   height: 100%;
 }
 
-.message {
-  font-family: 'Cinzel', serif;
-  color: #D4AF37;
-  font-weight: bold;
-  font-size: large;
-  /* Soft Gold color for buttons or specific text */
-  background-color: rgba(0, 0, 0, .3);
-  /* Ensure background doesn't override */
-
-  /* Gold border to enhance button design */
-  padding: 10px 20px;
-  /* Make the text stand out more */
+.mystical-link {
+  position: relative;
+  font-family: 'Palatino', 'Garamond', 'Georgia', 'Times New Roman', serif;
+  font-size: 24px;
+  color: #d4af37;
+  /* Golden mystical color */
+  text-decoration: none;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+  text-shadow: 0 0 8px rgba(212, 175, 55, 0.8), 0 0 15px rgba(255, 255, 255, 0.2);
   letter-spacing: 1px;
-  /* Slight letter spacing for a classic feel */
-  cursor: pointer;
+  cursor: default;
 }
 </style>

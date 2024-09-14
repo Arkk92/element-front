@@ -1,14 +1,6 @@
 <template>
-  <!-- <div class="alert alert-danger" role="alert" v-show="showingError">
-    {{ error }}
-  </div> -->
   <div class="room-container">
-    <div class="background-video-div">
-      <video class="background-video" autoplay muted loop id="background-video" playbackRate="1">
-        <!-- <source src="@/assets/background/background-animated.mp4" type="video/mp4"> -->
-        <source src="@/assets/background/mystical-background.mp4" type="video/mp4">
-      </video>
-    </div>
+    <Background/>
     <div v-if="data_ready" class="room-layout">
   
       <div class="container-fluid full-height-container">
@@ -42,10 +34,7 @@
   
     </div>
     <div class="room-layout" v-else>
-      <div class="info-game-title-wrapper">
-        <span class="mystical-text" data-text="Element Online">Element Online</span>
-      </div>
-      <!-- <a href="https://ratherdashinggames.com/games/element.html" target="_blank">Find the rules here!</a> -->
+      <MainMenu/>
     </div>
   </div>
 </template>
@@ -61,6 +50,8 @@ import ChatLayout from './chatLayout.vue';
 import WinnerLayout from './WinnerLayout.vue';
 import PlayerActionsLayout from './playerActionsLayout.vue';
 import Logger from '@/composables/Logger.vue';
+import Background from '@/components/Background.vue';
+import MainMenu from '@/composables/MainMenu/MainMenu.vue';
 
 let room: RoomModel;
 
@@ -72,7 +63,9 @@ export default defineComponent({
     ChatLayout,
     WinnerLayout,
     PlayerActionsLayout,
-    Logger
+    Logger,
+    Background,
+    MainMenu
   },
   setup() {
     const { cookies } = useCookies();
@@ -159,63 +152,13 @@ export default defineComponent({
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.info {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.room-container {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.room-info-background-image {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
-.info-game-title-wrapper {
-  position: absolute;
-  width: 100%;
-  height: 30%;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: rgba(0, 0, 0, 0.5);
-}
 
 .room-layout {
-  background-color: #1b2126;
-  width: 100%;
-  min-height: 100%;
-  max-height: 100%;
-}
-
-.background-video-div {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   width: 100%;
-  height: 100%;
-}
-
-.background-video {
-  position: relative;
-  top: 0;
-  min-width: 100%;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  
+  top: 6%;
+  height: 88%;
+  min-height: 88%;
 }
 
 .overlay-column {
@@ -263,24 +206,4 @@ export default defineComponent({
   width: 100%;
 }
 
-.mystical-text {
-  font-family: 'Cinzel', serif;
-  font-weight: bold;
-  /* Use Cinzel font */
-  font-size: 48px;
-  /* Adjust size as needed */
-  color: #FFD700;
-  /* Light Gold color */
-  text-shadow: 2px 2px 5px #4B0082;
-  /* Deep purple shadow */
-  text-transform: uppercase;
-  text-align: center;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  line-height: 1.2;
-  white-space: nowrap;
-  cursor: pointer;
-}
 </style>

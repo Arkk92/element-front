@@ -28,7 +28,7 @@ export default defineComponent({
   data() {
     return {
       data_ready: false,
-      state: 'None' as EmptyType
+      state: 'None' as EmptyType,
     }
   },
   mounted() {
@@ -65,7 +65,9 @@ export default defineComponent({
     },
     emptySelected(): void {
       if (this.state == 'Red') {
-        Emitter.emit('sagePositionDestination', this.piece!.position)
+        this.$nextTick(()=>{
+          Emitter.emit('sagePositionDestination', this.piece!.position)
+        })
       }
     },
     getEmptyType(): string {
