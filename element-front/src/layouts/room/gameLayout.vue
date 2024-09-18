@@ -10,7 +10,6 @@
 import { GameModel } from '@/game/models/game';
 import { defineComponent } from 'vue';
 import BoardLayout from './boardLayout.vue';
-import { BoardModel } from '@/game/models/board';
 
 export default defineComponent({
   name: 'GameLayout',
@@ -26,7 +25,6 @@ export default defineComponent({
   data() {
     return {
       turnPlayerNumber: this.isUserTurn ? this.game?.turn.player : -1,
-      reactBoard: new BoardModel()
     }
   },
   watch: {
