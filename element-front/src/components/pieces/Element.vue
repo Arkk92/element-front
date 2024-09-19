@@ -1,8 +1,8 @@
 <template>
   <div class="element">
-    <div class="element-piece col cells" style="padding: 0;" v-if="data_ready">
+    <div class="element-piece col cells" style="padding: 0;" v-if="data_ready" :class="getCssClass()">
       <img class="boxMarker" :src="getBoxMarkerImage()">
-      <img class="pieces" :src="getImage()" style="opacity: 100%;" :class="getCssClass()">
+      <img class="pieces" :src="getImage()" style="opacity: 100%;" :class="state=='RiverHead'?'river-head':''">
       <span v-if="isWind()" class="wind-counter">
         {{ (piece as any).stacked_winds }}
       </span>
@@ -11,7 +11,7 @@
         <button class="overlay-button cancel" @click.stop="handleRiverHeadAction('Cancel')">
           ❌
         </button>
-    
+
         <!-- Undo Button (Top Right) -->
         <button class="overlay-button undo" @click.stop="handleRiverHeadAction('Undo')">
           ⏪
@@ -30,8 +30,8 @@ import { Emitter } from '@/main';
 import { Position, PositionUtils } from '@/game/utils/position_utils';
 import { River } from '../PlayerMenu/types';
 
-type WaterType = 'RiverHead' | 'River'
-type ElementFrontType = 'None' | WaterType
+type WaterType = 'RiverHead' | 'River';
+type ElementFrontType = 'None' | WaterType | 'ReplaceableFire';
 
 export default defineComponent({
   name: 'ElementPieceComponent',
@@ -55,17 +55,21 @@ export default defineComponent({
     })
 
     Emitter.on('riverHead', (position) => {
-      
-      if(PositionUtils.isSamePosition(this.piece!.position, position as Position)){
+
+      if (PositionUtils.isSamePosition(this.piece!.position, position as Position)) {
         this.state = 'RiverHead'
       }
     })
 
     Emitter.on('NewRiverAvailablePlacement', (position) => {
-      console.log('NewRiverAvailablePlacement')
-      console.log(`${JSON.stringify(this.piece!.position)} == ${JSON.stringify(position)}`)
+      if (this.piece!.element_type == ElementTypes.Fire){
+        if (PositionUtils.isStrictOrthogonalPosition(this.piece!.position, position as Position)){
+          this.state = 'ReplaceableFire';
+        }else {
+          this.state = 'None';
+        }
+      }
       this.showOverlay = PositionUtils.isSamePosition(this.piece!.position, position as Position);
-      console.log(this.showOverlay)
     })
 
     Emitter.on('oldRiverDisplay', (river) => {
@@ -112,8 +116,8 @@ export default defineComponent({
         case 'River':
           cssClass = 'moveAvailable';
           break;
-        case 'RiverHead':
-          cssClass = 'river-head';
+        case 'ReplaceableFire':
+          cssClass = 'replaceable-fire';
           break;
         default:
           cssClass = '';
@@ -121,7 +125,7 @@ export default defineComponent({
       }
       return cssClass;
     },
-    handleRiverHeadAction(action: string){
+    handleRiverHeadAction(action: string) {
       Emitter.emit(`river${action}`);
     }
   },
@@ -136,6 +140,7 @@ export default defineComponent({
   aspect-ratio: 1/1;
 
 }
+
 .river-head {
   opacity: 0.5 !important;
 }
@@ -166,6 +171,10 @@ export default defineComponent({
 
 .moveAvailable {
   background-color: rgb(168, 168, 44);
+}
+
+.replaceable-fire {
+  background-color: rgba(255, 255, 0, 0.2);
 }
 
 .shinning-fade {
@@ -252,6 +261,7 @@ export default defineComponent({
   justify-content: center;
   align-items: center;
   z-index: 11;
+  opacity: 1;
 }
 
 .overlay-button {
