@@ -54,9 +54,6 @@ export default defineComponent({
     if (this.cookies.get("roomId") != null) {
       this.roomId = this.cookies.get("roomId")
     }
-    if (this.roomId !== "") {
-      this.queueStatus = 'Playing';
-    }
 
     SocketInstance.on("gameFound", (data: GameFound) => {
       this.joinGame(data.roomId);
@@ -74,7 +71,9 @@ export default defineComponent({
       this.username += "-" + SocketInstance!.id.slice(0, 4);
       console.log(this.roomId)
       console.log(this.username)
-      SocketInstance.emit("joinGame", { roomId: this.roomId, username: this.username })
+      this.$nextTick( () => {
+        SocketInstance.emit("joinGame", { roomId: this.roomId, username: this.username })
+      })
       this.queueStatus = 'Playing';
       Emitter.emit('usernameChange', this.username)
     },

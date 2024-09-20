@@ -1,11 +1,23 @@
 <template>
-  <div class="element-piece col cells" style="padding: 0;" v-if="data_ready" :class="getCssClass()">
-    <img class="boxMarker" :src="getBoxMarkerImage()">
-    <img class="pieces" :src="getImage()" style="opacity: 100%;">
-    <span v-if="isWind()" class="wind-counter">
-      {{ (piece as WindModel).stacked_winds }}
-    </span>
+  <div class="element">
+    <div class="element-piece col cells" style="padding: 0;" v-if="data_ready" :class="getCssClass()">
+      <img class="boxMarker" :src="getBoxMarkerImage()">
+      <img class="pieces" :src="getImage()" style="opacity: 100%;" :class="state=='RiverHead'?'river-head':''">
+      <span v-if="isWind()" class="wind-counter">
+        {{ (piece as any).stacked_winds }}
+      </span>
+      <div v-if="showOverlay" class="river-head-overlay">
+        <!-- Cancel Button (Top Left) -->
+        <button class="overlay-button cancel" @click.stop="handleRiverHeadAction('Cancel')">
+          ❌
+        </button>
 
+        <!-- Undo Button (Top Right) -->
+        <button class="overlay-button undo" @click.stop="handleRiverHeadAction('Undo')">
+          ⏪
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -13,21 +25,21 @@
 import { ElementModel, ElementTypes } from '@/game/models/elements/elements';
 import { defineComponent } from 'vue';
 import type { PropType } from 'vue'
-import { WindModel } from '@/game/models/elements/wind';
 import { EarthModel } from '@/game/models/elements/earth';
 import { Emitter } from '@/main';
 import { Position, PositionUtils } from '@/game/utils/position_utils';
 import { River } from '../PlayerMenu/types';
 
-type WaterType = 'RiverHead' | 'River'
-type ElementFrontType = 'None' | WaterType
+type WaterType = 'RiverHead' | 'River';
+type ElementFrontType = 'None' | WaterType | 'ReplaceableFire';
 
 export default defineComponent({
   name: 'ElementPieceComponent',
   data() {
     return {
       data_ready: false,
-      state: 'None' as ElementFrontType
+      state: 'None' as ElementFrontType,
+      showOverlay: false,
     }
   },
   props: {
@@ -43,9 +55,21 @@ export default defineComponent({
     })
 
     Emitter.on('riverHead', (position) => {
+
       if (PositionUtils.isSamePosition(this.piece!.position, position as Position)) {
-        this.state = 'RiverHead';
+        this.state = 'RiverHead'
       }
+    })
+
+    Emitter.on('NewRiverAvailablePlacement', (position) => {
+      if (this.piece!.element_type == ElementTypes.Fire){
+        if (PositionUtils.isStrictOrthogonalPosition(this.piece!.position, position as Position)){
+          this.state = 'ReplaceableFire';
+        }else {
+          this.state = 'None';
+        }
+      }
+      this.showOverlay = PositionUtils.isSamePosition(this.piece!.position, position as Position);
     })
 
     Emitter.on('oldRiverDisplay', (river) => {
@@ -82,6 +106,9 @@ export default defineComponent({
     isWind(): boolean {
       return this.piece?.element_type == ElementTypes.Wind
     },
+    isWater(): boolean {
+      return this.piece?.element_type == ElementTypes.Water
+    },
 
     getCssClass(): string {
       let cssClass: string;
@@ -89,21 +116,20 @@ export default defineComponent({
         case 'River':
           cssClass = 'moveAvailable';
           break;
-        case 'RiverHead':
-          cssClass = 'riverHead';
+        case 'ReplaceableFire':
+          cssClass = 'replaceable-fire';
           break;
         default:
           cssClass = '';
           break;
       }
       return cssClass;
+    },
+    handleRiverHeadAction(action: string) {
+      Emitter.emit(`river${action}`);
     }
   },
 })
-</script>
-
-<script setup lang="ts">
-
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
@@ -115,6 +141,9 @@ export default defineComponent({
 
 }
 
+.river-head {
+  opacity: 0.5 !important;
+}
 
 .pieces {
   box-sizing: border-box;
@@ -141,12 +170,11 @@ export default defineComponent({
 }
 
 .moveAvailable {
-  background-color: rgb(168, 168, 44) ;
+  background-color: rgb(168, 168, 44);
 }
 
-.riverHead {
-  background-color: red;
-  opacity: 20%;
+.replaceable-fire {
+  background-color: rgba(255, 255, 0, 0.2);
 }
 
 .shinning-fade {
@@ -170,13 +198,15 @@ export default defineComponent({
 
 @keyframes availableFadeIn {
   0% {
-    background-color: rgb(255, 255, 0, 0.2) ;
+    background-color: rgb(255, 255, 0, 0.2);
   }
+
   50% {
-    background-color: rgb(255, 255, 0, .6) ;
+    background-color: rgb(255, 255, 0, .6);
   }
+
   100% {
-    background-color: rgb(255, 255, 0, 0.2) ;
+    background-color: rgb(255, 255, 0, 0.2);
   }
 }
 
@@ -196,7 +226,7 @@ export default defineComponent({
   opacity: 1;
   animation: hoverResizing 1s;
   animation-iteration-count: infinite;
-  
+
 }
 
 .boxMarker:active {
@@ -211,13 +241,63 @@ export default defineComponent({
     width: 100%;
     height: 100%;
   }
+
   50% {
     width: 70%;
     height: 70%;
   }
+
   100% {
     width: 100%;
     height: 100%;
   }
+}
+
+.river-head-overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 11;
+  opacity: 1;
+}
+
+.overlay-button {
+  position: absolute;
+  width: 45%;
+  font-size: 16px;
+  font-weight: bold;
+  border: 2px solid #ff7043;
+  border-radius: 8px;
+  background-color: #29293a;
+  color: white;
+  cursor: pointer;
+  text-shadow: 0 0 5px #fff, 0 0 10px #ff5722;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.overlay-button:hover {
+  transform: scale(1.05);
+}
+
+.cancel {
+  top: 0;
+  left: 0;
+  text-shadow: 0 0 5px #ff3a3a, 0 0 10px #ff0000;
+  box-shadow: 0 0 10px #ff0000, 0 0 15px #ff3a3a;
+}
+
+.undo {
+  top: 0;
+  right: 0;
+  text-shadow: 0 0 5px #3a9df2, 0 0 10px #007bff;
+  box-shadow: 0 0 10px #007bff, 0 0 15px #3a9df2;
+}
+
+.overlay-button:active {
+  transform: scale(0.95);
 }
 </style>

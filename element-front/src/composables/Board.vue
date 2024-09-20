@@ -62,6 +62,14 @@ export default defineComponent({
         }
       }
     })
+    Emitter.on('riverCancel', () => {
+      this.waterUtils?.resetBuldingRiver(this.board!);
+    })
+    Emitter.on('riverUndo', () => {
+      this.waterUtils!.waterElementSM = 'Undoing';
+      this.waterUtils?.undoRiverBuildingStep(this.board!);
+      this.waterUtils!.waterElementSM = 'PlacingNewRiver';
+    })
   },
   methods: {
     isWizardCell(cell: PieceTypes): boolean {
