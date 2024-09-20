@@ -6,11 +6,12 @@
     </div>
     <div class="find-game-wrapper" v-else>
       <NavButton class="queue-status-button" :text="queueStatus" :disabled="true" />
-      <NavButton class="cancel-queue" v-on:click="cancelQueue()" :text="'Cancel'" :disabled="false" />
     </div>
   </div>
   <PlayMenuModal :isOpen="isMenuOpen" @close="isMenuOpen = false" @start-game="startLookingForGame"
     @select="handleSelect" />
+  <JoinGameModal :isOpen="isJoinGameOpen" :game-found="queueStatus == 'GameFound'" @close="isJoinGameOpen = false"
+    @join-game="joinGame" @cancel-search="cancelQueue" />
 </template>
 
 <script lang="ts">
@@ -20,15 +21,17 @@ import { GameFound, Queue, UserAuthData } from '@/sockets/socketUtils';
 import { useCookies } from "vue3-cookies";
 import NavButton from '@/components/NavButton.vue';
 import PlayMenuModal from '@/components/PlayMenuModal.vue';
+import JoinGameModal from '@/components/JoinGameModal.vue';
 
-type QueueStatus = "Play" | "Searching game..." | "Playing";
+type QueueStatus = "Play" | "Searching game..." | "GameFound" | "Joining";
 type QueueTypes = 'none' | 'queue2' | 'queue3' | 'queue4'
 
 export default defineComponent({
   name: 'QueueComponent',
   components: {
     NavButton,
-    PlayMenuModal
+    PlayMenuModal,
+    JoinGameModal,
   },
   setup() {
     const { cookies } = useCookies();
@@ -46,6 +49,7 @@ export default defineComponent({
       username: "Guest",
       usernameError: '',
       isMenuOpen: false,
+      isJoinGameOpen: false,
 
     }
   },
@@ -56,7 +60,8 @@ export default defineComponent({
     }
 
     SocketInstance.on("gameFound", (data: GameFound) => {
-      this.joinGame(data.roomId);
+      this.queueStatus = 'GameFound';
+      this.roomId = data.roomId;
     })
 
     SocketInstance.on('userAuthData', (data: UserAuthData) => {
@@ -65,22 +70,21 @@ export default defineComponent({
     })
   },
   methods: {
-    joinGame(roomId: string): void {
-      this.roomId = roomId;
+    joinGame(): void {
+      this.isJoinGameOpen = false;
       Emitter.emit('drawType', this.drawType);
       this.username += "-" + SocketInstance!.id.slice(0, 4);
-      console.log(this.roomId)
-      console.log(this.username)
-      this.$nextTick( () => {
-        SocketInstance.emit("joinGame", { roomId: this.roomId, username: this.username })
-      })
-      this.queueStatus = 'Playing';
+
+      SocketInstance.emit("joinGame", { roomId: this.roomId, username: this.username })
+
+      this.queueStatus = 'Joining';
       Emitter.emit('usernameChange', this.username)
     },
 
     cancelQueue(): void {
       this.queueStatus = 'Play';
-      if(this.queueType === 'none'){
+      this.isJoinGameOpen = false;
+      if (this.queueType === 'none') {
         return;
       }
       SocketInstance.emit('cancelQueue', this.queueType as Queue)
@@ -108,10 +112,11 @@ export default defineComponent({
           break;
       }
       this.isMenuOpen = false;
-      if(this.queueType === 'none'){
+      if (this.queueType === 'none') {
         this.queueStatus = 'Play';
         return;
       }
+      this.isJoinGameOpen = true;
       this.queueStatus = 'Searching game...';
       SocketInstance.emit("onQueue", this.queueType as Queue);
     }
@@ -128,17 +133,20 @@ export default defineComponent({
   width: 100%;
   height: 100%;
 }
-.find-game-wrapper{
+
+.find-game-wrapper {
   position: relative;
   height: 100%;
   width: 100%;
 }
-.queue-status-button{
+
+.queue-status-button {
   position: absolute;
   width: 100%;
   left: 0;
 }
-.cancel-queue{
+
+.cancel-queue {
   position: absolute;
   width: 30%;
   left: 72%;
