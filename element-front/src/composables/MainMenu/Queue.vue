@@ -1,15 +1,18 @@
 <template>
   <div class="queue">
     <!-- Button trigger modal -->
-    <div v-if="(queueStatus == 'Play')">
+    <div v-if="(queueStatus == 'Quick Play')">
       <NavButton v-on:click="isMenuOpen = true" :text="queueStatus" />
+    </div>
+    <div v-else-if="(queueStatus == 'Ranked Match')">
+      <NavButton v-on:click="isMenuOpen = false" :text="queueStatus" :disabled="true" />
     </div>
     <div class="find-game-wrapper" v-else>
       <NavButton class="queue-status-button" :text="queueStatus" :disabled="true" />
     </div>
   </div>
   <PlayMenuModal :isOpen="isMenuOpen" @close="isMenuOpen = false" @start-game="startLookingForGame"
-    @select="handleSelect" />
+    @username="handleUsernameChange" :is-competitive="queueStatus == 'Ranked Match'"/>
   <JoinGameModal :isOpen="isJoinGameOpen" :game-found="queueStatus == 'GameFound'" @close="isJoinGameOpen = false"
     @join-game="joinGame" @cancel-search="cancelQueue" />
 </template>
@@ -23,7 +26,7 @@ import NavButton from '@/components/NavButton.vue';
 import PlayMenuModal from '@/components/PlayMenuModal.vue';
 import JoinGameModal from '@/components/JoinGameModal.vue';
 
-type QueueStatus = "Play" | "Searching game..." | "GameFound" | "Joining";
+type QueueStatus = "Quick Play" | "Ranked Match" | "Searching game..." | "GameFound" | "Joining";
 type QueueTypes = 'none' | 'queue2' | 'queue3' | 'queue4'
 
 export default defineComponent({
@@ -32,6 +35,12 @@ export default defineComponent({
     NavButton,
     PlayMenuModal,
     JoinGameModal,
+  },
+  props: {
+    isRanked: {
+      type: Boolean,
+      default: false,
+    }
   },
   setup() {
     const { cookies } = useCookies();
@@ -42,7 +51,7 @@ export default defineComponent({
   },
   data() {
     return {
-      queueStatus: "Play" as QueueStatus,
+      queueStatus: "Quick Play" as QueueStatus,
       queueType: "none" as QueueTypes,
       roomId: "",
       drawType: 'random',
@@ -50,7 +59,6 @@ export default defineComponent({
       usernameError: '',
       isMenuOpen: false,
       isJoinGameOpen: false,
-
     }
   },
   mounted() {
@@ -58,6 +66,7 @@ export default defineComponent({
     if (this.cookies.get("roomId") != null) {
       this.roomId = this.cookies.get("roomId")
     }
+    this.queueStatus = this.isRanked ? 'Ranked Match' : 'Quick Play';
 
     SocketInstance.on("gameFound", (data: GameFound) => {
       this.queueStatus = 'GameFound';
@@ -73,16 +82,15 @@ export default defineComponent({
     joinGame(): void {
       this.isJoinGameOpen = false;
       Emitter.emit('drawType', this.drawType);
-      this.username += "-" + SocketInstance!.id.slice(0, 4);
 
       SocketInstance.emit("joinGame", { roomId: this.roomId, username: this.username })
 
       this.queueStatus = 'Joining';
-      Emitter.emit('usernameChange', this.username)
+      Emitter.emit('joinGame')
     },
 
     cancelQueue(): void {
-      this.queueStatus = 'Play';
+      this.queueStatus = 'Quick Play';
       this.isJoinGameOpen = false;
       if (this.queueType === 'none') {
         return;
@@ -90,13 +98,11 @@ export default defineComponent({
       SocketInstance.emit('cancelQueue', this.queueType as Queue)
     },
 
-    handleSelect(option: string) {
-      console.log('Selected option:', option);
-      this.isMenuOpen = false;
+    handleUsernameChange(username: string) {
+      this.username = username;
     },
 
     startLookingForGame(numPlayers: number) {
-      console.log(`Looking for a game room for ${numPlayers} players...`);
       switch (numPlayers) {
         case 2:
           this.queueType = 'queue2'
@@ -113,8 +119,11 @@ export default defineComponent({
       }
       this.isMenuOpen = false;
       if (this.queueType === 'none') {
-        this.queueStatus = 'Play';
+        this.queueStatus = 'Quick Play';
         return;
+      }
+      if(this.username===''){
+        this.username = 'Guest-' + SocketInstance.id.slice(0,4);
       }
       this.isJoinGameOpen = true;
       this.queueStatus = 'Searching game...';
