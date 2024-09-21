@@ -69,6 +69,7 @@ export default defineComponent({
         },
         onResetView(){
             this.selectedElement = NON_SELECTED;
+            this.$emit('elementClickedIndex', NON_SELECTED);
         }
 
     }
