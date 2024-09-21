@@ -26,7 +26,7 @@ import NavButton from '@/components/NavButton.vue';
 import PlayMenuModal from '@/components/PlayMenuModal.vue';
 import JoinGameModal from '@/components/JoinGameModal.vue';
 
-type QueueStatus = "Quick Play" | "Ranked Match" | "Searching game..." | "GameFound" | "Joining";
+type QueueStatus = "Quick Play" | "Ranked Match" | "GameFound" | "Joining";
 type QueueTypes = 'none' | 'queue2' | 'queue3' | 'queue4'
 
 export default defineComponent({
@@ -69,6 +69,9 @@ export default defineComponent({
     this.queueStatus = this.isRanked ? 'Ranked Match' : 'Quick Play';
 
     SocketInstance.on("gameFound", (data: GameFound) => {
+      if(this.isRanked){
+        return;
+      }
       this.queueStatus = 'GameFound';
       this.roomId = data.roomId;
     })
@@ -112,7 +115,7 @@ export default defineComponent({
 
       if(!this.isOfQueueTypes(queueType)){
         this.queueType = 'none'
-        this.queueStatus = 'Quick Play';
+        this.queueStatus = this.isRanked ? 'Ranked Match' : 'Quick Play';
         return;
       } else {
         this.queueType = queueType;
@@ -123,7 +126,6 @@ export default defineComponent({
         this.username = 'Guest-' + SocketInstance.id.slice(0, 4);
       }
       this.isJoinGameOpen = true;
-      this.queueStatus = 'Searching game...';
       SocketInstance.emit("onQueue", this.queueType as Queue);
     }
 
