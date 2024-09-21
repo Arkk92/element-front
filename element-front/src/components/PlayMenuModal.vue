@@ -3,8 +3,17 @@
 
     <div v-if="isOpen" class="modal-backdrop" @click="closeModal">
       <div class="modal-content" @click.stop>
-        <h2>Play Menu</h2>
-        
+        <h2 v-if="isCompetitive">Ranked Match</h2>
+        <h2 v-else>Quick Play</h2>
+
+        <div v-if="!isCompetitive" class="input-container">
+          <!-- Label for Username Input -->
+          <label for="username" class="input-label">Enter Your Username</label>
+
+          <!-- Username Input Field -->
+          <input id="username" type="text" class="input-box" v-model="username" placeholder="Your name here..." />
+        </div>
+
         <!-- Player Selector -->
         <div class="player-selector">
           <label for="num-players">Select type of match:</label>
@@ -22,17 +31,12 @@
             </select>
           </div>
         </div>
-  
+
         <!-- Start Game Button -->
         <button class="start-game-button" @click="startGame">
-          <span class="button-icon">⚡</span> 
+          <span class="button-icon">⚡</span>
           Play
         </button>
-  
-        <!-- <ul class="menu-options">
-          <li @click="selectOption('Options')">Options</li>
-          <li @click="selectOption('Exit')">Exit</li>
-        </ul> -->
       </div>
     </div>
   </Teleport>
@@ -48,27 +52,33 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    isCompetitive: {
+      type: Boolean,
+      default: false,
+    }
   },
   setup(props, { emit }) {
     const selectedPlayers = ref(2);
+    const username = ref('');
 
     const closeModal = () => {
       emit('close');
     };
 
     const startGame = () => {
+      if (!props.isCompetitive){
+        emit('username', username.value);
+      }
       emit('start-game', selectedPlayers.value);
     };
 
-    const selectOption = (option: string) => {
-      emit('select', option);
-    };
+
 
     return {
       selectedPlayers,
+      username,
       closeModal,
       startGame,
-      selectOption,
     };
   },
 });
@@ -196,32 +206,53 @@ select option span {
   from {
     text-shadow: 0 0 10px #ffffff, 0 0 20px #ff7043;
   }
+
   to {
     text-shadow: 0 0 20px #ff7043, 0 0 30px #ff5722;
   }
 }
 
-ul.menu-options {
-  list-style: none;
-  padding: 0;
-  margin: 30px 0 0;
+.input-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px 0;
+  position: relative;
 }
 
-ul.menu-options li {
-  margin: 10px 0;
-  padding: 12px;
-  cursor: pointer;
-  border: 2px solid transparent;
+.input-label {
   font-size: 18px;
   font-weight: bold;
-  transition: all 0.3s ease;
-  color: #ffffff;
+  color: #f4e0b7;
+  margin-bottom: 10px;
+  text-shadow: 0 0 10px #ff7043, 0 0 20px #ff7043;
+  font-family: 'Cinzel', serif;
 }
 
-ul.menu-options li:hover {
+.input-box {
+  width: 300px;
+  padding: 12px;
+  font-size: 16px;
   border: 2px solid #ff7043;
-  color: #ff7043;
-  text-shadow: 0 0 5px #ff7043, 0 0 10px #ff5722;
+  border-radius: 8px;
+  background-color: #29293a;
+  color: #fff;
+  outline: none;
+  text-align: center;
+  text-shadow: 0 0 5px #fff;
+  box-shadow: 0 0 10px #ff7043, 0 0 15px rgba(255, 112, 67, 0.6);
+  transition: all 0.3s ease;
+}
+
+.input-box::placeholder {
+  color: #bbb;
+  text-align: center;
+  opacity: 0.7;
+}
+
+.input-box:focus {
+  border-color: #ff5722;
+  box-shadow: 0 0 15px #ff5722, 0 0 20px rgba(255, 112, 67, 0.9);
   transform: scale(1.05);
 }
 </style>
