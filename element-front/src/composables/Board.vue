@@ -63,7 +63,8 @@ export default defineComponent({
       }
     })
     Emitter.on('riverCancel', () => {
-      this.waterUtils?.resetBuldingRiver(this.board!);
+      this.waterUtils?.cancelBuildingRiver(this.board!);
+      Emitter.emit('resetPlayerMenu');
     })
     Emitter.on('riverUndo', () => {
       this.waterUtils!.waterElementSM = 'Undoing';
