@@ -176,6 +176,20 @@ class WaterUtils {
     })
   }
 
+  cancelBuildingRiver(board: BoardModel): void {
+    this.restoreNewRiver(board);
+    this.restoreOldRiver(board);
+    const gridController: GridController = new GridController(board.grid);
+    gridController.clearCell(this.placedWater.position)
+    nextTick(()=>{
+      // Negative positions to reset empty spaces
+      Emitter.emit('NewRiverAvailablePlacement', {row: -2, column: -2});
+      this.waterElementSM = "None";
+      Emitter.emit('sysLog', `River cancelled`)
+    })
+
+  }
+
   undoRiverBuildingStep(board: BoardModel): void {
     const gridController: GridController = new GridController(board.grid);
     if(this.newRiver.length == 0){
