@@ -52,10 +52,11 @@ export default defineComponent({
 .background-video {
   position: relative;
   top: 0;
-  width: 110%;
+  min-width: 110%;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 1;
+  min-height: 80%;
 }
 </style>
