@@ -4,7 +4,7 @@
       <span class="welcome-message mystical-link">Welcome, {{ username }}</span>
     </div>
     <div class="menu-container">
-      <NavButton  v-on:click="isMenuOpen = true" :text="'Menu'" />
+      <NavButton  v-if="menuButtonShow" v-on:click="isMenuOpen = true" :text="'Menu'" />
     </div>
   </div>
   <InGameMenuModal :isOpen="isMenuOpen" @close="isMenuOpen = false" @select="handleSelect" />
@@ -38,10 +38,14 @@ export default defineComponent({
     }
   },
   mounted() {
-    Emitter.on('usernameChange', (username) => {
-      this.username = username as string;
+    Emitter.on('joinGame', ()=> {
       this.menuButtonShow = true;
     })
+    // Emitter.on('usernameChange', (username) => {
+    //   this.username = username as string;
+    //   this.menuButtonShow = true;
+    //   this.cookies.set('userId', username as string)
+    // })
   },
   methods: {
     handleSelect(option: InGameMenuSelectOptions) {
