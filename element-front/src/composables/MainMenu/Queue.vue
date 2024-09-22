@@ -123,7 +123,7 @@ export default defineComponent({
       this.isMenuOpen = false;
       
       if (this.username === '') {
-        this.username = 'Guest-' + SocketInstance.id.slice(0, 4);
+        this.username = 'Guest-' + SocketInstance!.id.slice(0, 4);
       }
       this.isJoinGameOpen = true;
       SocketInstance.emit("onQueue", this.queueType as Queue);
