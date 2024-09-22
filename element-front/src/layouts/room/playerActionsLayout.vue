@@ -1,46 +1,29 @@
 <template>
   <div class="player-actions-layout">
-    <div v-if="isDrawingElements()">
-      <DrawElementsAction
-      :element-pool-manager="elementPoolManager"
-      :room-id="roomId"
-      ></DrawElementsAction>
+
+    <div class="d-flex actions">
+      <PlayerMenu :element-pool-manager="elementPoolManager" :room-id="roomId" :turn="turn" :player="player"/>
     </div>
-    <div v-else-if="isMovementsAvailable()">
-      <MovesAvailables
-      :turn="turn"
-      :room-id="roomId"
-      :player="player"
-      ></MovesAvailables>
-    </div>
-    <div v-else>
-      END OF TURN
-    </div>
+
   </div>
 </template>
 
 <script lang="ts">
 import { ElementPoolManagerModel } from '@/game/models/element_pool';
-import { TurnModel, TurnStates } from '@/game/models/turn';
-import MovesAvailables from '@/components/MovesAvailables.vue'
-import DrawElementsAction from '@/components/DrawElements.vue'
+import { TurnModel } from '@/game/models/turn';
 import { defineComponent } from 'vue';
-import { PlayerModel } from '@/game/models/player';
+import PlayerMenu from '@/composables/PlayerMenu.vue';
 
 export default defineComponent({
   name: 'PlayerActionsLayout',
   components: {
-    MovesAvailables,
-    DrawElementsAction,
-  },
-  enums: {
-    TurnStates,
+    PlayerMenu
   },
   props: {
     turn: TurnModel,
     elementPoolManager: ElementPoolManagerModel,
     roomId: String,
-    player: PlayerModel,
+    player: String,
   },
   data() {
     return {
@@ -48,19 +31,32 @@ export default defineComponent({
     }
   },
   methods: {
-    isDrawingElements(): boolean {
-      return this.turn!.state == TurnStates.DrawingElements;
-    },
-    isMovementsAvailable(): boolean {
-      return this.turn!.state == TurnStates.MovesAvailables;
-    },
-    isEndTurn(): boolean {
-      return this.turn!.state == TurnStates.EndTurn;
-    }
   }
 })
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.player-actions-layout {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  /* background-color: #2a2d32;
+  color: white; */
+  border-radius: 10px;
+  width: 100%;
+  height: 100%;
+  background-image: url("@/assets/background/WizardBook.png");
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.actions {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 </style>

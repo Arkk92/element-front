@@ -1,21 +1,19 @@
 <template>
   <div class="user-layout">
-    User list:
+
     <div class="list-group" v-if="data_ready">
-      <a class="list-group-item list-group-item-action disabled" v-for="user in userList" :key="user"
-        :class="(user.uuid === currentUserId) ? 'active' : ''"
-        :aria-current="(user.uuid === currentUserId) ? 'true' : 'false'">
-        <div class="row justify-content-between">
-          <div class="col">
-            <img class="wizardSmall" :src="getImage(getPlayerNumberByUserId(user.uuid))">
-          </div>
-          
+      <a class="list-group-item list-group-item-action disabled user-box border-1" v-for="user in userList" :key="user"
+        :class="getUserBoxClassByUser(user)" :aria-current="(user.uuid === currentUserId) ? 'true' : 'false'">
+        <div class="overlay-info">
           <h5 class="col">{{ user.name }}</h5>
+          <p class="mb-1" v-if="user.uuid === turnUserId">{{ getTurnState() }}</p>
+          <p class="mb-1" v-else>Waiting...</p>
+          <i v-if="isTarget(user.uuid)" class="bi-bullseye target" role="img" aria-label="target"></i>
+          <small> Player number: {{ getPlayerNumberByUserId(user.uuid) }}</small>
         </div>
-        <p class="mb-1" v-if="user.uuid === turnUserId">{{ getTurnState() }}</p>
-        <p class="mb-1" v-else>Waiting...</p>
-        <i v-if="isTarget(user.uuid)" class="bi-bullseye target" role="img" aria-label="target"></i>
-        <small> Player number: {{ getPlayerNumberByUserId(user.uuid) }}</small>
+        <div class="wizard-wrap">
+          <img class="wizard" :src="getImage(getPlayerNumberByUserId(user.uuid))">
+        </div>
       </a>
     </div>
   </div>
@@ -73,24 +71,36 @@ export default defineComponent({
     getPlayerNumberByUserId(userId: string): number {
       const playerId: string = this.userToPlayerMap!.filter(map => map.user_uuid === userId)[0].player_uuid;
       return this.playerList!.filter(player => player.uuid === playerId)[0].player_number;
-      
+
     },
     getImage(playerNumber: number): any {
       switch (playerNumber) {
         case 0:
-          return require('@/assets/wizards/Wizard_1.png');
+          return require('@/assets/wizards/RockWizard.png');
         case 1:
-          return require('@/assets/wizards/Wizard_2.png');
+          return require('@/assets/wizards/FireWizard.png');
         case 2:
-          return require('@/assets/wizards/Wizard_3.png');
+          return require('@/assets/wizards/WaterWizard.png');
         case 3:
-          return require('@/assets/wizards/Wizard_4.png');
+          return require('@/assets/wizards/WindWizard.png');
       }
     },
     isTarget(userId: string): boolean {
       return this.playerList!.filter(player => player.player_number == this.getPlayerNumberByUserId(this.currentUserId!))[0].target == this.getPlayerNumberByUserId(userId);
-      
-      
+
+
+    },
+    getUserBoxClassByUser(user: UserModel): string {
+      let classes = "";
+      if (user.uuid === this.currentUserId) {
+        classes += 'active active-shinning';
+      } else {
+        classes += 'no-active'
+      }
+      if (user.uuid === this.turnUserId) {
+        classes += ' active-user-box';
+      }
+      return classes;
     }
   }
 })
@@ -98,11 +108,78 @@ export default defineComponent({
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.user-layout {
+  padding-top: 20px;
+  height: 100%;
+}
+
+.user-box {
+  padding-top: 10px;
+  overflow: hidden;
+  max-height: 100%;
+}
+
+.active-user-box {
+  width: 100% !important;
+}
+
+.overlay-info {
+  position: relative;
+  color: white;
+  top: 0;
+  left: 0;
+  z-index: 1001;
+}
+
+.wizard-wrap {
+  position: absolute;
+  overflow: hidden;
+  margin: 0;
+  right: 0;
+  top: 0;
+  z-index: 1000;
+  width: 70%;
+  height: 100%;
+}
+
+.wizard {
+  position: absolute;
+  right: 0;
+  width: 150px;
+  height: 150px;
+}
+
 .wizardSmall {
   height: 32px;
-  
+
 }
+
 .target {
   color: red;
+}
+
+a {
+  border-color: rgb(80, 80, 80) !important;
+}
+
+.no-active {
+  background-color: #2a2d32 !important;
+  width: 80%;
+}
+
+.active {
+  background-color: #3d4249 ;
+  border-color: rgba(114, 114, 37, 1)!important;
+  width: 80%;
+}
+
+.active-shinning {
+  animation: fadeIn 0.75s;
+  animation-iteration-count: infinite;
+}
+@keyframes fadeIn {
+  0% { background-color: #2a2d32; }
+  50% { background-color: #3d4249 ; }
+  100% { background-color: #2a2d32 ; }
 }
 </style>

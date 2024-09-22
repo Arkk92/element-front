@@ -1,74 +1,32 @@
 <template>
   <div class="board-layout">
-    <div class="row">
-      <div class="col">
+    <div class="board-background-image-wrapper">
+      <GameBoard
+      :board="board"
+      :current-player="currentPlayer"
+      :players="players"
+      />
+    </div>
+    <div class="legend-layout">
+      <Legend
+      :board="board"
+      />
+    </div>
 
-        <div class="row">
-  
-          <div class="col">
-            <div class="row align-items-center">
-              <div class="col element-div">
-                <img class="element" :src="require('@/assets/elements/Fire.png')">
-              </div>
-              <div class="col">
-                x{{ board?.elementPool.fire.amount }}
-              </div>
-            </div>
-          </div>
-          <div class="col">
-            <div class="row align-items-center">
-              <div class="col element-div">
-                <img class="element" :src="require('@/assets/elements/Water.png')">
-              </div>
-              <div class="col">
-                x{{ board?.elementPool.water.amount }}
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col">
-            <div class="row align-items-center">
-              <div class="col element-div">
-                <img class="element" :src="require('@/assets/elements/Earth.png')">
-              </div>
-              <div class="col">
-                x{{ board?.elementPool.earth.amount }}
-              </div>
-            </div>
-          </div>
-          <div class="col">
-            <div class="row align-items-center">
-              <div class="col element-div">
-                <img class="element" :src="require('@/assets/elements/Wind.png')">
-              </div>
-              <div class="col">
-                x{{ board?.elementPool.wind.amount }}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        LEGEND!
-      </div>
-    </div>
-    <div class="row">
-      <Board :board="board" :players="players" :current-player="currentPlayer">
-      </Board>
-    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { BoardModel } from '@/game/models/board';
-import Board from '@/components/Board.vue';
+import Legend from '@/composables/Legend.vue';
+import GameBoard from '@/composables/GameBoard.vue';
 
 export default defineComponent({
   name: 'GameLayout',
   components: {
-    Board
+    GameBoard,
+    Legend
   },
   props: {
     board: BoardModel,
@@ -78,25 +36,34 @@ export default defineComponent({
   data() {
     return {
     }
-  },
+  }
+  
 })
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.element {
-  height: 40px;
-  width: 40px;
-  border: solid;
-  border-width: 1px;
-  border-radius: 40px;
-  vertical-align: middle;
-  text-align: center;
-}
 
-.element-div {
-  
+.board-layout {
+  height: 100%;
+  width: 100%;
+  z-index: 1001;
 }
-
+.legend-layout {
+  position: absolute;
+  max-width: 6%;
+  width: 100%;
+  height: 40%;
+  bottom: 0;
+  right: 0;
+  z-index: 2;
+}
+.board-background-image-wrapper {
+  position: relative;
+  height: 100%;
+  max-width: 94%;
+  top: 0px;
+  z-index: 1;
+}
 
 </style>
