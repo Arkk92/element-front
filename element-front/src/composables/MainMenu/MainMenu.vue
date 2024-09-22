@@ -3,7 +3,10 @@
         <!-- <a href="https://ratherdashinggames.com/games/element.html" target="_blank">Find the rules here!</a> -->
         <div class="menu-container">
           <div class="menu-item">
-            <QueueVue class="play-button"/>
+            <QueueVue :is-ranked="false" class="play-button"/>
+          </div>
+          <div class="menu-item">
+            <QueueVue :is-ranked="true" class="play-button"/>
           </div>
           <div class="menu-item">
             <Settings class="settings-button"/>
@@ -68,13 +71,14 @@ export default defineComponent({
 .menu-container {
   position: relative;
   height: 100%;
-  padding-top: 2%;
-  padding-bottom: 2%;
+  padding-top: 1%;
+  padding-bottom: 3%;
 }
 
 .menu-item {
   position: relative;
   height: 20%;
+  top: 5%;
   width: 20%;
   left: 50%;
   transform: translateX(-50%);
