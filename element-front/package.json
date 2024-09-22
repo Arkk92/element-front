@@ -73,6 +73,9 @@
       }
     ]
   },
+  "resolutions": {
+    "@types/node": "22.5.1"
+  },
   "browserslist": [
     "> 1%",
     "last 2 versions",
