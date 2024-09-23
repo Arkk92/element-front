@@ -17,6 +17,8 @@ import { Position, PositionUtils } from '@/game/utils/position_utils';
 import { Emitter } from '@/main';
 import { defineComponent } from 'vue';
 
+import boxMarkerImageUrl from '@/assets/icons/boxMarker.png';
+
 type EmptyType = 'None' | 'Red' | 'Blue' | 'Yellow'
 
 export default defineComponent({
@@ -61,7 +63,7 @@ export default defineComponent({
   },
   methods: {
     getImage(): any {
-      return require('@/assets/icons/boxMarker.png');
+      return boxMarkerImageUrl;
     },
     emptySelected(): void {
       if (this.state == 'Red') {

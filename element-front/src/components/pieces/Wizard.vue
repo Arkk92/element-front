@@ -13,6 +13,12 @@ import { SageModel } from '@/game/models/pieces/sage';
 import { Emitter } from '@/main';
 import { defineComponent } from 'vue';
 
+import boxMarkerImageUrl from '@/assets/icons/boxMarker.png'
+import rockWizardImageUrl from '@/assets/wizards/RockWizardMiniature.png'
+import fireWizardImageUrl from '@/assets/wizards/FireWizardMiniature.png'
+import waterWizardImageUrl from '@/assets/wizards/WaterWizardMiniature.png'
+import windWizardImageUrl from '@/assets/wizards/WindWizardMiniature.png'
+
 export default defineComponent({
   name: 'WizardPieceComponent',
   props: {
@@ -31,18 +37,18 @@ export default defineComponent({
   },
   methods: {
     getBoxMarkerImage(): string {
-      return require('@/assets/icons/boxMarker.png');
+      return boxMarkerImageUrl
     },
     getWizardImage(): any {
       switch (this.playerNumber) {
         case 0:
-          return require('@/assets/wizards/RockWizardMiniature.png');
+          return rockWizardImageUrl
         case 1:
-          return require('@/assets/wizards/FireWizardMiniature.png');
+          return fireWizardImageUrl
         case 2:
-          return require('@/assets/wizards/WaterWizardMiniature.png');
+          return waterWizardImageUrl
         case 3:
-          return require('@/assets/wizards/WindWizardMiniature.png');
+          return windWizardImageUrl
       }
     },
     sageSelected(): void {

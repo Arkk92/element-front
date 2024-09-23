@@ -2,7 +2,7 @@
     <div class="gameboard-layout">
 
         <div class="board-wrapper">
-            <img class="image" :src="require('@/assets/background/Board.png')">
+            <img class="image" src="@/assets/background/Board.png">
         </div>
         <div class="grid-wrapper">
             <Board class="board-grid" :board="board" :players="players as Array<any>" :current-player="currentPlayer" />

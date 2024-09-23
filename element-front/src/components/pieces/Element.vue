@@ -30,6 +30,13 @@ import { Emitter } from '@/main';
 import { Position, PositionUtils } from '@/game/utils/position_utils';
 import { River } from '../PlayerMenu/types';
 
+import boxMarkerImageUrl from '@/assets/icons/boxMarker.png'
+import fireImageUrl from '@/assets/elements/Fire.png'
+import waterImageUrl from '@/assets/elements/Water.png'
+import mountainImageUrl from '@/assets/elements/Mountain.png'
+import earthImageUrl from '@/assets/elements/Earth.png'
+import windImageUrl from '@/assets/elements/Wind.png'
+
 type WaterType = 'RiverHead' | 'River';
 type ElementFrontType = 'None' | WaterType | 'ReplaceableFire';
 
@@ -86,21 +93,21 @@ export default defineComponent({
   },
   methods: {
     getBoxMarkerImage(): string {
-      return require('@/assets/icons/boxMarker.png');
+      return boxMarkerImageUrl
     },
     getImage(): any {
       switch (this.piece?.element_type) {
         case ElementTypes.Fire:
-          return require('@/assets/elements/Fire.png');
+          return fireImageUrl
         case ElementTypes.Water:
-          return require('@/assets/elements/Water.png');
+          return waterImageUrl
         case ElementTypes.Earth:
           if ((this.piece! as EarthModel).is_mountain || (this.piece! as EarthModel).is_range) {
-            return require('@/assets/elements/Mountain.png');
+            return mountainImageUrl
           }
-          return require('@/assets/elements/Earth.png');
+          return earthImageUrl
         case ElementTypes.Wind:
-          return require('@/assets/elements/Wind.png');
+          return windImageUrl
       }
     },
     isWind(): boolean {

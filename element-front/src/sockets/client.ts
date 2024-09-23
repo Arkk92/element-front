@@ -5,7 +5,7 @@ import { useCookies } from "vue3-cookies";
 
 class ClientSocket {
 
-    private static URL: string | undefined = process.env.VUE_APP_BACKEND_SOCKET_PATH;
+    private static URL: string = import.meta.env.VITE_BACKEND_SOCKET_PATH;
 
     constructor() { }
 
