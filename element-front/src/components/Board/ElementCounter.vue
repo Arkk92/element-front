@@ -12,6 +12,11 @@
 import { ElementTypes } from '@/game/models/elements/elements';
 import { defineComponent } from 'vue';
 
+import fireImageUrl from '@/assets/elements/Fire.png'
+import waterImageUrl from '@/assets/elements/Water.png'
+import earthImageUrl from '@/assets/elements/Earth.png'
+import windImageUrl from '@/assets/elements/Wind.png'
+
 export default defineComponent({
     name: 'ElementCounterComponent',
     components: {
@@ -35,16 +40,16 @@ export default defineComponent({
             let imageUrl = "";
             switch (this.element!) {
                 case ElementTypes.Fire:
-                    imageUrl = require('@/assets/elements/Fire.png')
+                    imageUrl = fireImageUrl
                     break;
                 case ElementTypes.Water:
-                    imageUrl = require('@/assets/elements/Water.png')
+                    imageUrl = waterImageUrl
                     break;
                 case ElementTypes.Earth:
-                    imageUrl = require('@/assets/elements/Earth.png')
+                    imageUrl = earthImageUrl
                     break;
                 case ElementTypes.Wind:
-                    imageUrl = require('@/assets/elements/Wind.png')
+                    imageUrl = windImageUrl
                     break;
             }
             return imageUrl;

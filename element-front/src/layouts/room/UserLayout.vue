@@ -27,6 +27,11 @@ import { PlayerModel } from '@/game/models/player';
 import { UserToPlayerMap } from '@/game/models/room';
 import { useCookies } from "vue3-cookies";
 
+import rockWizardImageUrl from '@/assets/wizards/RockWizard.png'
+import fireWizardImageUrl from '@/assets/wizards/FireWizard.png'
+import waterWizardImageUrl from '@/assets/wizards/WaterWizard.png'
+import windWizardImageUrl from '@/assets/wizards/WindWizard.png'
+
 export default defineComponent({
   name: 'UserLayout',
   components: {
@@ -76,13 +81,13 @@ export default defineComponent({
     getImage(playerNumber: number): any {
       switch (playerNumber) {
         case 0:
-          return require('@/assets/wizards/RockWizard.png');
+          return rockWizardImageUrl
         case 1:
-          return require('@/assets/wizards/FireWizard.png');
+          return fireWizardImageUrl
         case 2:
-          return require('@/assets/wizards/WaterWizard.png');
+          return waterWizardImageUrl
         case 3:
-          return require('@/assets/wizards/WindWizard.png');
+          return windWizardImageUrl
       }
     },
     isTarget(userId: string): boolean {

@@ -1,7 +1,7 @@
 <template>
   <div class="background">
     <div class="title-wrapper">
-      <img class="title-img" :src="require('@/assets/background/title.png')">
+      <img class="title-img" src="@/assets/background/title.png">
     </div>
     <div class="background-video-div">
       <video class="background-video" autoplay muted loop id="background-video" playbackRate="1">

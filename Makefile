@@ -27,7 +27,7 @@ dev:
 	$(MAKE) nvm-use
 	# uncomment the following line when using linux
 	# echo $(fs.inotify.max_user_watches=524288) | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
-	cd element-front && npm run serve
+	cd element-front && npm run dev
 
 deploy-local:
 	$(MAKE) nvm-use

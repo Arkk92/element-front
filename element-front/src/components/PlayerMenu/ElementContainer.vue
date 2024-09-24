@@ -1,23 +1,30 @@
 <template>
     <div class="element-container">
         <div class="orbit">
-            <div class="image-container image-container-1" >
+            <div class="image-container image-container-1">
                 <img v-if="list.length > 0" :src="getImageUrl(list[0])"
-                :class="selectedElement==0 ? 'image-selected':'image'" v-on:click="onElementClick(0)">
+                    :class="selectedElement == 0 ? 'image-selected' : 'image'" v-on:click="onElementClick(0)">
             </div>
-            <div class="image-container image-container-2" >
+            <div class="image-container image-container-2">
                 <img v-if="list.length > 1" :src="getImageUrl(list[1])"
-                :class="selectedElement==1 ? 'image-selected':'image'" v-on:click="onElementClick(1)">
+                    :class="selectedElement == 1 ? 'image-selected' : 'image'" v-on:click="onElementClick(1)">
             </div>
-            <div class="image-container image-container-3" >
+            <div class="image-container image-container-3">
                 <img v-if="list.length > 2" :src="getImageUrl(list[2])"
-                :class="selectedElement==2 ? 'image-selected':'image'" v-on:click="onElementClick(2)">
+                    :class="selectedElement == 2 ? 'image-selected' : 'image'" v-on:click="onElementClick(2)">
             </div>
         </div>
     </div>
 </template>
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
+
+import allElementsImageUrl from '@/assets/elements/allElements.png';
+import fireImageUrl from '@/assets/elements/Fire.png'
+import waterImageUrl from '@/assets/elements/Water.png'
+import earthImageUrl from '@/assets/elements/Earth.png'
+import windImageUrl from '@/assets/elements/Wind.png'
+
 
 const NON_SELECTED = -1;
 
@@ -51,14 +58,31 @@ export default defineComponent({
     methods: {
         getImageUrl(element: string): string {
             if (this.elementsHidden) {
-                return require('@/assets/elements/allElements.png');
+                return allElementsImageUrl
             }
-            return require(`@/assets/elements/${element}.png`);
+            let url: string = '';
+            switch (element) {
+                case 'Fire':
+                    url = fireImageUrl;
+                    break;
+                case 'Water':
+                    url = waterImageUrl;
+                    break;
+                case 'Wind':
+                    url = windImageUrl;
+                    break;
+                case 'Earth':
+                    url = earthImageUrl;
+                    break;
+                default:
+                    break;
+            }
+            return url;
 
         },
         onElementClick(index: number): void {
             if (!this.elementsHidden) {
-                if(this.selectedElement == index){
+                if (this.selectedElement == index) {
                     this.selectedElement = NON_SELECTED;
                     this.$emit('elementClickedIndex', NON_SELECTED);
                 } else {
@@ -67,7 +91,7 @@ export default defineComponent({
                 }
             }
         },
-        onResetView(){
+        onResetView() {
             this.selectedElement = NON_SELECTED;
             this.$emit('elementClickedIndex', NON_SELECTED);
         }
