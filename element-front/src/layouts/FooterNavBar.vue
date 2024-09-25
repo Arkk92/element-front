@@ -34,7 +34,7 @@ export default defineComponent({
   position: fixed;
   bottom: 0;
   width: 100%;
-  z-index: 2000;
+  z-index: 1000;
   height: 100%;
   background: linear-gradient(to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
   /* background-image: url("@/assets/header/footerNavHeader.jpg");

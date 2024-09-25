@@ -97,6 +97,7 @@ export default defineComponent({
   align-items: center;
   opacity: 0;
   animation: fadeIn 0.8s forwards;
+  
 }
 
 .modal-content {
@@ -112,6 +113,8 @@ export default defineComponent({
   opacity: 0;
   transform: scale(0.8);
   animation: scaleUp 0.5s 0.3s forwards;
+  max-height: 100%;
+  overflow-y: scroll;
 }
 
 @keyframes fadeIn {
@@ -127,94 +130,6 @@ export default defineComponent({
   }
 }
 
-@media screen and (max-width: 785px) {
-  h2 {
-    margin-bottom: 20px;
-    font-size: 1rem;
-    color: #f4e0b7;
-    text-shadow: 0 0 10px #ff7043, 0 0 20px #ff7043;
-  }
-
-  label {
-    font-size: 1rem;
-    color: #f4e0b7;
-    display: block;
-    margin-bottom: 10px;
-  }
-
-  select {
-    padding: 10px 14px;
-    font-size: 1rem;
-    background-color: #29293a;
-    color: #ffffff;
-    border-radius: 8px;
-    border: 2px solid #ff7043;
-    text-align: center;
-    outline: none;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-    appearance: none;
-    width: 100%;
-  }
-
-  select option {
-    padding: 10px;
-    font-size: 1rem;
-  }
-
-  select option span {
-    font-size: 1rem;
-    margin-right: 5px;
-  }
-
-  .start-game-button {
-    background-color: #ff7043;
-    border: none;
-    color: white;
-    padding: 12px 20px;
-    margin-top: 20px;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-    text-shadow: 0 0 5px #fff, 0 0 10px #ff5722;
-    box-shadow: 0 0 20px #ff5722, 0 0 30px #ff7043;
-  }
-
-  .button-icon {
-    font-size: 1rem;
-    animation: glow 1.5s infinite alternate;
-  }
-
-  .input-label {
-    font-size: 1rem;
-    font-weight: bold;
-    color: #f4e0b7;
-    margin-bottom: 10px;
-    text-shadow: 0 0 10px #ff7043, 0 0 20px #ff7043;
-    font-family: 'Cinzel', serif;
-  }
-
-  .input-box {
-    width: 300px;
-    padding: 12px;
-    font-size: 1rem;
-    border: 2px solid #ff7043;
-    border-radius: 8px;
-    background-color: #29293a;
-    color: #fff;
-    outline: none;
-    text-align: center;
-    text-shadow: 0 0 5px #fff;
-    box-shadow: 0 0 10px #ff7043, 0 0 15px rgba(255, 112, 67, 0.6);
-    transition: all 0.3s ease;
-  }
-}
-
 h2 {
   margin-bottom: 20px;
   font-size: 1.75rem;
@@ -223,7 +138,7 @@ h2 {
 }
 
 .player-selector {
-  margin: 25px 0;
+  margin: 10% 0;
 }
 
 label {
@@ -342,5 +257,93 @@ select option span {
   border-color: #ff5722;
   box-shadow: 0 0 15px #ff5722, 0 0 20px rgba(255, 112, 67, 0.9);
   transform: scale(1.05);
+}
+
+@media screen and (max-width: 785px) {
+  h2 {
+    margin-bottom: 20px;
+    font-size: 1rem !important;
+    color: #f4e0b7;
+    text-shadow: 0 0 10px #ff7043, 0 0 20px #ff7043;
+  }
+
+  label {
+    font-size: 1rem !important;
+    color: #f4e0b7;
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  select {
+    padding: 10px 14px;
+    font-size: 1rem !important;
+    background-color: #29293a;
+    color: #ffffff;
+    border-radius: 8px;
+    border: 2px solid #ff7043;
+    text-align: center;
+    outline: none;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    appearance: none;
+    width: 100%;
+  }
+
+  select option {
+    padding: 10px;
+    font-size: 1rem !important;
+  }
+
+  select option span {
+    font-size: 1rem !important;
+    margin-right: 5px;
+  }
+
+  .start-game-button {
+    background-color: #ff7043;
+    border: none;
+    color: white;
+    padding: 12px 20px;
+    margin-top: 20px;
+    font-size: 1rem !important;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    text-shadow: 0 0 5px #fff, 0 0 10px #ff5722;
+    box-shadow: 0 0 20px #ff5722, 0 0 30px #ff7043;
+  }
+
+  .button-icon {
+    font-size: 1rem !important;
+    animation: glow 1.5s infinite alternate;
+  }
+
+  .input-label {
+    font-size: 1rem !important;
+    font-weight: bold;
+    color: #f4e0b7;
+    margin-bottom: 10px;
+    text-shadow: 0 0 10px #ff7043, 0 0 20px #ff7043;
+    font-family: 'Cinzel', serif;
+  }
+
+  .input-box {
+    width: 300px;
+    padding: 12px;
+    font-size: 1rem !important;
+    border: 2px solid #ff7043;
+    border-radius: 8px;
+    background-color: #29293a;
+    color: #fff;
+    outline: none;
+    text-align: center;
+    text-shadow: 0 0 5px #fff;
+    box-shadow: 0 0 10px #ff7043, 0 0 15px rgba(255, 112, 67, 0.6);
+    transition: all 0.3s ease;
+  }
 }
 </style>
