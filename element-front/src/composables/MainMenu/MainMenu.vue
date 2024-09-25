@@ -34,30 +34,6 @@ export default defineComponent({
 })
 </script>
 <style lang="css" scoped>
-.mystical-text {
-  font-weight: bold;
-  /* Use Cinzel font */
-  font-size: 48px;
-  /* Deep purple shadow */
-  text-transform: uppercase;
-  text-align: center;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  line-height: 1.2;
-  white-space: nowrap;
-  cursor: default;
-
-  font-family: 'Palatino', 'Garamond', 'Georgia', 'Times New Roman', serif;
-  color: #d4af37;
-  /* Golden mystical color */
-  text-decoration: none;
-  transition: color 0.3s ease, text-shadow 0.3s ease;
-  text-shadow: 0 0 8px rgba(212, 175, 55, 0.4), 0 0 15px rgba(255, 255, 255, 0.2);
-  letter-spacing: 1px;
-}
-
 .main-menu-wrapper {
   position: absolute;
   width: 100%;
@@ -100,4 +76,5 @@ export default defineComponent({
   /* top: 70%; */
   /* left: 46.5%; */
 }
+
 </style>

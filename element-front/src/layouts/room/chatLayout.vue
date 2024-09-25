@@ -178,7 +178,7 @@ export default defineComponent({
   display: block;
   width: 74%;
   height: 100%;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 400;
   line-height: 1.5;
   color: black;
@@ -207,5 +207,26 @@ export default defineComponent({
   height: 100%;
   top: 0;
   right: 0;
+}
+
+@media screen and (max-width: 785px) {
+  .form-control {
+    position: absolute;
+    display: block;
+    width: 74%;
+    height: 100%;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: black;
+    background-clip: padding-box;
+    background-color: white;
+    border: 1px solid #ccc;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: 0.25rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  }
 }
 </style>

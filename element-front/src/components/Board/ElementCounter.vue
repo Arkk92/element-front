@@ -76,7 +76,7 @@ export default defineComponent({
 
 .counter {
     color: yellow;
-    font-size: 35px;
+    font-size: 2.1875rem;
     font-weight: bold;
     -webkit-text-stroke: 1.5px black;
     /* width and color */
@@ -89,6 +89,25 @@ export default defineComponent({
     text-decoration: none;
     z-index: 2;
 
+}
+
+@media screen and (max-width: 785px) {
+    .counter {
+        color: yellow;
+        font-size: 1rem;
+        font-weight: bold;
+        -webkit-text-stroke: 1.5px black;
+        /* width and color */
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-decoration: none;
+        z-index: 2;
+
+    }
 }
 
 .image {

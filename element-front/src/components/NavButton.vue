@@ -1,6 +1,6 @@
 <template>
   <div type="button" class="nav-button" v-on:click="onButtonPressed()">
-      <a type="button" :class="disabled?'disabled-link':'mystical-link'">{{ text }}</a>
+    <a type="button" :class="disabled ? 'disabled-link' : 'mystical-link'">{{ text }}</a>
   </div>
 </template>
 <script lang="ts">
@@ -42,13 +42,46 @@ export default defineComponent({
   top: 0%;
   left: 0%;
   display: flex;
-  justify-content: center; /* Horizontal centering */
-  align-items: center;     /* Vertical centering */
+  justify-content: center;
+  /* Horizontal centering */
+  align-items: center;
+  /* Vertical centering */
 }
+
+@media screen and (max-width: 785px) {
+  .mystical-link {
+    position: relative;
+    font-family: 'Palatino', 'Garamond', 'Georgia', 'Times New Roman', serif;
+    font-size: 1rem !important;
+    color: #d4af37;
+    /* Golden mystical color */
+    text-decoration: none;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+    text-shadow: 0 0 8px rgba(212, 175, 55, 0.8), 0 0 15px rgba(255, 255, 255, 0.2);
+    letter-spacing: 1px;
+  }
+
+  .disabled-link {
+    font-family: 'Palatino', 'Garamond', 'Georgia', 'Times New Roman', serif;
+    font-size: 1rem !important;
+    color: #a9a9a9;
+    /* Grey color to indicate disabled state */
+    text-decoration: none;
+    pointer-events: none;
+    /* Disables clicks */
+    opacity: 0.6;
+    /* Makes it look visually inactive */
+    cursor: not-allowed;
+    /* Shows 'not-allowed' cursor on hover */
+    text-shadow: none;
+    /* Removes any glow or shadow */
+  }
+}
+
 .mystical-link {
   position: relative;
   font-family: 'Palatino', 'Garamond', 'Georgia', 'Times New Roman', serif;
-  font-size: 24px;
+  font-size: 1.5rem;
   color: #d4af37;
   /* Golden mystical color */
   text-decoration: none;
@@ -66,18 +99,24 @@ export default defineComponent({
 
 .disabled-link {
   font-family: 'Palatino', 'Garamond', 'Georgia', 'Times New Roman', serif;
-  font-size: 24px;
-  color: #a9a9a9; /* Grey color to indicate disabled state */
+  font-size: 1.5rem;
+  color: #a9a9a9;
+  /* Grey color to indicate disabled state */
   text-decoration: none;
-  pointer-events: none; /* Disables clicks */
-  opacity: 0.6; /* Makes it look visually inactive */
-  cursor: not-allowed; /* Shows 'not-allowed' cursor on hover */
-  text-shadow: none; /* Removes any glow or shadow */
+  pointer-events: none;
+  /* Disables clicks */
+  opacity: 0.6;
+  /* Makes it look visually inactive */
+  cursor: not-allowed;
+  /* Shows 'not-allowed' cursor on hover */
+  text-shadow: none;
+  /* Removes any glow or shadow */
 }
 
 .disabled-link:hover {
-  text-decoration: none; /* Prevent underline on hover */
-  color: #a9a9a9; /* Keep grey color on hover */
+  text-decoration: none;
+  /* Prevent underline on hover */
+  color: #a9a9a9;
+  /* Keep grey color on hover */
 }
-
 </style>
