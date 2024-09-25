@@ -2,7 +2,7 @@
   <div class="element">
     <div class="element-piece col cells" style="padding: 0;" v-if="data_ready" :class="getCssClass()">
       <img class="boxMarker" :src="getBoxMarkerImage()">
-      <img class="pieces" :src="getImage()" style="opacity: 100%;" :class="state=='RiverHead'?'river-head':''">
+      <img class="pieces" :src="getImage()" style="opacity: 100%;" :class="state == 'RiverHead' ? 'river-head' : ''">
       <span v-if="isWind()" class="wind-counter">
         {{ (piece as any).stacked_winds }}
       </span>
@@ -69,10 +69,10 @@ export default defineComponent({
     })
 
     Emitter.on('NewRiverAvailablePlacement', (position) => {
-      if (this.piece!.element_type == ElementTypes.Fire){
-        if (PositionUtils.isStrictOrthogonalPosition(this.piece!.position, position as Position)){
+      if (this.piece!.element_type == ElementTypes.Fire) {
+        if (PositionUtils.isStrictOrthogonalPosition(this.piece!.position, position as Position)) {
           this.state = 'ReplaceableFire';
-        }else {
+        } else {
           this.state = 'None';
         }
       }
@@ -169,7 +169,7 @@ export default defineComponent({
   transform: translateX(-50%);
   font-weight: bold;
   color: yellow;
-  font-size: 40px;
+  font-size: 2.5rem;
   -webkit-text-stroke: 1px black;
   cursor: default;
   z-index: 5;
@@ -274,7 +274,7 @@ export default defineComponent({
 .overlay-button {
   position: absolute;
   width: 45%;
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: bold;
   border: 2px solid #ff7043;
   border-radius: 8px;
@@ -306,5 +306,36 @@ export default defineComponent({
 
 .overlay-button:active {
   transform: scale(0.95);
+}
+
+@media screen and (max-width: 785px) {
+  .wind-counter {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    font-weight: bold;
+    color: yellow;
+    font-size: 1rem;
+    -webkit-text-stroke: 1px black;
+    cursor: default;
+    z-index: 5;
+
+  }
+
+  .overlay-button {
+    position: absolute;
+    width: 45%;
+    font-size: 1rem;
+    font-weight: bold;
+    border: 2px solid #ff7043;
+    border-radius: 8px;
+    background-color: #29293a;
+    color: white;
+    cursor: pointer;
+    text-shadow: 0 0 5px #fff, 0 0 10px #ff5722;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+  }
 }
 </style>

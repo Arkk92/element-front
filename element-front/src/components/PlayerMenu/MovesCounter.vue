@@ -39,6 +39,7 @@ export default defineComponent({
     height: 100%;
     width: 100%;
 }
+
 .moves-counter-container {
     position: absolute;
     width: 100%;
@@ -50,7 +51,7 @@ export default defineComponent({
 
 .moves-number {
     color: yellow;
-    font-size: 40px;
+    font-size: 2.5rem;
     font-weight: bold;
     -webkit-text-stroke: 1px black;
     /* width and color */
@@ -71,5 +72,25 @@ export default defineComponent({
     height: 100%;
     width: 100%;
     z-index: 1;
+}
+
+@media screen and (max-width: 785px) {
+    .moves-number {
+        color: yellow;
+        font-size: 1.5rem;
+        font-weight: bold;
+        -webkit-text-stroke: 1px black;
+        /* width and color */
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-decoration: none;
+        z-index: 2;
+
+    }
 }
 </style>

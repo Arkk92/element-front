@@ -21,7 +21,7 @@
           <span class="button-icon">❌</span>
           Cancel
         </button>
-        
+
       </div>
     </div>
   </Teleport>
@@ -107,9 +107,62 @@ export default defineComponent({
   }
 }
 
+@media screen and (max-width: 785px) {
+  h2 {
+    margin-bottom: 20px;
+    font-size: 1rem;
+    color: #f4e0b7;
+    text-shadow: 0 0 10px #ff7043, 0 0 20px #ff7043;
+  }
+
+
+  .join-game-button {
+    background-color: #ff7043;
+    border: none;
+    color: white;
+    padding: 12px 20px;
+    margin-top: 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    text-shadow: 0 0 5px #fff, 0 0 10px #ff5722;
+    box-shadow: 0 0 20px #ff5722, 0 0 30px #ff7043;
+  }
+
+  .cancel-button {
+    background-color: #ff7043;
+    border: none;
+    color: white;
+    padding: 12px 20px;
+    margin-top: 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    text-shadow: 0 0 5px #fff, 0 0 10px #ff5722;
+    box-shadow: 0 0 20px #ff5722, 0 0 30px #ff7043;
+  }
+
+  .button-icon {
+    font-size: 1rem;
+    animation: glow 1.5s infinite alternate;
+  }
+}
+
 h2 {
   margin-bottom: 20px;
-  font-size: 28px;
+  font-size: 1.75rem;
   color: #f4e0b7;
   text-shadow: 0 0 10px #ff7043, 0 0 20px #ff7043;
 }
@@ -121,7 +174,7 @@ h2 {
   color: white;
   padding: 12px 20px;
   margin-top: 20px;
-  font-size: 20px;
+  font-size: 1.25rem;
   font-weight: bold;
   cursor: pointer;
   border-radius: 10px;
@@ -140,7 +193,7 @@ h2 {
   color: white;
   padding: 12px 20px;
   margin-top: 20px;
-  font-size: 20px;
+  font-size: 1.25rem;
   font-weight: bold;
   cursor: pointer;
   border-radius: 10px;
@@ -159,7 +212,7 @@ h2 {
 }
 
 .button-icon {
-  font-size: 24px;
+  font-size: 1.25rem;
   animation: glow 1.5s infinite alternate;
 }
 

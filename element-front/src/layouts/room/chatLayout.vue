@@ -2,9 +2,9 @@
   <div class="chat-layout">
     <div class="backdrop"></div>
     <div class="messages">
-      <div class="message small p-2 mb-1 rounded-3 ms-3" v-for="message in messages" :key="message"
-        v-bind:class="{ 'ownerMessage me-3 bg-primary text-white': isOwnerMessage(message) }">
-        <p style="margin: 0">
+      <div class="message small ms-3" v-for="message in messages" :key="message"
+        v-bind:class="{ 'ownerMessage bg-primary text-white': isOwnerMessage(message) }">
+        <p>
           {{ message.user.name }} : {{ message.message }}
         </p>
       </div>
@@ -13,8 +13,8 @@
       <input type="text" v-on:keyup.enter="onEnter" v-model="inputText" class="form-control" aria-label="message…"
         placeholder="Write message…">
 
-      <button type="button" class="btn btn-light btn-placement" v-on:click="sendMessage"><i class="bi bi-send"
-          aria-hidden="true"></i></button>
+      <button type="button" class="btn btn-light btn-placement" v-on:click="sendMessage"><i
+          class="bi bi-send icon-button" aria-hidden="true"></i></button>
     </div>
   </div>
 </template>
@@ -92,16 +92,17 @@ export default defineComponent({
 }
 
 .message {
-  display: flex;
-  justify-content: left;
+  position: relative;
   border-radius: 7%;
-  align-items: flex-start;
   background-color: #e5e5ea;
+  text-align: end;
   color: #000;
   display: inline-block;
-  min-width: 50%;
-  max-width: 50%;
+  min-width: fit-content;
+  max-width: 75%;
   padding: 2px;
+  margin-top: 2px;
+  margin-left: 50% !important;
 }
 
 .message:before {
@@ -120,11 +121,11 @@ export default defineComponent({
 }
 
 .ownerMessage {
-  justify-content: right;
-  align-self: flex-end;
-  background-color: #248bf5;
-  color: #fff;
+  text-align: start !important;
+  justify-content: left;
+  display: inline-block;
   margin: 0.25rem 0 0;
+  margin-left: 0% !important;
 }
 
 .ownerMessage::before {
@@ -178,7 +179,7 @@ export default defineComponent({
   display: block;
   width: 74%;
   height: 100%;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 400;
   line-height: 1.5;
   color: black;
@@ -207,5 +208,60 @@ export default defineComponent({
   height: 100%;
   top: 0;
   right: 0;
+}
+
+p {
+  word-break: break-all;
+  white-space: normal;
+  margin: 0;
+}
+
+.icon-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@media screen and (max-width: 785px) {
+  .form-control {
+    position: absolute;
+    display: block;
+    width: 74%;
+    height: 100%;
+    font-size: 0.875rem !important;
+    font-weight: 400;
+    line-height: 1.5;
+    color: black;
+    background-clip: padding-box;
+    background-color: white;
+    border: 1px solid #ccc;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: 0.25rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  }
+
+  .message {
+    display: flex;
+    justify-content: left;
+    border-radius: 7%;
+    align-items: flex-start;
+    background-color: #e5e5ea;
+    color: #000;
+    display: inline-block;
+    min-width: 100%;
+    max-width: 50%;
+    padding: 2px;
+  }
+
+  .small {
+    font-size: 0.75rem !important;
+  }
+
+  .ms-3 {
+    margin-left: 0rem !important;
+  }
 }
 </style>

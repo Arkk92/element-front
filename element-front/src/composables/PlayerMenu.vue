@@ -169,7 +169,7 @@ export default defineComponent({
 
 .wizard-moves-number {
   color: wheat;
-  font-size: 40px;
+  font-size: 2.5rem;
   -webkit-text-stroke: 1px black;
   /* width and color */
   position: absolute;
@@ -185,5 +185,19 @@ export default defineComponent({
 .user-interactor {
   width: 100%;
   height: 100%;
+}
+
+@media screen and (max-width: 785px) {
+
+  .wizard-moves-number {
+    color: wheat;
+    font-size: 1rem;
+    -webkit-text-stroke: 1px black;
+    /* width and color */
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
 }
 </style>

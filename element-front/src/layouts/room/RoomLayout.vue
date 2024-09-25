@@ -167,7 +167,6 @@ export default defineComponent({
 
 .custom-row {
   height: 100%;
-  width: 100%;
 }
 
 .center-col {
