@@ -114,7 +114,7 @@ export default defineComponent({
   transform: scale(0.8);
   animation: scaleUp 0.5s 0.3s forwards;
   max-height: 100%;
-  overflow-y: scroll;
+  overflow-y: hidden;
 }
 
 @keyframes fadeIn {
@@ -344,6 +344,25 @@ select option span {
     text-shadow: 0 0 5px #fff;
     box-shadow: 0 0 10px #ff7043, 0 0 15px rgba(255, 112, 67, 0.6);
     transition: all 0.3s ease;
+  }
+}
+
+@media screen and (max-height: 500px) {
+  .modal-content {
+    background: linear-gradient(135deg, #29293a 0%, #121216 100%);
+    padding: 30px;
+    border-radius: 15px;
+    width: 350px;
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.5), 0 0 30px rgba(255, 0, 255, 0.5);
+    text-align: center;
+    font-family: 'Cinzel', serif;
+    color: #ffffff;
+    border: 2px solid #ff7043;
+    opacity: 0;
+    transform: scale(0.8);
+    animation: scaleUp 0.5s 0.3s forwards;
+    max-height: 100%;
+    overflow-y: scroll;
   }
 }
 </style>
