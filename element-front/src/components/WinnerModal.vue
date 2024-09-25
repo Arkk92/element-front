@@ -95,14 +95,14 @@ export default defineComponent({
 }
 
 .winner-title {
-    font-size: 36px;
+    font-size: 2.25rem;
     color: #f4e0b7;
     text-shadow: 0 0 15px #ff7043, 0 0 25px #ff7043;
     margin-bottom: 20px;
 }
 
 .victory-icon {
-    font-size: 64px;
+    font-size: 4rem;
     margin: 30px 0;
     animation: glowTrophy 1.5s infinite alternate;
 }
@@ -121,7 +121,7 @@ export default defineComponent({
     background-color: #ff7043;
     color: white;
     padding: 15px 25px;
-    font-size: 20px;
+    font-size: var(--global-font-size);
     font-weight: bold;
     cursor: pointer;
     border-radius: 12px;
@@ -137,5 +137,37 @@ export default defineComponent({
 .return-button:hover {
     background-color: #ff5722;
     transform: scale(1.05);
+}
+
+@media screen and (max-width: 785px) {
+    .winner-title {
+        font-size: 1rem;
+        color: #f4e0b7;
+        text-shadow: 0 0 15px #ff7043, 0 0 25px #ff7043;
+        margin-bottom: 20px;
+    }
+
+    .victory-icon {
+        font-size: 1rem;
+        margin: 30px 0;
+        animation: glowTrophy 1.5s infinite alternate;
+    }
+
+    .return-button {
+        background-color: #ff7043;
+        color: white;
+        padding: 15px 25px;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        border-radius: 12px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        box-shadow: 0 0 20px #ff5722, 0 0 30px #ff7043;
+        border: none;
+        text-shadow: 0 0 5px #fff, 0 0 10px #ff5722;
+    }
 }
 </style>

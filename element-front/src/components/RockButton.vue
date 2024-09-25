@@ -64,10 +64,26 @@ export default defineComponent({
   transform: translate(-50%, -50%);
 }
 
+@media screen and (max-width: 785px) {
+  .button-overlay {
+    position: absolute;
+    color: black;
+    font-size: 1rem !important;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    z-index: 2;
+  }
+}
+
 .button-overlay {
   position: absolute;
   color: black;
-  font-size: 25px;
+  font-size: 1.5625rem;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);

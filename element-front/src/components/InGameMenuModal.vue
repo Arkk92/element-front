@@ -3,7 +3,7 @@
     <div v-if="isOpen" class="modal-backdrop" @click="closeModal">
       <div class="modal-content" @click.stop>
         <h2>Game Menu</h2>
-        
+
         <!-- Modal Buttons -->
         <div class="buttons-wrapper">
           <button class="action-button forfeit" @click="handleAction('Forfeit')">
@@ -92,9 +92,33 @@ export default defineComponent({
   }
 }
 
+@media screen and (max-width: 785px) {
+  h2 {
+    margin-bottom: 20px;
+    font-size: 1rem;
+    color: #f4e0b7;
+    text-shadow: 0 0 10px #ff7043, 0 0 20px #ff7043;
+  }
+
+  .action-button {
+    background-color: #29293a;
+    color: #ffffff;
+    padding: 12px 20px;
+    font-size: 1rem;
+    border-radius: 10px;
+    border: 2px solid #ff7043;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
 h2 {
   margin-bottom: 20px;
-  font-size: 28px;
+  font-size: 1.75rem;
   color: #f4e0b7;
   text-shadow: 0 0 10px #ff7043, 0 0 20px #ff7043;
 }
@@ -109,7 +133,7 @@ h2 {
   background-color: #29293a;
   color: #ffffff;
   padding: 12px 20px;
-  font-size: 20px;
+  font-size: 1.25rem;
   border-radius: 10px;
   border: 2px solid #ff7043;
   cursor: pointer;

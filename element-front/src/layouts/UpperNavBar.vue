@@ -4,7 +4,7 @@
       <span class="welcome-message mystical-link">Welcome, {{ username }}</span>
     </div>
     <div class="menu-container">
-      <NavButton  v-if="menuButtonShow" v-on:click="isMenuOpen = true" :text="'Menu'" />
+      <NavButton v-if="menuButtonShow" v-on:click="isMenuOpen = true" :text="'Menu'" />
     </div>
   </div>
   <InGameMenuModal :isOpen="isMenuOpen" @close="isMenuOpen = false" @select="handleSelect" />
@@ -18,7 +18,7 @@ import InGameMenuModal from '@/components/InGameMenuModal.vue';
 import { ForfeitData } from '@/sockets/socketUtils';
 import { useCookies } from 'vue3-cookies';
 
-type InGameMenuSelectOptions ='Forfeit' |'Options' |'Exit';
+type InGameMenuSelectOptions = 'Forfeit' | 'Options' | 'Exit';
 
 export default defineComponent({
   name: 'UpperNavBarComponent',
@@ -38,7 +38,7 @@ export default defineComponent({
     }
   },
   mounted() {
-    Emitter.on('joinGame', ()=> {
+    Emitter.on('joinGame', () => {
       this.menuButtonShow = true;
     })
     // Emitter.on('usernameChange', (username) => {
@@ -56,14 +56,14 @@ export default defineComponent({
           break;
         case 'Options':
           break;
-        
+
         default:
           /* Do nothing */
           break;
       }
       this.isMenuOpen = false;
     },
-    forfeit(){
+    forfeit() {
       const data: ForfeitData = { userId: this.cookies.get('userId'), roomId: this.cookies.get('roomId') }
       SocketInstance.emit('forfeit', data);
       this.cookies.remove('roomId')
@@ -122,7 +122,7 @@ export default defineComponent({
 .mystical-link {
   position: relative;
   font-family: 'Palatino', 'Garamond', 'Georgia', 'Times New Roman', serif;
-  font-size: 24px;
+  font-size: 1.5rem;
   color: #d4af37;
   /* Golden mystical color */
   text-decoration: none;
@@ -130,5 +130,20 @@ export default defineComponent({
   text-shadow: 0 0 8px rgba(212, 175, 55, 0.8), 0 0 15px rgba(255, 255, 255, 0.2);
   letter-spacing: 1px;
   cursor: default;
+}
+
+@media screen and (max-width: 785px) {
+  .mystical-link {
+    position: relative;
+    font-family: 'Palatino', 'Garamond', 'Georgia', 'Times New Roman', serif;
+    font-size: 1rem;
+    color: #d4af37;
+    /* Golden mystical color */
+    text-decoration: none;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+    text-shadow: 0 0 8px rgba(212, 175, 55, 0.8), 0 0 15px rgba(255, 255, 255, 0.2);
+    letter-spacing: 1px;
+    cursor: default;
+  }
 }
 </style>
