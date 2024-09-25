@@ -5,11 +5,13 @@
       <a class="list-group-item list-group-item-action disabled user-box border-1" v-for="user in userList" :key="user"
         :class="getUserBoxClassByUser(user)" :aria-current="(user.uuid === currentUserId) ? 'true' : 'false'">
         <div class="overlay-info">
-          <h5 class="col">{{ user.name }}</h5>
+
+          <h5 class="col">
+            {{ user.name }} <span v-if="isTarget(user.uuid)">💀</span>
+          </h5>
           <p class="mb-1" v-if="user.uuid === turnUserId">{{ getTurnState() }}</p>
           <p class="mb-1" v-else>Waiting...</p>
-          <i v-if="isTarget(user.uuid)" class="bi-bullseye target" role="img" aria-label="target"></i>
-          <small> Player number: {{ getPlayerNumberByUserId(user.uuid) }}</small>
+          <p class="mb-1">Player number: {{ getPlayerNumberByUserId(user.uuid) }}</p>
         </div>
         <div class="wizard-wrap">
           <img class="wizard" :src="getImage(getPlayerNumberByUserId(user.uuid))">
@@ -114,13 +116,20 @@ export default defineComponent({
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .user-layout {
+  display: block;
   padding-top: 20px;
+  padding-bottom: 5px;
   height: 100%;
 }
 
 .user-box {
   padding-top: 10px;
   overflow: hidden;
+  max-height: 50%;
+  min-height: 25%;
+}
+
+.list-group {
   max-height: 100%;
 }
 
@@ -173,8 +182,8 @@ a {
 }
 
 .active {
-  background-color: #3d4249 ;
-  border-color: rgba(114, 114, 37, 1)!important;
+  background-color: #3d4249;
+  border-color: rgba(114, 114, 37, 1) !important;
   width: 80%;
 }
 
@@ -182,9 +191,38 @@ a {
   animation: fadeIn 0.75s;
   animation-iteration-count: infinite;
 }
+
 @keyframes fadeIn {
-  0% { background-color: #2a2d32; }
-  50% { background-color: #3d4249 ; }
-  100% { background-color: #2a2d32 ; }
+  0% {
+    background-color: #2a2d32;
+  }
+
+  50% {
+    background-color: #3d4249;
+  }
+
+  100% {
+    background-color: #2a2d32;
+  }
+}
+
+@media screen and (max-width: 1400px) {
+  .wizard-wrap {
+    display: none;
+  }
+
+  .wizard {
+    display: none;
+  }
+
+  .mb-1 {
+    display: none;
+  }
+
+  p {
+    word-break: break-all;
+    white-space: normal;
+    margin: 0;
+  }
 }
 </style>
