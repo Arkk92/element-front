@@ -94,7 +94,7 @@ export default defineComponent({
 @media screen and (max-width: 785px) {
     .counter {
         color: yellow;
-        font-size: 1rem;
+        font-size: 1.4rem;
         font-weight: bold;
         -webkit-text-stroke: 1.5px black;
         /* width and color */

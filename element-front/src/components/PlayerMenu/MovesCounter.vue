@@ -77,7 +77,7 @@ export default defineComponent({
 @media screen and (max-width: 785px) {
     .moves-number {
         color: yellow;
-        font-size: 1rem;
+        font-size: 1.5rem;
         font-weight: bold;
         -webkit-text-stroke: 1px black;
         /* width and color */
