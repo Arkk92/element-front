@@ -29,7 +29,7 @@ export default defineComponent({
   height: 40%;
   top: 30%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-46.5%, -50%);
   z-index: 1;
 }
 
