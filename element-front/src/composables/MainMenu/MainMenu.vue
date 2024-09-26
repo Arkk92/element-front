@@ -1,21 +1,21 @@
 <template>
     <div class="main-menu-wrapper">
         <!-- <a href="https://ratherdashinggames.com/games/element.html" target="_blank">Find the rules here!</a> -->
-        <div class="menu-container">
-          <div class="menu-item">
+        <ul class="menu-container">
+          <li class="menu-item">
             <QueueVue :is-ranked="false" class="play-button"/>
-          </div>
-          <div class="menu-item">
+          </li>
+          <li class="menu-item">
             <QueueVue :is-ranked="true" class="play-button"/>
-          </div>
-          <div class="menu-item">
+          </li>
+          <li class="menu-item">
             <Settings class="settings-button"/>
-          </div>
-          <div class="menu-item">
+          </li>
+          <li class="menu-item">
             <AboutUs class="about-us-button"/>
-          </div>
+          </li>
           
-        </div>
+        </ul>
     </div>
 </template>
 <script lang="ts">
@@ -34,6 +34,9 @@ export default defineComponent({
 })
 </script>
 <style lang="css" scoped>
+ul {
+  list-style-type: none;
+}
 .main-menu-wrapper {
   position: absolute;
   width: 100%;
@@ -55,7 +58,7 @@ export default defineComponent({
   position: relative;
   height: 20%;
   top: 5%;
-  width: 20%;
+  width: 100%;
   left: 50%;
   transform: translateX(-50%);
   margin-bottom: 1%;

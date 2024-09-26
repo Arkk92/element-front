@@ -47,7 +47,6 @@ export default defineComponent({
 
 .welcome-message {
   padding-left: 50px;
-
 }
 
 .mystical-link {
@@ -63,7 +62,7 @@ export default defineComponent({
 }
 
 .font-size {
-  font-size: 1.5rem;
+  font-size: 1rem;
 }
 
 @media screen and (max-width: 785px) {
