@@ -1,15 +1,18 @@
 <template>
   <div id="app">
-    <div v-if="isPortrait" class="landscape-warning">
-      Please rotate your device to landscape mode.
-    </div>
-    <div v-else class="app-content">
-      <UpperNavBarVue/>
-      <RoomViewVue/>
-      <FooterNavBarVue/>
-    </div>
+
+    <PreloadScreen>
+      <div v-if="isPortrait" class="landscape-warning">
+        Please rotate your device to landscape mode.
+      </div>
+      <div v-else class="app-content">
+        <UpperNavBarVue />
+        <RoomViewVue />
+        <FooterNavBarVue />
+      </div>
+    </PreloadScreen>
   </div>
-  
+
 </template>
 
 <script lang="ts">
@@ -18,6 +21,7 @@ import UpperNavBarVue from './layouts/UpperNavBar.vue';
 import FooterNavBarVue from './layouts/FooterNavBar.vue';
 
 import { ref, onMounted, onBeforeUnmount, defineComponent } from 'vue';
+import PreloadScreen from './views/PreloadScreen.vue';
 
 export default defineComponent({
   setup() {
@@ -43,7 +47,8 @@ export default defineComponent({
   components: {
     RoomViewVue,
     UpperNavBarVue,
-    FooterNavBarVue
+    FooterNavBarVue,
+    PreloadScreen
   }
 });
 </script>
