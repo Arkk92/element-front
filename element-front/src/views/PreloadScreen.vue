@@ -31,9 +31,17 @@ export default defineComponent({
         const loadedAssets = ref(0);
         const totalAssets = ref(0);
 
-        // Dynamically import all images and videos from the assets folder and subfolders
-        const imageAssets = import.meta.glob('@/assets/**/*.{png,jpg,jpeg}', { eager: true });
-        const videoAssets = import.meta.glob('@/assets/**/*.mp4', { eager: true });
+        let imageAssets: Object;
+        let videoAssets: Object;
+
+        if(import.meta.env.MODE !== 'production'){
+            // Dynamically import all images and videos from the assets folder and subfolders
+            imageAssets = import.meta.glob('@/assets/**/*.{png,jpg,jpeg}', { eager: true });
+            videoAssets = import.meta.glob('@/assets/**/*.mp4', { eager: true });
+        } else {
+            imageAssets = import.meta.glob('/assets/*.{png,jpg,jpeg}', { eager: true });
+            videoAssets = import.meta.glob('/assets/*.mp4', { eager: true });
+        }
 
         // Extract URLs from imageAssets and videoAssets
         const imagePaths = Object.keys(imageAssets);
@@ -43,20 +51,6 @@ export default defineComponent({
         let allAssets = [...imagePaths, ...videoPaths];
         totalAssets.value = allAssets.length; // Set the total number of assets for the progress bar
 
-        // This is intended for production
-        if (allAssets.length == 0) {
-            // Extract filenames from the paths
-            const assetFilenames = allAssets.map(assetPath => {
-                // Split by '/' and get the last part, which is the filename
-                return assetPath.split('/').pop();
-            });
-            if(assetFilenames != undefined){
-                allAssets = assetFilenames as any;
-            } else {
-                console.error('Could find any assets')
-            }
-        }
-        console.log(allAssets);
         onMounted(() => {
             preloadAssets(allAssets, (loaded: number, total: number) => {
                 loadedAssets.value = loaded; // Update the loaded assets count
