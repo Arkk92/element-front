@@ -40,8 +40,22 @@ export default defineComponent({
         const videoPaths = Object.keys(videoAssets);
 
         // Combined asset paths for preloading
-        const allAssets = [...imagePaths, ...videoPaths];
+        let allAssets = [...imagePaths, ...videoPaths];
         totalAssets.value = allAssets.length; // Set the total number of assets for the progress bar
+
+        // This is intended for production
+        if (allAssets.length == 0) {
+            // Extract filenames from the paths
+            const assetFilenames = allAssets.map(assetPath => {
+                // Split by '/' and get the last part, which is the filename
+                return assetPath.split('/').pop();
+            });
+            if(assetFilenames != undefined){
+                allAssets = assetFilenames as any;
+            } else {
+                console.error('Could find any assets')
+            }
+        }
 
         onMounted(() => {
             preloadAssets(allAssets, (loaded: number, total: number) => {
@@ -105,7 +119,7 @@ export default defineComponent({
     font-size: 1.5rem;
 }
 
-.company-logo{
+.company-logo {
     height: 50%;
     width: 50%;
     transform: translateX(50%);
