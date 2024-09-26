@@ -48,7 +48,7 @@ export default defineComponent({
                 loadedAssets.value = loaded; // Update the loaded assets count
             })
                 .then(() => {
-                    // isLoading.value = false;
+                    isLoading.value = false;
                     console.log('All assets preloaded, start the game!');
                 })
                 .catch((error) => {
