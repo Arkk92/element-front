@@ -56,7 +56,7 @@ export default defineComponent({
                 console.error('Could find any assets')
             }
         }
-
+        console.log(allAssets);
         onMounted(() => {
             preloadAssets(allAssets, (loaded: number, total: number) => {
                 loadedAssets.value = loaded; // Update the loaded assets count
