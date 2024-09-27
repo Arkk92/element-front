@@ -2,7 +2,7 @@
     <div>
         <div v-if="isLoading" class="loading-screen">
             <div class="loading-container">
-                <img class="company-logo" src="@/assets/companyLogo.png">
+                <img class="company-logo" src="/assets/companyLogo.png">
                 <p class="assets-progress-text">{{ loadedAssets }}/{{ totalAssets }} assets loaded</p>
                 <div class="gauge-container">
                     <div class="gauge-bar" :style="{ width: (loadedAssets / totalAssets) * 100 + '%' }">
@@ -22,56 +22,38 @@
 
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue';
+import assetsData from '@/assets/assets.json'; // Import the generated assets.json
+
 import { preloadAssets } from '@/utils/assetsLoader';
 
 export default defineComponent({
-    setup() {
-        const isLoading = ref(true);
-        const errorMessage = ref('');
-        const loadedAssets = ref(0);
-        const totalAssets = ref(0);
+  setup() {
+    const isLoading = ref(true);
+    const errorMessage = ref('');
+    const loadedAssets = ref(0);
+    const totalAssets = ref(assetsData.assets.length); // Use total assets count from JSON
 
-        let imageAssets: Object;
-        let videoAssets: Object;
-
-        if(import.meta.env.MODE !== 'production'){
-            // Dynamically import all images and videos from the assets folder and subfolders
-            imageAssets = import.meta.glob('@/assets/**/*.{png,jpg,jpeg}', { eager: true });
-            videoAssets = import.meta.glob('@/assets/**/*.mp4', { eager: true });
-        } else {
-            imageAssets = import.meta.glob('/assets/*.{png,jpg,jpeg}', { eager: true });
-            videoAssets = import.meta.glob('/assets/*.mp4', { eager: true });
-        }
-
-        // Extract URLs from imageAssets and videoAssets
-        const imagePaths = Object.keys(imageAssets);
-        const videoPaths = Object.keys(videoAssets);
-
-        // Combined asset paths for preloading
-        let allAssets = [...imagePaths, ...videoPaths];
-        totalAssets.value = allAssets.length; // Set the total number of assets for the progress bar
-
-        onMounted(() => {
-            preloadAssets(allAssets, (loaded: number, total: number) => {
-                loadedAssets.value = loaded; // Update the loaded assets count
-            })
-                .then(() => {
-                    isLoading.value = false;
-                    console.log('All assets preloaded, start the game!');
-                })
-                .catch((error) => {
-                    errorMessage.value = 'Error loading assets!';
-                    console.error(error);
-                });
+    onMounted(() => {
+      preloadAssets(assetsData.assets, (loaded: number) => {
+        loadedAssets.value = loaded;
+      })
+        .then(() => {
+          isLoading.value = false; // All assets loaded
+          console.log('Assets preloaded, start the game!');
+        })
+        .catch((error) => {
+          errorMessage.value = 'Error loading assets!';
+          console.error(error);
         });
+    });
 
-        return {
-            isLoading,
-            errorMessage,
-            loadedAssets,
-            totalAssets
-        };
-    }
+    return {
+      isLoading,
+      errorMessage,
+      loadedAssets,
+      totalAssets
+    };
+  }
 });
 </script>
 
