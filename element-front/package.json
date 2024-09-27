@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "node scripts/preBuild.mjs",
     "build": "vite build",
+    "preview": "vite preview --port 4000",
     "serve": "vite preview",
     "test:unit": "vue-cli-service test:unit",
     "lint": "eslint --ext .ts,.vue --ignore-path .gitignore --fix src"
