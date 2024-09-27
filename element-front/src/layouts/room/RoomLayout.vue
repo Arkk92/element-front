@@ -147,6 +147,7 @@ export default defineComponent({
     },
     resetRoomLayout(){
       this.data_ready = false;
+      this.isGameOver = false;
       Emitter.emit('restart');
     }
 
