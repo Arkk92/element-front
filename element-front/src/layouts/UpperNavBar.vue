@@ -41,11 +41,9 @@ export default defineComponent({
     Emitter.on('joinGame', () => {
       this.menuButtonShow = true;
     })
-    // Emitter.on('usernameChange', (username) => {
-    //   this.username = username as string;
-    //   this.menuButtonShow = true;
-    //   this.cookies.set('userId', username as string)
-    // })
+    Emitter.on('restart', () => {
+      this.menuButtonShow = false;
+    })
   },
   methods: {
     handleSelect(option: InGameMenuSelectOptions) {
@@ -68,7 +66,7 @@ export default defineComponent({
       SocketInstance.emit('forfeit', data);
       this.cookies.remove('roomId')
       this.cookies.remove('userId')
-      window.location.reload();
+      this.menuButtonShow = false;
     }
   }
 })
