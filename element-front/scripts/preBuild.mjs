@@ -8,7 +8,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Define the folder where your assets are located
+// Define the folder where your assets are located (e.g., public/assets)
 const assetsDir = path.resolve(__dirname, '../public/assets');
 
 // Function to recursively get all asset paths
@@ -24,8 +24,14 @@ const getAssetPaths = (dir) => {
       // Recurse into directories
       assetPaths = assetPaths.concat(getAssetPaths(filePath));
     } else {
-      // Add the file path relative to the public folder
-      assetPaths.push(filePath.replace(`${assetsDir}/`, '/assets/').replace(/\\/g, '/'));
+      // Check if the file is a supported asset type (images, videos, etc.)
+      const ext = path.extname(file).toLowerCase();
+      const supportedFormats = ['.jpg', '.jpeg', '.png', '.gif', '.mp4', '.webm', '.ogg']; // Add more extensions if needed
+
+      if (supportedFormats.includes(ext)) {
+        // Add the file path relative to the public folder
+        assetPaths.push(filePath.replace(`${assetsDir}/`, '/assets/').replace(/\\/g, '/'));
+      }
     }
   });
 
