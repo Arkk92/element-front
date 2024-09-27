@@ -13,8 +13,8 @@ Backend project can be found [here](https://github.com/Ojka91/element-core)
 
 If you want to play with your friends visit [here](https://element-online.netlify.app/)
 
-[!NOTE]
-Element Online is based on [element/element silver edition](https://ratherdashinggames.com/games/element-silver.html) board game. We have no relationship with the owners of the game nor do we intend to profit from it.
+> 💡 _Note:_ 
+> Element Online is based on [element/element silver edition](https://ratherdashinggames.com/games/element-silver.html) board game. We have no relationship with the owners of the game nor do we intend to profit from it.
 
 ## Setup Instructions
 
@@ -25,8 +25,8 @@ Element Online is based on [element/element silver edition](https://ratherdashin
 - [Vitejs](https://vitejs.dev/)
 - [Docker](https://docs.docker.com/install)
 
-[!IMPORTANT]
-The game does not work properly unless the [Backend](https://github.com/Ojka91/element-core) is running.
+> ⚠️ **Important:** 
+> The game does not work properly unless the [Backend](https://github.com/Ojka91/element-core) is running.
 
 ### Running the project with Docker
 
@@ -43,7 +43,7 @@ make run
 ```
 
 It deploys a Nginx web server which serves the static files.
-Exposed url is [http://localhost:4000](http://localhost:4000) will provide the static single page of the game.
+Exposed url is [http://localhost:4000](http://localhost:4000) and will provide the static single page of the game.
 
 Alternatively, it can be deployed with a single command with:
 
@@ -72,5 +72,5 @@ For production build, a preview of the build can be served with the following co
 make deploy-local
 ```
 
-[!IMPORTANT]
-Keep in mind the game doesn't work unless the [Backend](https://github.com/Ojka91/element-core) is running.
+> ⚠️ **Important:** 
+> Keep in mind the game doesn't work unless the [Backend](https://github.com/Ojka91/element-core) is running.
