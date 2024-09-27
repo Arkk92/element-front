@@ -80,8 +80,6 @@ export default defineComponent({
   position: fixed;
   width: 100%;
   z-index: 1000;
-  /* background-image: url("@/assets/header/upperNavHeader3.jpg");
-  background-position: center; */
   background: linear-gradient(to bottom, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
   height: 6%;
   /* object-fit: fill; */

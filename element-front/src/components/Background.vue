@@ -1,12 +1,11 @@
 <template>
   <div class="background">
     <div class="title-wrapper">
-      <img class="title-img" src="@/assets/background/title.png">
+      <img class="title-img" src="/assets/title.png">
     </div>
     <div class="background-video-div">
       <video class="background-video" autoplay muted loop id="background-video" playbackRate="1">
-        <!-- <source src="@/assets/background/background-animated.mp4" type="video/mp4"> -->
-        <source src="@/assets/background/mystical-background.mp4" type="video/mp4">
+        <source src="/assets/mystical-background.mp4" type="video/mp4">
       </video>
     </div>
   </div>

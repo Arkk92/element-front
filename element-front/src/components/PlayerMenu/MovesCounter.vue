@@ -1,7 +1,7 @@
 <template>
     <div class="moves-counter">
         <div class="moves-counter-container">
-            <img class="image" src="@/assets/icons/boots.png">
+            <img class="image" src="/assets/boots.png">
             <div class="moves-number">
                 {{ counter }}
             </div>

@@ -29,10 +29,10 @@ import { PlayerModel } from '@/game/models/player';
 import { UserToPlayerMap } from '@/game/models/room';
 import { useCookies } from "vue3-cookies";
 
-import rockWizardImageUrl from '@/assets/wizards/RockWizard.png'
-import fireWizardImageUrl from '@/assets/wizards/FireWizard.png'
-import waterWizardImageUrl from '@/assets/wizards/WaterWizard.png'
-import windWizardImageUrl from '@/assets/wizards/WindWizard.png'
+import rockWizardImageUrl from '/assets/RockWizard.png'
+import fireWizardImageUrl from '/assets/FireWizard.png'
+import waterWizardImageUrl from '/assets/WaterWizard.png'
+import windWizardImageUrl from '/assets/WindWizard.png'
 
 export default defineComponent({
   name: 'UserLayout',
