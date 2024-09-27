@@ -1,8 +1,9 @@
 <template>
-  <div class="player-actions-layout">
+  <div class="player-actions-layout" :class="isUserTurn ?'':'no-user-turn'">
 
-    <div class="d-flex actions">
-      <PlayerMenu :element-pool-manager="elementPoolManager" :room-id="roomId" :turn="turn" :player="player"/>
+    <div class="d-flex actions" v-if="!endTurn">
+      <PlayerMenu :element-pool-manager="elementPoolManager" :room-id="roomId" :turn="turn" :player="player"
+        :is-user-turn="isUserTurn" @end-turn="endTurn = true" />
     </div>
 
   </div>
@@ -24,13 +25,19 @@ export default defineComponent({
     elementPoolManager: ElementPoolManagerModel,
     roomId: String,
     player: String,
+    isUserTurn: Boolean
   },
   data() {
     return {
-      selectedElement: 'None',
+      endTurn: false,
     }
   },
   methods: {
+  },
+  watch: {
+    turn() {
+      this.endTurn = false;
+    }
   }
 })
 </script>
@@ -58,5 +65,10 @@ export default defineComponent({
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.no-user-turn {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 </style>

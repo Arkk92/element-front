@@ -1,5 +1,5 @@
 <template>
-  <div class="user-interactor">
+  <div class="user-interactor" :class="isUserTurn?'':'non-user-interactor'">
     <div class="elements-and-moves-container">
       <div class="all-elements-container">
         <ElementContainer :elements-hidden="isDrawingElements()" :list="getElementList()" :reset="resetElementView"
@@ -9,10 +9,13 @@
         <MovesCounter :counter="getSageMovements()" />
       </div>
     </div>
-    <div class="button-group-container">
+    <div v-if="isUserTurn" class="button-group-container">
       <DrawingButtonGroup v-if="isDrawingElements()" @add="addElementToList()" @remove="removeElementFromList()"
         @draw="drawElements()" />
       <PlayingButtonGroup v-else-if="isMovementsAvailable()" @endTurn="endTurn()" />
+    </div>
+    <div v-else class="button-group-container">
+      <TurnStateButton :state="getStringState()" />
     </div>
   </div>
 </template>
@@ -31,6 +34,13 @@ import UserInterfaceUtils from './PlayerMenu/UserInterfaceUtils';
 import { ClickedData, Elements, NoneElement } from '@/components/PlayerMenu/types';
 import { Position } from '@/game/utils/position_utils';
 import PlacementUtils from './PlayerMenu/PlacementUtils';
+import TurnStateButton from '@/components/PlayerMenu/TurnStateButton.vue';
+
+const TurnStatesToStringMap = new Map<Number, String>([
+  [TurnStates.DrawingElements, 'Drawing'],
+  [TurnStates.MovesAvailables, 'Playing'],
+  [TurnStates.EndTurn, 'Finished'],
+]);
 
 export default defineComponent({
   name: 'PlayerMenuComponent',
@@ -38,13 +48,15 @@ export default defineComponent({
     MovesCounter,
     ElementContainer,
     DrawingButtonGroup,
-    PlayingButtonGroup
+    PlayingButtonGroup,
+    TurnStateButton
   },
   props: {
     elementPoolManager: ElementPoolManagerModel,
     roomId: String,
     turn: TurnModel,
-    player: String
+    player: String,
+    isUserTurn: Boolean
   },
   data() {
     return {
@@ -113,6 +125,7 @@ export default defineComponent({
     },
     endTurn(): void {
       UserInterfaceUtils.endTurn(this.roomId!)
+      this.$emit('endTurn');
     },
     isEndOfTurn(): boolean {
       return this.turn!.available_sage_moves == 0 && this.turn!.chosen_elements.length == 0;
@@ -126,6 +139,9 @@ export default defineComponent({
         this.selectedElement = NoneElement.None;
       }
       Emitter.emit('elementSelected', this.selectedElement);
+    },
+    getStringState(): string {
+      return TurnStatesToStringMap.get(this.turn!.state) as any;
     }
   }
 })
@@ -199,5 +215,9 @@ export default defineComponent({
     left: 50%;
     transform: translate(-50%, -50%);
   }
+}
+
+.non-user-interactor{
+  pointer-events: none;
 }
 </style>
