@@ -46,7 +46,7 @@ export default defineComponent({
   border-radius: 10px;
   width: 100%;
   height: 100%;
-  background-image: url("@/assets/background/WizardBook.png");
+  background-image: url("/assets/WizardBook.png");
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;

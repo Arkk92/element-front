@@ -41,11 +41,9 @@ export default defineComponent({
     Emitter.on('joinGame', () => {
       this.menuButtonShow = true;
     })
-    // Emitter.on('usernameChange', (username) => {
-    //   this.username = username as string;
-    //   this.menuButtonShow = true;
-    //   this.cookies.set('userId', username as string)
-    // })
+    Emitter.on('restart', () => {
+      this.menuButtonShow = false;
+    })
   },
   methods: {
     handleSelect(option: InGameMenuSelectOptions) {
@@ -68,7 +66,7 @@ export default defineComponent({
       SocketInstance.emit('forfeit', data);
       this.cookies.remove('roomId')
       this.cookies.remove('userId')
-      window.location.reload();
+      this.menuButtonShow = false;
     }
   }
 })
@@ -80,8 +78,6 @@ export default defineComponent({
   position: fixed;
   width: 100%;
   z-index: 1000;
-  /* background-image: url("@/assets/header/upperNavHeader3.jpg");
-  background-position: center; */
   background: linear-gradient(to bottom, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
   height: 6%;
   /* object-fit: fill; */

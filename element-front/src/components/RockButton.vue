@@ -2,7 +2,7 @@
   <div type="button" class="rock-button" :style="`width: ${computedWidth}; height: ${computedHeight};`"
     v-on:click="onButtonPressed()">
     <div type="button" class="button-container">
-      <img class="rock-button-image" src="@/assets/header/StoneButton.png">
+      <img class="rock-button-image" src="/assets/StoneButton.png">
       <a type="button" class="button-overlay">{{ text }}</a>
       <i class="button-overlay" :class="icon" role="img" aria-label="rock-button-icon"></i>
     </div>

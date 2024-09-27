@@ -17,7 +17,7 @@ import { Position, PositionUtils } from '@/game/utils/position_utils';
 import { Emitter } from '@/main';
 import { defineComponent } from 'vue';
 
-import boxMarkerImageUrl from '@/assets/icons/boxMarker.png';
+import boxMarkerImageUrl from '/assets/boxMarker.png';
 
 type EmptyType = 'None' | 'Red' | 'Blue' | 'Yellow'
 

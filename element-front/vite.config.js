@@ -10,7 +10,9 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  root: './',
   build: {
     commonjsOptions: { transformMixedEsModules: true }
-  }
+  },
+  publicDir: 'public'
 });

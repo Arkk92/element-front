@@ -37,8 +37,6 @@ export default defineComponent({
   z-index: 1000;
   height: 100%;
   background: linear-gradient(to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
-  /* background-image: url("@/assets/header/footerNavHeader.jpg");
-  background-position: center; */
   height: 6%;
   /* Sets the image height to 60px */
   object-fit: fill;

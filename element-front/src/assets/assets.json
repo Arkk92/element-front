@@ -1,0 +1,28 @@
+{
+  "assets": [
+    "/assets/Board.png",
+    "/assets/Earth.png",
+    "/assets/Empty.png",
+    "/assets/Fire.png",
+    "/assets/FireWizard.png",
+    "/assets/FireWizardMiniature.png",
+    "/assets/Mountain.png",
+    "/assets/RockWizard.png",
+    "/assets/RockWizardMiniature.png",
+    "/assets/StoneButton.png",
+    "/assets/Water.png",
+    "/assets/WaterWizard.png",
+    "/assets/WaterWizardMiniature.png",
+    "/assets/Wind.png",
+    "/assets/WindWizard.png",
+    "/assets/WindWizardMiniature.png",
+    "/assets/WizardBook.png",
+    "/assets/allElements.png",
+    "/assets/boots.png",
+    "/assets/boxMarker.png",
+    "/assets/companyLogo.png",
+    "/assets/logo.png",
+    "/assets/mystical-background.mp4",
+    "/assets/title.png"
+  ]
+}

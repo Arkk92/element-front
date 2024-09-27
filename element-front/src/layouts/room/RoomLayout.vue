@@ -28,7 +28,7 @@
   
             </div>
           </div>
-          <WinnerLayout v-if="isGameOver" :current-user="getUserId()" :room="roomData" :winner="winner"></WinnerLayout>
+          <WinnerLayout v-if="isGameOver" :current-user="getUserId()" :room="roomData" :winner="winner" @on-close="resetRoomLayout"></WinnerLayout>
         </div>
       </div>
   
@@ -144,6 +144,11 @@ export default defineComponent({
         }
       }
       return ""
+    },
+    resetRoomLayout(){
+      this.data_ready = false;
+      this.isGameOver = false;
+      Emitter.emit('restart');
     }
 
   }

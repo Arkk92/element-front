@@ -13,11 +13,11 @@ import { SageModel } from '@/game/models/pieces/sage';
 import { Emitter } from '@/main';
 import { defineComponent } from 'vue';
 
-import boxMarkerImageUrl from '@/assets/icons/boxMarker.png'
-import rockWizardImageUrl from '@/assets/wizards/RockWizardMiniature.png'
-import fireWizardImageUrl from '@/assets/wizards/FireWizardMiniature.png'
-import waterWizardImageUrl from '@/assets/wizards/WaterWizardMiniature.png'
-import windWizardImageUrl from '@/assets/wizards/WindWizardMiniature.png'
+import boxMarkerImageUrl from '/assets/boxMarker.png'
+import rockWizardImageUrl from '/assets/RockWizardMiniature.png'
+import fireWizardImageUrl from '/assets/FireWizardMiniature.png'
+import waterWizardImageUrl from '/assets/WaterWizardMiniature.png'
+import windWizardImageUrl from '/assets/WindWizardMiniature.png'
 
 export default defineComponent({
   name: 'WizardPieceComponent',

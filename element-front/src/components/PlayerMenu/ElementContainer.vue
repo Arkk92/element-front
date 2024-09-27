@@ -19,11 +19,11 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 
-import allElementsImageUrl from '@/assets/elements/allElements.png';
-import fireImageUrl from '@/assets/elements/Fire.png'
-import waterImageUrl from '@/assets/elements/Water.png'
-import earthImageUrl from '@/assets/elements/Earth.png'
-import windImageUrl from '@/assets/elements/Wind.png'
+import allElementsImageUrl from '/assets/allElements.png';
+import fireImageUrl from '/assets/Fire.png'
+import waterImageUrl from '/assets/Water.png'
+import earthImageUrl from '/assets/Earth.png'
+import windImageUrl from '/assets/Wind.png'
 
 
 const NON_SELECTED = -1;

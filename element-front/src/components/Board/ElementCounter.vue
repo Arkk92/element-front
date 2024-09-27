@@ -12,10 +12,10 @@
 import { ElementTypes } from '@/game/models/elements/elements';
 import { defineComponent } from 'vue';
 
-import fireImageUrl from '@/assets/elements/Fire.png'
-import waterImageUrl from '@/assets/elements/Water.png'
-import earthImageUrl from '@/assets/elements/Earth.png'
-import windImageUrl from '@/assets/elements/Wind.png'
+import fireImageUrl from '/assets/Fire.png'
+import waterImageUrl from '/assets/Water.png'
+import earthImageUrl from '/assets/Earth.png'
+import windImageUrl from '/assets/Wind.png'
 
 export default defineComponent({
     name: 'ElementCounterComponent',

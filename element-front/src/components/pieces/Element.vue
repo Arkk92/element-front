@@ -30,12 +30,12 @@ import { Emitter } from '@/main';
 import { Position, PositionUtils } from '@/game/utils/position_utils';
 import { River } from '../PlayerMenu/types';
 
-import boxMarkerImageUrl from '@/assets/icons/boxMarker.png'
-import fireImageUrl from '@/assets/elements/Fire.png'
-import waterImageUrl from '@/assets/elements/Water.png'
-import mountainImageUrl from '@/assets/elements/Mountain.png'
-import earthImageUrl from '@/assets/elements/Earth.png'
-import windImageUrl from '@/assets/elements/Wind.png'
+import boxMarkerImageUrl from '/assets/boxMarker.png'
+import fireImageUrl from '/assets/Fire.png'
+import waterImageUrl from '/assets/Water.png'
+import mountainImageUrl from '/assets/Mountain.png'
+import earthImageUrl from '/assets/Earth.png'
+import windImageUrl from '/assets/Wind.png'
 
 type WaterType = 'RiverHead' | 'River';
 type ElementFrontType = 'None' | WaterType | 'ReplaceableFire';
