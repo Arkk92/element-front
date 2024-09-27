@@ -2,7 +2,7 @@
 # Build and run commands for vue development
 .DEFAULT_GOAL := dev
 MAIN_SERVICE_NAME := home-web-app
-MAIN_SERVICE_PORT := 8080
+MAIN_SERVICE_PORT := 4000
 NODE_VERSION := 22
 
 .ONESHELL:
@@ -16,8 +16,12 @@ build:
 	docker build -t element-front .
 	
 run:
-	docker run --env-file='element-front/.env' -p 8080:8080 element-front
+	docker run --env-file='element-front/.env' -p 4000:4000 element-front
 
+.ONESHELL:
+deploy:
+	$(MAKE) build
+	$(MAKE) run
 
 build-dev:
 	cd element-front &&	npm install -g @vue/cli &&	npm update -g @vue/cli && npm install
@@ -31,4 +35,4 @@ dev:
 
 deploy-local:
 	$(MAKE) nvm-use
-	cd element-front && npm run build
+	cd element-front && npm run build && npm run preview

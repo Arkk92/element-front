@@ -1,0 +1,7 @@
+FROM node:latest
+WORKDIR "/app"
+COPY ./element-front .
+RUN npm install -g @vue/cli
+#RUN	npm update -g @vue/cli
+RUN npm install
+CMD ["npm", "run", "dev"]
