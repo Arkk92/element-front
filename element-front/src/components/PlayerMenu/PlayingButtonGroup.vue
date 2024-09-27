@@ -1,7 +1,7 @@
 <template>
     <div class="draw-button-group d-flex">
         <div type="button" class="end-turn-button" v-on:click="endTurn()">
-            <RockButton :button-width="'100%'" :button-height="'100%'" :padding="'0px 0px 0px 0px'" :text="'EndTurn'" />
+            <RockButton :button-width="'100%'" :button-height="'100%'" :padding="'0px 0px 0px 0px'" :text="'End turn'" />
         </div>
     </div>
 </template>
