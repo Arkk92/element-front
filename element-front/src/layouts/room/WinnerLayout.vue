@@ -1,6 +1,8 @@
 <template>
   <div class="winner-layout">
-    <WinnerModal :is-open="isModalOpen" :winner-name="winnerName"
+    <WinnerModal v-if="isCurrentUserWinner" :is-open="isModalOpen" :winner-name="winnerName"
+    @close="closeModal()" @return-main="closeModal()"/>
+    <LoserModal v-else :is-open="isModalOpen" :winner-name="winnerName"
     @close="closeModal()" @return-main="closeModal()"/>
   </div>
 </template>
@@ -9,11 +11,13 @@
 import { RoomModel } from '@/game/models/room';
 import { defineComponent, PropType } from 'vue';
 import WinnerModal from '@/components/WinnerModal.vue';
+import LoserModal from '@/components/LoserModal.vue';
 
 export default defineComponent({
   name: 'WinnerLayout',
   components: {
-    WinnerModal
+    WinnerModal,
+    LoserModal
   },
   props: {
     isGameOver: Boolean,
@@ -47,7 +51,7 @@ export default defineComponent({
 
   methods: {
     closeModal() {
-      location.reload();
+      this.$emit('onClose');
     }
   }
 })
