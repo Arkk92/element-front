@@ -21,6 +21,16 @@ import boxMarkerImageUrl from '/assets/boxMarker.png';
 
 type EmptyType = 'None' | 'Red' | 'Blue' | 'Yellow'
 
+function createDebounce() {
+  let timeout: number | undefined = undefined;
+  return function (fnc, delayMs) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      fnc();
+    }, delayMs || 500);
+  };
+}
+
 export default defineComponent({
   name: 'EmptyPieceComponent',
   props: {
@@ -53,9 +63,9 @@ export default defineComponent({
     });
 
     Emitter.on('NewRiverAvailablePlacement', (position) => {
-      if((PositionUtils.isStrictOrthogonalPosition(this.piece!.position, position as Position)&&(this.state == 'None'))){
+      if ((PositionUtils.isStrictOrthogonalPosition(this.piece!.position, position as Position) && (this.state == 'None'))) {
         this.state = 'Yellow';
-      } else{
+      } else {
         this.state = this.state == 'Yellow' ? 'None' : this.state;
       }
     });
@@ -66,10 +76,11 @@ export default defineComponent({
       return boxMarkerImageUrl;
     },
     emptySelected(): void {
+      const debounce = createDebounce();
       if (this.state == 'Red') {
-        this.$nextTick(()=>{
-          Emitter.emit('sagePositionDestination', this.piece!.position)
-        })
+          debounce(()=>{
+            Emitter.emit('sagePositionDestination', this.piece!.position)
+          }, 100);
       }
     },
     getEmptyType(): string {
@@ -126,6 +137,7 @@ export default defineComponent({
   bottom: 0%;
   left: 0%;
 }
+
 .boxMarker {
   position: absolute;
   width: 100%;
@@ -141,7 +153,7 @@ export default defineComponent({
   opacity: 1;
   animation: hoverResizing 1s;
   animation-iteration-count: infinite;
-  
+
 }
 
 .boxMarker:active {
@@ -156,10 +168,12 @@ export default defineComponent({
     width: 100%;
     height: 100%;
   }
+
   50% {
     width: 70%;
     height: 70%;
   }
+
   100% {
     width: 100%;
     height: 100%;
