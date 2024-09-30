@@ -9,12 +9,17 @@
       </video>
     </div>
   </div>
+
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { SoundManager } from '@/services/soundManager';
 
 export default defineComponent({
-  name: 'BackgroundComponent'
+  name: 'BackgroundComponent',
+  mounted() {
+    SoundManager.playBackgroundMusic('backgroundMusic');
+  }
 })
 
 </script>
@@ -22,6 +27,7 @@ export default defineComponent({
 .background {
   display: block;
 }
+
 .title-wrapper {
   position: absolute;
   width: 30%;

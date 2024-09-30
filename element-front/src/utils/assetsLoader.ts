@@ -1,3 +1,6 @@
+import { SoundManager } from '@/services/soundManager';
+import soundAssets from '@/assets/sounds.json';
+
 export const preloadImage = (src: string): Promise<void> => {
   return new Promise((resolve, reject) => {
     const img = new Image();
@@ -22,6 +25,7 @@ export const preloadAssets = (
 ): Promise<void[]> => {
   let loaded = 0;
   const total = assetList.length;
+  SoundManager.loadSounds(soundAssets);
 
   const updateProgress = () => {
     loaded += 1;

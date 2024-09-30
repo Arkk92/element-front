@@ -1,0 +1,4 @@
+{
+  "hoverNav": {"path": "/assets/nav-hover-sound.mp3", "type": "effect"},
+  "backgroundMusic": {"path":"/assets/background-music.mp3", "type": "music"}
+}

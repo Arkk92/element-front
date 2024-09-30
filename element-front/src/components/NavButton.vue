@@ -1,10 +1,11 @@
 <template>
   <div type="button" class="nav-button" v-on:click="onButtonPressed()">
-    <a type="button" :class="disabled ? 'disabled-link' : 'mystical-link'">{{ text }}</a>
+    <a type="button" :class="disabled ? 'disabled-link' : 'mystical-link'" @mouseenter="playSound">{{ text }}</a>
   </div>
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { SoundManager } from '@/services/soundManager';
 
 export default defineComponent({
   name: 'NavButtonComponent',
@@ -30,7 +31,13 @@ export default defineComponent({
   methods: {
     onButtonPressed() {
       this.$emit('clicked');
+    },
+    playSound(){
+      if(!this.disabled){
+        SoundManager.playSound('hoverNav');
+      }
     }
+
   }
 })
 </script>
