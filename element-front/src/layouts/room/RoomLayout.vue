@@ -22,7 +22,7 @@
             </div>
             <div class="player-action-layout">
   
-              <PlayerActionsLayout v-if="isCurrentUserTurn()" :element-pool-manager="roomData.game.board.elementPool"
+              <PlayerActionsLayout :is-user-turn="isCurrentUserTurn()" :element-pool-manager="roomData.game.board.elementPool"
                 :turn="roomData.game.turn" :room-id="roomData.uuid" :player="getPlayerIdByUserId(getUserId())">
               </PlayerActionsLayout>
   
