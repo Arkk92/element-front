@@ -118,7 +118,11 @@ export default defineComponent({
       SocketInstance.on("connect_error", (err) => {
         console.log(`connect_error due to ${err.message}`);
       });
-
+    
+      const roomId = this.cookies.get('roomId')
+      if(roomId != null){
+        SocketInstance.emit('forceGameUpdate', {})
+      }
   },
 
   methods: {
