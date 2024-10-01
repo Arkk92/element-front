@@ -1,11 +1,8 @@
 <template>
   <div class="empty-piece cells" style="padding: 0;" v-if="data_ready">
-    <div class="cells" :class="getEmptyType()" v-on:click="emptySelected()">
+    <div class="cells" :class="getEmptyType()" @click.stop="emptySelected">
       <img class="boxMarker" :src="getImage()">
     </div>
-
-    <!-- <img class="empty" :src="getImage()"> -->
-
   </div>
 </template>
 
@@ -53,9 +50,9 @@ export default defineComponent({
     });
 
     Emitter.on('NewRiverAvailablePlacement', (position) => {
-      if((PositionUtils.isStrictOrthogonalPosition(this.piece!.position, position as Position)&&(this.state == 'None'))){
+      if ((PositionUtils.isStrictOrthogonalPosition(this.piece!.position, position as Position) && (this.state == 'None'))) {
         this.state = 'Yellow';
-      } else{
+      } else {
         this.state = this.state == 'Yellow' ? 'None' : this.state;
       }
     });
@@ -66,11 +63,7 @@ export default defineComponent({
       return boxMarkerImageUrl;
     },
     emptySelected(): void {
-      if (this.state == 'Red') {
-        this.$nextTick(()=>{
-          Emitter.emit('sagePositionDestination', this.piece!.position)
-        })
-      }
+      this.$emit('clicked', this.piece);
     },
     getEmptyType(): string {
       let cssClass: string;
@@ -126,6 +119,7 @@ export default defineComponent({
   bottom: 0%;
   left: 0%;
 }
+
 .boxMarker {
   position: absolute;
   width: 100%;
@@ -141,7 +135,7 @@ export default defineComponent({
   opacity: 1;
   animation: hoverResizing 1s;
   animation-iteration-count: infinite;
-  
+
 }
 
 .boxMarker:active {
@@ -156,10 +150,12 @@ export default defineComponent({
     width: 100%;
     height: 100%;
   }
+
   50% {
     width: 70%;
     height: 70%;
   }
+
   100% {
     width: 100%;
     height: 100%;

@@ -1,6 +1,6 @@
 <template>
   <div class="element">
-    <div class="element-piece col cells" style="padding: 0;" v-if="data_ready" :class="getCssClass()">
+    <div class="element-piece col cells" style="padding: 0;" v-if="data_ready" :class="getCssClass()" v-on:click="clicked">
       <img class="boxMarker" :src="getBoxMarkerImage()">
       <img class="pieces" :src="getImage()" style="opacity: 100%;" :class="state == 'RiverHead' ? 'river-head' : ''">
       <span v-if="isWind()" class="wind-counter">
@@ -134,6 +134,9 @@ export default defineComponent({
     },
     handleRiverHeadAction(action: string) {
       Emitter.emit(`river${action}`);
+    },
+    clicked(){
+      this.$emit('clicked', this.piece);
     }
   },
 })

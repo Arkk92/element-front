@@ -3,7 +3,7 @@
 
     <div class="d-flex actions" v-if="!endTurn">
       <PlayerMenu :element-pool-manager="elementPoolManager" :room-id="roomId" :turn="turn" :player="player"
-        :is-user-turn="isUserTurn" @end-turn="endTurn = true" />
+        :is-user-turn="isUserTurn" @endTurn="endTurn = true" />
     </div>
 
   </div>

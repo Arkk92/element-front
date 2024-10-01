@@ -8,8 +8,9 @@ import { Position, PositionUtils } from "@/game/utils/position_utils";
 import { Emitter } from "@/main";
 import { nextTick } from "vue";
 
-type WaterElementSM =
-  | "None"
+type PieceStateMachine =
+  "None"
+  | "SageSelected"
   | "WaterSelected"
   | "PlacingElement"
   | "ShowingRiversAvailable"
@@ -17,8 +18,8 @@ type WaterElementSM =
   | "SendingData"
   | 'Undoing';
 
-class WaterUtils {
-  waterElementSM: WaterElementSM;
+class PieceManager {
+  state: PieceStateMachine;
   placedWater: WaterModel;
   oldRiver: River;
   newRiver: River;
@@ -28,7 +29,7 @@ class WaterUtils {
   availableRivers: Array<River>;
 
   constructor() {
-    this.waterElementSM = "None";
+    this.state = "None";
     this.placedWater = new WaterModel();
     this.oldRiver = [];
     this.newRiver = [];
@@ -53,7 +54,7 @@ class WaterUtils {
         piece: piece,
       };
       this.sendClickedCellData(clickedData);
-      this.waterElementSM = "None";
+      this.state = "None";
     } else {
       water.position = piece.position;
       gridController.updateGridCell(water);
@@ -62,7 +63,7 @@ class WaterUtils {
         Emitter.emit("riverHighlight", river);
       }
 
-      this.waterElementSM = "ShowingRiversAvailable";
+      this.state = "ShowingRiversAvailable";
       this.placedWater = piece as WaterModel;
       Emitter.emit('sysLog', `Chose the river to move`)
     }
@@ -77,7 +78,7 @@ class WaterUtils {
       ) {
         this.oldRiver = river;
         this.newRiverLength = river.length + 1;
-        this.waterElementSM = "PlacingNewRiver";
+        this.state = "PlacingNewRiver";
         this.lastWaterPlaced = this.placedWater.position;
         this.clearOldRiver(board);
 
@@ -130,7 +131,7 @@ class WaterUtils {
         newRiver: this.newRiver,
       };
       this.sendClickedCellData(data);
-      this.waterElementSM = "None";
+      this.state = "None";
       
       Emitter.emit("oldRiverDisplayOff", this.oldRiver);
       
@@ -138,7 +139,7 @@ class WaterUtils {
   }
 
   sendClickedCellData(data: ClickedData): void {
-    this.waterElementSM = "None";
+    this.state = "None";
     Emitter.emit("clickedCell", data);
   }
 
@@ -184,7 +185,7 @@ class WaterUtils {
     nextTick(()=>{
       // Negative positions to reset empty spaces
       Emitter.emit('NewRiverAvailablePlacement', {row: -2, column: -2});
-      this.waterElementSM = "None";
+      this.state = "None";
       Emitter.emit('sysLog', `River cancelled`)
     })
 
@@ -217,4 +218,4 @@ class WaterUtils {
   }
 }
 
-export default WaterUtils;
+export default PieceManager;
