@@ -64,7 +64,6 @@ export default defineComponent({
     },
     emptySelected(): void {
       this.$emit('clicked', this.piece);
-      // Emitter.emit('sagePositionDestination', )
     },
     getEmptyType(): string {
       let cssClass: string;
