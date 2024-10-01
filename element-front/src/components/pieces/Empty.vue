@@ -1,11 +1,8 @@
 <template>
   <div class="empty-piece cells" style="padding: 0;" v-if="data_ready">
-    <div class="cells" :class="getEmptyType()" v-on:click="emptySelected()">
+    <div class="cells" :class="getEmptyType()" @click.stop="emptySelected">
       <img class="boxMarker" :src="getImage()">
     </div>
-
-    <!-- <img class="empty" :src="getImage()"> -->
-
   </div>
 </template>
 
@@ -20,16 +17,6 @@ import { defineComponent } from 'vue';
 import boxMarkerImageUrl from '/assets/boxMarker.png';
 
 type EmptyType = 'None' | 'Red' | 'Blue' | 'Yellow'
-
-function createDebounce() {
-  let timeout: number | undefined = undefined;
-  return function (fnc, delayMs) {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => {
-      fnc();
-    }, delayMs || 500);
-  };
-}
 
 export default defineComponent({
   name: 'EmptyPieceComponent',
@@ -76,12 +63,8 @@ export default defineComponent({
       return boxMarkerImageUrl;
     },
     emptySelected(): void {
-      const debounce = createDebounce();
-      if (this.state == 'Red') {
-          debounce(()=>{
-            Emitter.emit('sagePositionDestination', this.piece!.position)
-          }, 100);
-      }
+      this.$emit('clicked', this.piece);
+      // Emitter.emit('sagePositionDestination', )
     },
     getEmptyType(): string {
       let cssClass: string;
