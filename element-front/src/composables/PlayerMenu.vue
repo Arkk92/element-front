@@ -1,5 +1,6 @@
 <template>
-  <div class="user-interactor" :class="isUserTurn?'':'non-user-interactor'">
+  <div class="user-interactor" :class="isUserTurn ? '' : 'non-user-interactor'">
+
     <div class="elements-and-moves-container">
       <div class="all-elements-container">
         <ElementContainer :elements-hidden="isDrawingElements()" :list="getElementList()" :reset="resetElementView"
@@ -8,6 +9,9 @@
       <div class="moves-counter-wrap">
         <MovesCounter :counter="getSageMovements()" />
       </div>
+    </div>
+    <div class="turn-timer">
+      <PlayerTimer :restart="restartTimer" :minutes="0" :seconds="10" @time-out="endTurn()" />
     </div>
     <div v-if="isUserTurn" class="button-group-container">
       <DrawingButtonGroup v-if="isDrawingElements()" @add="addElementToList()" @remove="removeElementFromList()"
@@ -35,6 +39,7 @@ import { ClickedData, Elements, NoneElement } from '@/components/PlayerMenu/type
 import { Position } from '@/game/utils/position_utils';
 import PlacementUtils from './PlayerMenu/PlacementUtils';
 import TurnStateButton from '@/components/PlayerMenu/TurnStateButton.vue';
+import PlayerTimer from '@/components/PlayerMenu/PlayerTimer.vue';
 
 const TurnStatesToStringMap = new Map<Number, String>([
   [TurnStates.DrawingElements, 'Drawing'],
@@ -49,7 +54,8 @@ export default defineComponent({
     ElementContainer,
     DrawingButtonGroup,
     PlayingButtonGroup,
-    TurnStateButton
+    TurnStateButton,
+    PlayerTimer
   },
   props: {
     elementPoolManager: ElementPoolManagerModel,
@@ -58,6 +64,9 @@ export default defineComponent({
     player: String,
     isUserTurn: Boolean
   },
+  beforeMount(){
+    this.resetTimer();
+  },
   data() {
     return {
       sageMovements: UserInterfaceUtils.MIN_SAGE_MOVEMENTS,
@@ -65,6 +74,9 @@ export default defineComponent({
       drawType: 'random',
       selectedElement: NoneElement.None as Elements,
       resetElementView: false,
+      restartTimer: true,
+      currentPlayer: null as Number | null,
+      dataReady: false
     }
   },
   mounted() {
@@ -124,7 +136,10 @@ export default defineComponent({
       return this.turn!.state == TurnStates.EndTurn;
     },
     endTurn(): void {
-      UserInterfaceUtils.endTurn(this.roomId!)
+      if(this.isUserTurn){
+        UserInterfaceUtils.endTurn(this.roomId!)
+      }
+      this.resetTimer();
       this.$emit('endTurn');
     },
     isEndOfTurn(): boolean {
@@ -142,6 +157,25 @@ export default defineComponent({
     },
     getStringState(): string {
       return TurnStatesToStringMap.get(this.turn!.state) as any;
+    },
+    resetTimer(){
+      this.restartTimer = true;
+        this.$nextTick(()=>{
+          this.restartTimer = false;
+        })
+    }
+  },
+  computed: {
+    playerChange(){
+      return this.turn!.player;
+    }
+  },
+  watch: {
+    playerChange(){
+      if(this.turn!.player != this.currentPlayer){
+        this.currentPlayer = this.turn!.player;
+        this.resetTimer();
+      }
     }
   }
 })
@@ -203,6 +237,14 @@ export default defineComponent({
   height: 100%;
 }
 
+.turn-timer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: fit-content;
+}
+
 @media screen and (max-width: 785px) {
 
   .wizard-moves-number {
@@ -217,7 +259,7 @@ export default defineComponent({
   }
 }
 
-.non-user-interactor{
+.non-user-interactor {
   pointer-events: none;
 }
 </style>
