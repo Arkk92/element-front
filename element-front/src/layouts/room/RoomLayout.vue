@@ -104,8 +104,6 @@ export default defineComponent({
 
         }
         this.data_ready = true;
-
-
       }
     }),
       SocketInstance.on('error', async (data) => {
@@ -122,6 +120,7 @@ export default defineComponent({
       const roomId = this.cookies.get('roomId')
       if(roomId != null){
         SocketInstance.emit('forceGameUpdate', {})
+        Emitter.emit("joinGame");
       }
   },
 
