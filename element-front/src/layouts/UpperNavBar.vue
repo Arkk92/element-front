@@ -38,7 +38,7 @@ export default defineComponent({
     }
   },
   mounted() {
-    Emitter.on('joinGame', () => {
+    Emitter.on('GameAccepted', () => {
       this.menuButtonShow = true;
     })
     Emitter.on('restart', () => {

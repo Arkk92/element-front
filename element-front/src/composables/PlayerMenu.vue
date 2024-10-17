@@ -11,7 +11,7 @@
       </div>
     </div>
     <div class="turn-timer">
-      <PlayerTimer :restart="restartTimer" :minutes="0" :seconds="10" @time-out="endTurn()" />
+      <PlayerTimer :restart="restartTimer" :time="turn!.remainingTurnTime" />
     </div>
     <div v-if="isUserTurn" class="button-group-container">
       <DrawingButtonGroup v-if="isDrawingElements()" @add="addElementToList()" @remove="removeElementFromList()"
@@ -40,6 +40,8 @@ import { Position } from '@/game/utils/position_utils';
 import PlacementUtils from './PlayerMenu/PlacementUtils';
 import TurnStateButton from '@/components/PlayerMenu/TurnStateButton.vue';
 import PlayerTimer from '@/components/PlayerMenu/PlayerTimer.vue';
+import { useAuthStore } from '@/stores/auth';
+import { useGameStore } from '@/stores/game';
 
 const TurnStatesToStringMap = new Map<Number, String>([
   [TurnStates.DrawingElements, 'Drawing'],
@@ -57,32 +59,26 @@ export default defineComponent({
     TurnStateButton,
     PlayerTimer
   },
-  props: {
-    elementPoolManager: ElementPoolManagerModel,
-    roomId: String,
-    turn: TurnModel,
-    player: String,
-    isUserTurn: Boolean
-  },
-  beforeMount(){
-    this.resetTimer();
-  },
+  setup() {
+    const authStore = useAuthStore();
+    const gameStore = useGameStore();
+    return {
+      authStore,
+      gameStore
+    }
+  },  
   data() {
     return {
       sageMovements: UserInterfaceUtils.MIN_SAGE_MOVEMENTS,
       elementList: [] as Array<ElementTypes>,
-      drawType: 'random',
       selectedElement: NoneElement.None as Elements,
       resetElementView: false,
-      restartTimer: true,
+      restartTimer: false,
       currentPlayer: null as Number | null,
       dataReady: false
     }
   },
   mounted() {
-    Emitter.on('drawType', (drawType => {
-      this.drawType = drawType as string;
-    }))
 
     Emitter.on('clickedCell', clickedData => {
       if (this.selectedElement === NoneElement.None) {
@@ -136,10 +132,9 @@ export default defineComponent({
       return this.turn!.state == TurnStates.EndTurn;
     },
     endTurn(): void {
-      if(this.isUserTurn){
+      if (this.isUserTurn) {
         UserInterfaceUtils.endTurn(this.roomId!)
       }
-      this.resetTimer();
       this.$emit('endTurn');
     },
     isEndOfTurn(): boolean {
@@ -158,24 +153,31 @@ export default defineComponent({
     getStringState(): string {
       return TurnStatesToStringMap.get(this.turn!.state) as any;
     },
-    resetTimer(){
-      this.restartTimer = true;
-        this.$nextTick(()=>{
-          this.restartTimer = false;
-        })
-    }
   },
   computed: {
-    playerChange(){
-      return this.turn!.player;
+    elementPoolManager(): ElementPoolManagerModel {
+      return this.gameStore.gameModel.board.elementPool;
+    },
+    roomId(): string {
+      return this.authStore.roomId;
+    },
+    turn(): TurnModel{
+      return this.gameStore.gameModel.turn;
+    },
+    player(): string{
+      return this.authStore.playerId;
+    },
+    isUserTurn(): Boolean {
+      return this.authStore.playerId === this.gameStore.getTurnPlayerId();
     }
   },
   watch: {
-    playerChange(){
-      if(this.turn!.player != this.currentPlayer){
-        this.currentPlayer = this.turn!.player;
-        this.resetTimer();
-      }
+    playerChange() {
+      this.restartTimer = true;
+      // console.log("player change!")
+      this.$nextTick(() => {
+        this.restartTimer = false;
+      })
     }
   }
 })

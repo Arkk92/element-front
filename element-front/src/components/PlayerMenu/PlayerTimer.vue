@@ -10,7 +10,6 @@
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { useCookies } from 'vue3-cookies';
 
 
 function getTimeRemaining(endtime: Date) {
@@ -28,41 +27,24 @@ export default defineComponent({
     name: 'PlayerTimerComponent',
     components: {
     },
-    setup() {
-        const { cookies } = useCookies();
-
-        return {
-            cookies
-        };
-    },
     props: {
         restart: Boolean,
-        minutes: {
+        time: {
             type: Number,
-            default: 2,
+            required: true
         },
-        seconds: {
-            type: Number,
-            default: 30
-        }
     },
     data() {
         return {
             deadline: new Date(),
             interval: 0,
             stop: false,
-            remainingMinutes: this.minutes,
-            remainingSeconds: this.seconds
+            remainingMinutes: 0,
+            remainingSeconds: 0
         }
     },
     mounted() {
-        const storedDeadLine = this.cookies.get('deadline');
-        if (storedDeadLine == null) {
-            this.startTimer()
-        } else {
-            this.deadline = new Date(Date.parse(storedDeadLine));
-        }
-        this.stop = false;
+        this.startTimer()
         this.updateTimer();
         this.interval = setInterval(this.updateTimer, 1000);
     },
@@ -79,16 +61,13 @@ export default defineComponent({
         },
         onTimeOut() {
             this.stopTimer();
-            this.$emit('time-out');
         },
         startTimer() {
-            this.deadline = new Date(Date.parse(new Date().toISOString()) + (this.minutes * 60 + this.seconds) * 1000);
-            this.cookies.set('deadline', this.deadline.toISOString());
+            this.deadline = new Date(Date.parse(new Date().toISOString()) + this.time);
             this.stop = false;
         },
         stopTimer(){
             this.stop = true;
-            this.cookies.remove('deadline');
         }
     },
     computed: {
@@ -99,9 +78,9 @@ export default defineComponent({
         }
     },
     watch: {
-        restart() {
-            this.stopTimer()
-            this.startTimer();
+        restart(){
+            this.stopTimer();
+            this.startTimer()
             this.updateTimer();
         }
     }
