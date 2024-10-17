@@ -15,16 +15,12 @@ export class SocketController {
     private client: Socket<ServerToClientEvents, ClientToServerEvents>
   ) {}
   execute() {
+    const roomStore = useRoomStore();
+    const authStore = useAuthStore();
+
     this.client.on("gameUpdate", (data: PublicServerResponse | null) => {
-      const roomStore = useRoomStore();
-      const authStore = useAuthStore();
-      console.log(data)
-      if (data){
-        if(authStore.playerId === null) {
-          const userToPlayerMap = data.room.user_to_player_map
-          const playerId: string = userToPlayerMap.filter(map => map.user_uuid === authStore.userId)[0].player_uuid;
-          authStore.setPlayerId(playerId);
-        }
+      console.log(data);
+      if (data) {
         roomStore.updateFromServerResponse(data);
       }
     });
@@ -39,14 +35,16 @@ export class SocketController {
     });
 
     this.client.on("userAuthData", (data: UserAuthData) => {
-      const authStore = useAuthStore();
-      if (data) authStore.updateAuthData(data);
+      if (data) {
+        authStore.updateAuthData(data);
+      }
     });
 
     this.client.on("gameFound", (data: GameFound) => {
-      const roomStore = useRoomStore();
       roomStore.setRoomId(data.roomId);
       roomStore.updateRoomState("GameFound");
     });
+
+    console.log("Event Listeners Ready!")
   }
 }

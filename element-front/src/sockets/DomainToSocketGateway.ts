@@ -33,7 +33,7 @@ export class DomainToSocketGateway {
     });
 
     Emitter.on("ReJoiningGame", () => {
-      this.client.emit("forceGameUpdate", {});
+      this.client.emit("forceGameUpdate");
     });
   }
 }
