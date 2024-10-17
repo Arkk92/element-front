@@ -1,4 +1,4 @@
-import { IGameModel, GameModel, GameModelMap } from "@/game/models/game";
+import { GameModel, GameModelMap, IGameModel } from "@/game/models/game";
 import { TurnStates } from "@/game/models/turn";
 import { Emitter } from "@/main";
 import { defineStore } from "pinia";
@@ -13,16 +13,17 @@ export const useGameStore = defineStore("game", {
   state: () => {
     return { ...defaultState };
   },
-  getters: {
-    
-  },
+  getters: {},
   actions: {
-    reset(){
+    reset() {
       Object.assign(this, defaultState);
     },
     updateGameModel(game: IGameModel) {
       this.gameModel = new GameModelMap().toDomain(game);
-      Emitter.emit("GameUpdate");
+      console.log(this.gameModel.turn.remainingTurnTime);
+      setTimeout(() => {
+        Emitter.emit("GameUpdate");
+      }, 100);
     },
     setWinner(winner: string) {
       this.winner = winner;
@@ -35,6 +36,9 @@ export const useGameStore = defineStore("game", {
     },
     getTurnPlayerId(): string {
       return this.turnPlayerId;
+    },
+    getRemainingTurnTime(): number {
+      return this.gameModel.turn.remainingTurnTime;
     },
   },
 });
