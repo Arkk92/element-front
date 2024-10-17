@@ -1,3 +1,4 @@
+import { Emitter } from '@/main';
 import { JoinGameData, UserAuthData } from '@/sockets/socketUtils';
 import { defineStore } from 'pinia'
 import { useCookies } from 'vue3-cookies';
@@ -16,8 +17,8 @@ export const useAuthStore = defineStore('auth', {
     }
   },
   getters: {
-    getAuthData(): JoinGameData {
-        return { roomId: this.roomId, username: this.userId };
+    getAuthData(): UserAuthData {
+        return { roomUuid: this.roomId, userUuid: this.userId, playerUuid: this.playerId };
     }
   },
   actions: {
@@ -28,8 +29,11 @@ export const useAuthStore = defineStore('auth', {
     updateAuthData(data: UserAuthData) {
       this.roomId = data.roomUuid;
       this.userId = data.userUuid;
+      this.playerId = data.playerUuid;
       this.cookies.set("roomId", this.roomId, COOKIES_EXPIRATION_TIME);
       this.cookies.set("userId", this.userId, COOKIES_EXPIRATION_TIME);
+      this.cookies.set("playerId", this.playerId, COOKIES_EXPIRATION_TIME);
+      Emitter.emit('AuthDataUpdate')
     },
     removeAuthData(){
       this.roomId = '';
@@ -38,9 +42,5 @@ export const useAuthStore = defineStore('auth', {
       this.cookies.remove("userId");
       this.cookies.remove("playerId");
     },
-    setPlayerId(playerId: string){
-      this.playerId = playerId;
-      this.cookies.set("playerId", this.playerId, COOKIES_EXPIRATION_TIME);
-    }
   },
 })
