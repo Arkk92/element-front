@@ -10,6 +10,7 @@ export interface ServerToClientEvents {
   gameFound: (response: GameFound) => void;
   chat: (response: ChatServerToClient) => void;
   userAuthData: (response: UserAuthData) => void;
+  currentUsersConnected: (response: UsersConnectedCount) => void;
 
   // Testing porpouses
   boardMovement: (response: {}) => void;
@@ -19,14 +20,14 @@ export interface ServerToClientEvents {
 export interface ClientToServerEvents {
   onQueue: (queue: Queue) => void;
   cancelQueue: (queue: Queue) => void;
-  joinGame: (data: JoinGame) => void;
-  endTurn: (data: EndTurn) => void;
-  drawElements: (data: DrawElements) => void;
-  placeElement: (data: PlaceElement) => void;
-  moveSage: (data: MoveSage) => void;
+  joinGame: (data: JoinGameData) => void;
+  endTurn: (data: EndTurnData) => void;
+  drawElements: (data: DrawElementsData) => void;
+  placeElement: (data: PlaceElementData) => void;
+  moveSage: (data: MoveSageData) => void;
   chat: (data: ChatClientToServer) => void;
   forfeit: (data: ForfeitData) => void;
-  forceGameUpdate: (data: any) => void;
+  forceGameUpdate: () => void;
 
   // Testing porpouses
   joinRoom: (data: any) => void;
@@ -51,28 +52,28 @@ export type GameFound = {
   roomId: string
 }
 
-export type JoinGame = {
+export type JoinGameData = {
   roomId: string
   username: string
 }
 
-export type EndTurn = {
+export type EndTurnData = {
   roomId: string
 }
 
-export type DrawElements = {
+export type DrawElementsData = {
   roomId: string
   numOfElements: number
 }
 
-export type PlaceElement = {
+export type PlaceElementData = {
   roomId: string
   element: ElementTypes
   position: Position
   reaction?: Reaction
 }
 
-export type MoveSage = {
+export type MoveSageData = {
   roomId: string
   playerId: string
   position: Position
@@ -95,4 +96,8 @@ export type UserAuthData = {
 export type ForfeitData = {
   roomId: string,
   userId: string
+}
+
+export type UsersConnectedCount = {
+  currentUsersCount: number
 }
