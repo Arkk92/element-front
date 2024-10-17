@@ -1,17 +1,23 @@
-import { createApp } from 'vue'
-import App from '@/App.vue'
-import ClientSocket from './sockets/client';
-import enums from 'vue-enums'
-import mitt from 'mitt';
+import App from "@/App.vue";
+import mitt from "mitt";
+import { createApp } from "vue";
+import enums from "vue-enums";
+import ClientSocket from "./sockets/client";
 
-import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap";
-import 'bootstrap-icons/font/bootstrap-icons';
-import 'bootstrap-icons/font/bootstrap-icons.css';
+import "bootstrap-icons/font/bootstrap-icons";
+import "bootstrap-icons/font/bootstrap-icons.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { createPinia } from "pinia";
 
-export const SocketInstance = ClientSocket.setupSocketConnection();
 export const Emitter = mitt();
 
-const app = createApp(App)
-app.use(enums)
-app.mount('#app')
+export const SocketInstance = ClientSocket.setupSocketConnection();
+
+const pinia = createPinia();
+const app = createApp(App);
+
+app.use(enums);
+app.use(pinia);
+
+app.mount("#app");

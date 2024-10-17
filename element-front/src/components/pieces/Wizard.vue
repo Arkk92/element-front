@@ -1,5 +1,5 @@
 <template>
-  <div class="wizard-piece col cells" style="padding: 0;" v-if="data_ready" v-on:click="sageSelected()">
+  <div class="wizard-piece col cells" style="padding: 0;" v-if="data_ready" v-on:click.stop="sageSelected()">
     <img class="boxMarker" :src="getBoxMarkerImage()">
     <div v-if="playerNumber == currentPlayer" class="wizard-shadow shinning-fade"></div>
     <img class="pieces wizard-image" :src="getWizardImage()" tabindex="-1">
@@ -60,6 +60,7 @@ export default defineComponent({
           this.selected = true;
           Emitter.emit('sageSelectedPosition', this.piece?.position);
         }
+        this.$emit('selected', this.selected)
       }
     }
     

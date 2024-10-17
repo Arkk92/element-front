@@ -1,5 +1,6 @@
 <template>
-  <div class="user-interactor">
+  <div class="user-interactor" :class="isUserTurn ? '' : 'non-user-interactor'">
+
     <div class="elements-and-moves-container">
       <div class="all-elements-container">
         <ElementContainer :elements-hidden="isDrawingElements()" :list="getElementList()" :reset="resetElementView"
@@ -9,10 +10,16 @@
         <MovesCounter :counter="getSageMovements()" />
       </div>
     </div>
-    <div class="button-group-container">
+    <div class="turn-timer">
+      <PlayerTimer />
+    </div>
+    <div v-if="isUserTurn" class="button-group-container">
       <DrawingButtonGroup v-if="isDrawingElements()" @add="addElementToList()" @remove="removeElementFromList()"
         @draw="drawElements()" />
       <PlayingButtonGroup v-else-if="isMovementsAvailable()" @endTurn="endTurn()" />
+    </div>
+    <div v-else class="button-group-container">
+      <TurnStateButton :state="getStringState()" />
     </div>
   </div>
 </template>
@@ -31,6 +38,16 @@ import UserInterfaceUtils from './PlayerMenu/UserInterfaceUtils';
 import { ClickedData, Elements, NoneElement } from '@/components/PlayerMenu/types';
 import { Position } from '@/game/utils/position_utils';
 import PlacementUtils from './PlayerMenu/PlacementUtils';
+import TurnStateButton from '@/components/PlayerMenu/TurnStateButton.vue';
+import PlayerTimer from '@/components/PlayerMenu/PlayerTimer.vue';
+import { useAuthStore } from '@/stores/auth';
+import { useGameStore } from '@/stores/game';
+
+const TurnStatesToStringMap = new Map<Number, String>([
+  [TurnStates.DrawingElements, 'Drawing'],
+  [TurnStates.MovesAvailables, 'Playing'],
+  [TurnStates.EndTurn, 'Finished'],
+]);
 
 export default defineComponent({
   name: 'PlayerMenuComponent',
@@ -38,27 +55,30 @@ export default defineComponent({
     MovesCounter,
     ElementContainer,
     DrawingButtonGroup,
-    PlayingButtonGroup
+    PlayingButtonGroup,
+    TurnStateButton,
+    PlayerTimer
   },
-  props: {
-    elementPoolManager: ElementPoolManagerModel,
-    roomId: String,
-    turn: TurnModel,
-    player: String
-  },
+  setup() {
+    const authStore = useAuthStore();
+    const gameStore = useGameStore();
+    return {
+      authStore,
+      gameStore
+    }
+  },  
   data() {
     return {
       sageMovements: UserInterfaceUtils.MIN_SAGE_MOVEMENTS,
       elementList: [] as Array<ElementTypes>,
-      drawType: 'random',
       selectedElement: NoneElement.None as Elements,
       resetElementView: false,
+      restartTimer: false,
+      currentPlayer: null as Number | null,
+      dataReady: false
     }
   },
   mounted() {
-    Emitter.on('drawType', (drawType => {
-      this.drawType = drawType as string;
-    }))
 
     Emitter.on('clickedCell', clickedData => {
       if (this.selectedElement === NoneElement.None) {
@@ -112,7 +132,10 @@ export default defineComponent({
       return this.turn!.state == TurnStates.EndTurn;
     },
     endTurn(): void {
-      UserInterfaceUtils.endTurn(this.roomId!)
+      if (this.isUserTurn) {
+        UserInterfaceUtils.endTurn(this.roomId!)
+      }
+      this.$emit('endTurn');
     },
     isEndOfTurn(): boolean {
       return this.turn!.available_sage_moves == 0 && this.turn!.chosen_elements.length == 0;
@@ -126,6 +149,35 @@ export default defineComponent({
         this.selectedElement = NoneElement.None;
       }
       Emitter.emit('elementSelected', this.selectedElement);
+    },
+    getStringState(): string {
+      return TurnStatesToStringMap.get(this.turn!.state) as any;
+    },
+  },
+  computed: {
+    elementPoolManager(): ElementPoolManagerModel {
+      return this.gameStore.gameModel.board.elementPool;
+    },
+    roomId(): string {
+      return this.authStore.roomId;
+    },
+    turn(): TurnModel{
+      return this.gameStore.gameModel.turn;
+    },
+    player(): string{
+      return this.authStore.playerId;
+    },
+    isUserTurn(): Boolean {
+      return this.authStore.playerId === this.gameStore.getTurnPlayerId();
+    }
+  },
+  watch: {
+    playerChange() {
+      this.restartTimer = true;
+      // console.log("player change!")
+      this.$nextTick(() => {
+        this.restartTimer = false;
+      })
     }
   }
 })
@@ -187,6 +239,14 @@ export default defineComponent({
   height: 100%;
 }
 
+.turn-timer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: fit-content;
+}
+
 @media screen and (max-width: 785px) {
 
   .wizard-moves-number {
@@ -199,5 +259,9 @@ export default defineComponent({
     left: 50%;
     transform: translate(-50%, -50%);
   }
+}
+
+.non-user-interactor {
+  pointer-events: none;
 }
 </style>

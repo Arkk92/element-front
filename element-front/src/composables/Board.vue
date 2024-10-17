@@ -1,12 +1,13 @@
 <template>
   <div class="board" v-if="data_ready">
     <div class="custom-row" v-for="row in board!.grid!.cells" :key="row as any">
-      <div class="cell-div" v-for="cell in row" :key="cell as any" v-on:click="cellClicked(cell)">
+      <div class="cell-div" v-for="cell in row" :key="cell as any">
         <Wizard v-if="isWizardCell(cell.type)" :piece="cell as any"
           :player-number="getPlayerNumberBySage(cell as SageModel) as (number | undefined)"
-          :current-player="currentPlayer" />
-        <Element v-else-if="isElementCell(cell.type)" :piece="cell as any" />
-        <Empty v-else :piece="cell" :grid="board!.grid" />
+          :current-player="currentPlayer"
+          @selected="sageSelected"/>
+        <Element v-else-if="isElementCell(cell.type)" :piece="cell as any" @clicked="cellClicked(cell)" />
+        <Empty v-else :piece="cell" :grid="board!.grid" @clicked="cellClicked(cell)"/>
 
       </div>
     </div>
@@ -27,7 +28,7 @@ import Element from '@/components/pieces/Element.vue';
 import { Emitter } from '@/main'
 import { ElementTypes } from '@/game/models/elements/elements';
 import { WaterModel } from '@/game/models/elements/water';
-import WaterUtils from './Board/WaterUtils';
+import PieceManager from '@/composables/Board/PieceManager';
 
 export default defineComponent({
   name: 'BoardComponent',
@@ -46,30 +47,32 @@ export default defineComponent({
   },
   data() {
     return {
-      waterUtils: null as WaterUtils | null,
+      pieceManager: null as PieceManager | null,
       data_ready: false,
     }
   },
   mounted() {
     this.data_ready = true;
 
-    this.waterUtils = new WaterUtils();
+    this.pieceManager = new PieceManager();
 
     Emitter.on('elementSelected', (element) => {
       if ((element as ElementTypes) === ElementTypes.Water) {
-        if (this.waterUtils!.waterElementSM === 'None') {
-          this.waterUtils!.waterElementSM = 'PlacingElement';
+        if (this.pieceManager!.state === 'None') {
+          this.pieceManager!.state = 'PlacingElement';
         }
+      } else {
+        this.pieceManager!.state = 'None';
       }
     })
     Emitter.on('riverCancel', () => {
-      this.waterUtils?.cancelBuildingRiver(this.board!);
+      this.pieceManager?.cancelBuildingRiver(this.board!);
       Emitter.emit('resetPlayerMenu');
     })
     Emitter.on('riverUndo', () => {
-      this.waterUtils!.waterElementSM = 'Undoing';
-      this.waterUtils?.undoRiverBuildingStep(this.board!);
-      this.waterUtils!.waterElementSM = 'PlacingNewRiver';
+      this.pieceManager!.state = 'Undoing';
+      this.pieceManager?.undoRiverBuildingStep(this.board!);
+      this.pieceManager!.state = 'PlacingNewRiver';
     })
   },
   methods: {
@@ -94,24 +97,38 @@ export default defineComponent({
       }
       return 0;
     },
+    sageSelected(selected: Boolean){
+      if(selected){
+        this.pieceManager!.state = 'SageSelected';
+      } else {
+        this.pieceManager!.state = 'None';
+      }
+    },
     cellClicked(piece: PieceModel): void {
-      switch (this.waterUtils!.waterElementSM) {
+      switch (this.pieceManager!.state) {
+        case 'SageSelected':
+          if(piece.type !== PieceTypes.Element){
+            Emitter.emit('sagePositionDestination', piece.position);
+            this.pieceManager!.state = 'None';
+          } else {
+            Emitter.emit('errorLog', 'Move is not allowed')
+          }
+          break;
         case 'PlacingElement':
-          this.waterUtils!.placingWater(piece as WaterModel, this.board!);
+          this.pieceManager!.placingWater(piece as WaterModel, this.board!);
           break;
         case 'ShowingRiversAvailable':
-          this.waterUtils!.chosingRiver(piece as WaterModel, this.board!);
+          this.pieceManager!.chosingRiver(piece as WaterModel, this.board!);
           break;
         case 'PlacingNewRiver':
-          this.waterUtils!.buildNewRiver(piece as WaterModel, this.board!);
+          this.pieceManager!.buildNewRiver(piece as WaterModel, this.board!);
           break;
         default:
-          this.waterUtils!.sendClickedCellData({
+          this.pieceManager!.sendClickedCellData({
             piece: piece
           });
           break;
       }
-
     },
 
   }

@@ -25,9 +25,11 @@ import { defineComponent, ref, onMounted } from 'vue';
 import assetsData from '@/assets/assets.json'; // Import the generated assets.json
 
 import { preloadAssets } from '@/utils/assetsLoader';
+import { useAppStore } from '@/stores/app';
 
 export default defineComponent({
   setup() {
+    const appStore = useAppStore();
     const isLoading = ref(true);
     const errorMessage = ref('');
     const loadedAssets = ref(0);
@@ -40,6 +42,7 @@ export default defineComponent({
         .then(() => {
           isLoading.value = false; // All assets loaded
           console.log('Assets preloaded, start the game!');
+          appStore.onLoadingFinished();
         })
         .catch((error) => {
           errorMessage.value = 'Error loading assets!';

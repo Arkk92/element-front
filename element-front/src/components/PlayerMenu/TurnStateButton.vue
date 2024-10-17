@@ -1,7 +1,7 @@
 <template>
-    <div class="draw-button-group d-flex">
-        <div type="button" class="end-turn-button" v-on:click="endTurn()">
-            <RockButton :button-width="'100%'" :button-height="'100%'" :padding="'0px 0px 0px 0px'" :text="'End turn'" />
+    <div class="turn-state-button-group d-flex">
+        <div type="button" class="turn-state-button">
+            <RockButton :button-width="'100%'" :button-height="'100%'" :padding="'0px 0px 0px 0px'" :text="state" />
         </div>
     </div>
 </template>
@@ -14,15 +14,16 @@ export default defineComponent({
     components: {
         RockButton
     },
+    props: {
+        state: String
+    },
     methods: {
-        endTurn() {
-            this.$emit('endTurn');
-        },
+        
     }
 })
 </script>
 <style scoped>
-.draw-button-group {
+.turn-state-button-group {
 
     width: 100%;
     height: 100%;
@@ -30,7 +31,7 @@ export default defineComponent({
     min-height: 15%;
 
 }
-.end-turn-button {
+.turn-state-button {
   max-width: 100%;
   min-width: 100%;
 }

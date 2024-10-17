@@ -1,32 +1,29 @@
 <template>
   <div class="queue">
     <!-- Button trigger modal -->
-    <div v-if="(queueStatus == 'Quick Play')">
-      <NavButton v-on:click="isMenuOpen = true" :text="queueStatus" />
-    </div>
-    <div v-else-if="(queueStatus == 'Ranked Match')">
-      <NavButton v-on:click="isMenuOpen = false" :text="queueStatus" :disabled="true" />
+    <div v-if="isRoomStateIdle">
+      <NavButton v-on:click="isMenuOpen = true" :text="gameType" :disabled="isRankedMatch" />
     </div>
     <div class="find-game-wrapper" v-else>
       <NavButton class="queue-status-button" :text="queueStatus" :disabled="true" />
     </div>
   </div>
   <PlayMenuModal :isOpen="isMenuOpen" @close="isMenuOpen = false" @start-game="startLookingForGame"
-    @username="handleUsernameChange" :is-competitive="queueStatus == 'Ranked Match'" />
-  <JoinGameModal :isOpen="isJoinGameOpen" :game-found="queueStatus == 'GameFound'" @close="isJoinGameOpen = false"
+    @username="handleUsernameChange" :is-competitive="isRankedMatch" />
+  <JoinGameModal :isOpen="isJoinGameOpen" :game-found="isRoomStateGameFound" @close="isJoinGameOpen = false"
     @join-game="joinGame" @cancel-search="cancelQueue" />
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { Emitter, SocketInstance } from '@/main'
-import { GameFound, Queue, UserAuthData } from '@/sockets/socketUtils';
-import { useCookies } from "vue3-cookies";
+import JoinGameModal from '@/components/JoinGameModal.vue';
 import NavButton from '@/components/NavButton.vue';
 import PlayMenuModal from '@/components/PlayMenuModal.vue';
-import JoinGameModal from '@/components/JoinGameModal.vue';
+import { Emitter, SocketInstance } from '@/main';
+import { Queue } from '@/sockets/socketUtils';
+import { RoomState, useRoomStore } from '@/stores/room';
+import { defineComponent } from 'vue';
+import { useCookies } from "vue3-cookies";
 
-type QueueStatus = "Quick Play" | "Ranked Match" | "GameFound" | "Joining";
 type QueueTypes = 'none' | 'queue2' | 'queue3' | 'queue4'
 
 export default defineComponent({
@@ -37,10 +34,7 @@ export default defineComponent({
     JoinGameModal,
   },
   props: {
-    isRanked: {
-      type: Boolean,
-      default: false,
-    }
+    gameType: String,
   },
   setup() {
     const { cookies } = useCookies();
@@ -51,7 +45,7 @@ export default defineComponent({
   },
   data() {
     return {
-      queueStatus: "Quick Play" as QueueStatus,
+      queueStatus: "Idle" as RoomState,
       queueType: "none" as QueueTypes,
       roomId: "",
       drawType: 'random',
@@ -63,70 +57,80 @@ export default defineComponent({
   },
   mounted() {
 
-    if (this.cookies.get("roomId") != null) {
-      this.roomId = this.cookies.get("roomId")
-    }
-    this.queueStatus = this.isRanked ? 'Ranked Match' : 'Quick Play';
+    Emitter.on('GameUpdate', () => {
+      this.isJoinGameOpen = false;
+    })
 
-    SocketInstance.on("gameFound", (data: GameFound) => {
-      if(this.isRanked){
+    Emitter.on('ReJoiningGame', () => {
+      this.queueStatus = 'Re-Joining'
+    });
+
+    Emitter.on('GameFound', () => {
+      if (this.isRankedMatch) {
         return;
       }
-      this.queueStatus = 'GameFound';
-      this.roomId = data.roomId;
-    })
-
-    SocketInstance.on('userAuthData', (data: UserAuthData) => {
-      this.cookies.set("roomId", data.roomUuid, 60 * 60);
-      this.cookies.set("userId", data.userUuid, 60 * 60);
-    })
+      this.queueStatus = 'GameFound'
+    });
+  },
+  computed: {
+    isQuickMatch(): boolean {
+      return this.gameType === 'Quick Match';
+    },
+    isRankedMatch(): boolean {
+      return this.gameType === 'Ranked Match';
+    },
+    isRoomStateIdle(): boolean {
+      return this.queueStatus === 'Idle';
+    },
+    isRoomStateGameFound(): boolean {
+      return this.queueStatus === 'GameFound';
+    }
   },
   methods: {
     joinGame(): void {
+      const roomStore = useRoomStore();
+      roomStore.updateRoomState('Joining');
+
       this.isJoinGameOpen = false;
-      Emitter.emit('drawType', this.drawType);
-
-      SocketInstance.emit("joinGame", { roomId: this.roomId, username: this.username })
-
       this.queueStatus = 'Joining';
-      Emitter.emit('joinGame')
     },
 
     cancelQueue(): void {
-      this.queueStatus = 'Quick Play';
+      const roomStore = useRoomStore();
+      this.queueStatus = 'Idle';
       this.isJoinGameOpen = false;
-      if (this.queueType === 'none') {
-        return;
+      if (roomStore.roomSize) {
+        roomStore.updateRoomState('Idle');
       }
-      SocketInstance.emit('cancelQueue', this.queueType as Queue)
     },
 
     handleUsernameChange(username: string) {
       this.username = username;
     },
 
-    isOfQueueTypes (keyInput: string): keyInput is QueueTypes {
+    isOfQueueTypes(keyInput: string): keyInput is QueueTypes {
       return ['queue2', 'queue3', 'queue4'].includes(keyInput);
     },
 
     startLookingForGame(numPlayers: number) {
-
+      const roomStore = useRoomStore();
       const queueType = `queue${numPlayers}`
 
-      if(!this.isOfQueueTypes(queueType)){
-        this.queueType = 'none'
-        this.queueStatus = this.isRanked ? 'Ranked Match' : 'Quick Play';
+      if (!this.isOfQueueTypes(queueType)) {
+        roomStore.updateRoomState('Idle')
+        this.queueStatus = 'Idle';
         return;
-      } else {
-        this.queueType = queueType;
       }
-      this.isMenuOpen = false;
-      
+
       if (this.username === '') {
         this.username = 'Guest-' + SocketInstance!.id!.slice(0, 4);
       }
       this.isJoinGameOpen = true;
-      SocketInstance.emit("onQueue", this.queueType as Queue);
+      roomStore.username = this.username;
+      roomStore.roomSize = queueType as Queue;
+      roomStore.updateRoomState('Searching');
+
+      this.isMenuOpen = false;
     }
 
 

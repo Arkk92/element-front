@@ -1,37 +1,37 @@
 <template>
-  <div class="player-actions-layout">
+  <div class="player-actions-layout" :class="isUserTurn ? '' : 'no-user-turn'">
 
     <div class="d-flex actions">
-      <PlayerMenu :element-pool-manager="elementPoolManager" :room-id="roomId" :turn="turn" :player="player"/>
+      <PlayerMenu/>
     </div>
 
   </div>
 </template>
 
 <script lang="ts">
-import { ElementPoolManagerModel } from '@/game/models/element_pool';
-import { TurnModel } from '@/game/models/turn';
-import { defineComponent } from 'vue';
 import PlayerMenu from '@/composables/PlayerMenu.vue';
+import { useAuthStore } from '@/stores/auth';
+import { useGameStore } from '@/stores/game';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'PlayerActionsLayout',
+  setup() {
+    const authStore = useAuthStore();
+    const gameStore = useGameStore();
+    return {
+      authStore, gameStore
+    }  
+  },
   components: {
     PlayerMenu
   },
-  props: {
-    turn: TurnModel,
-    elementPoolManager: ElementPoolManagerModel,
-    roomId: String,
-    player: String,
-  },
-  data() {
-    return {
-      selectedElement: 'None',
+  computed: {
+    isUserTurn(): boolean {
+      return this.gameStore.getTurnPlayerId() === this.authStore.playerId;
     }
-  },
-  methods: {
   }
+
 })
 </script>
 
@@ -58,5 +58,10 @@ export default defineComponent({
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.no-user-turn {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 </style>
