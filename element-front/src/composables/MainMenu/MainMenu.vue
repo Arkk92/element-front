@@ -1,42 +1,43 @@
 <template>
-    <div class="main-menu-wrapper">
-        <!-- <a href="https://ratherdashinggames.com/games/element.html" target="_blank">Find the rules here!</a> -->
-        <ul class="menu-container">
-          <li class="menu-item">
-            <QueueVue :is-ranked="false" class="play-button"/>
-          </li>
-          <li class="menu-item">
-            <QueueVue :is-ranked="true" class="play-button"/>
-          </li>
-          <li class="menu-item">
-            <Settings class="settings-button"/>
-          </li>
-          <li class="menu-item">
-            <AboutUs class="about-us-button"/>
-          </li>
-          
-        </ul>
-    </div>
+  <div class="main-menu-wrapper">
+    <!-- <a href="https://ratherdashinggames.com/games/element.html" target="_blank">Find the rules here!</a> -->
+    <ul class="menu-container">
+      <li class="menu-item">
+        <QueueVue :game-type="'Quick Match'" class="play-button" />
+      </li>
+      <li class="menu-item">
+        <QueueVue :game-type="'Ranked Match'" class="play-button" />
+      </li>
+      <li class="menu-item">
+        <Settings class="settings-button" />
+      </li>
+      <li class="menu-item">
+        <AboutUs class="about-us-button" />
+      </li>
+
+    </ul>
+  </div>
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
+import AboutUs from './AboutUs.vue';
 import QueueVue from './Queue.vue';
 import Settings from './Settings.vue';
-import AboutUs from './AboutUs.vue';
 
 export default defineComponent({
-    name: 'MainMenuComponent',
-    components: {
-      QueueVue,
-      Settings,
-      AboutUs
-    }
+  name: 'MainMenuComponent',
+  components: {
+    QueueVue,
+    Settings,
+    AboutUs
+  }
 })
 </script>
 <style lang="css" scoped>
 ul {
   list-style-type: none;
 }
+
 .main-menu-wrapper {
   position: absolute;
   width: 100%;
@@ -62,7 +63,7 @@ ul {
   left: 50%;
   transform: translateX(-50%);
   margin-bottom: 1%;
-  
+
 }
 
 .play-button {
@@ -79,5 +80,4 @@ ul {
   /* top: 70%; */
   /* left: 46.5%; */
 }
-
 </style>

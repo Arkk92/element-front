@@ -1,5 +1,6 @@
 <template>
-  <div class="user-interactor" :class="isUserTurn?'':'non-user-interactor'">
+  <div class="user-interactor" :class="isUserTurn ? '' : 'non-user-interactor'">
+
     <div class="elements-and-moves-container">
       <div class="all-elements-container">
         <ElementContainer :elements-hidden="isDrawingElements()" :list="getElementList()" :reset="resetElementView"
@@ -8,6 +9,9 @@
       <div class="moves-counter-wrap">
         <MovesCounter :counter="getSageMovements()" />
       </div>
+    </div>
+    <div class="turn-timer">
+      <PlayerTimer />
     </div>
     <div v-if="isUserTurn" class="button-group-container">
       <DrawingButtonGroup v-if="isDrawingElements()" @add="addElementToList()" @remove="removeElementFromList()"
@@ -35,6 +39,9 @@ import { ClickedData, Elements, NoneElement } from '@/components/PlayerMenu/type
 import { Position } from '@/game/utils/position_utils';
 import PlacementUtils from './PlayerMenu/PlacementUtils';
 import TurnStateButton from '@/components/PlayerMenu/TurnStateButton.vue';
+import PlayerTimer from '@/components/PlayerMenu/PlayerTimer.vue';
+import { useAuthStore } from '@/stores/auth';
+import { useGameStore } from '@/stores/game';
 
 const TurnStatesToStringMap = new Map<Number, String>([
   [TurnStates.DrawingElements, 'Drawing'],
@@ -49,28 +56,29 @@ export default defineComponent({
     ElementContainer,
     DrawingButtonGroup,
     PlayingButtonGroup,
-    TurnStateButton
+    TurnStateButton,
+    PlayerTimer
   },
-  props: {
-    elementPoolManager: ElementPoolManagerModel,
-    roomId: String,
-    turn: TurnModel,
-    player: String,
-    isUserTurn: Boolean
-  },
+  setup() {
+    const authStore = useAuthStore();
+    const gameStore = useGameStore();
+    return {
+      authStore,
+      gameStore
+    }
+  },  
   data() {
     return {
       sageMovements: UserInterfaceUtils.MIN_SAGE_MOVEMENTS,
       elementList: [] as Array<ElementTypes>,
-      drawType: 'random',
       selectedElement: NoneElement.None as Elements,
       resetElementView: false,
+      restartTimer: false,
+      currentPlayer: null as Number | null,
+      dataReady: false
     }
   },
   mounted() {
-    Emitter.on('drawType', (drawType => {
-      this.drawType = drawType as string;
-    }))
 
     Emitter.on('clickedCell', clickedData => {
       if (this.selectedElement === NoneElement.None) {
@@ -124,7 +132,9 @@ export default defineComponent({
       return this.turn!.state == TurnStates.EndTurn;
     },
     endTurn(): void {
-      UserInterfaceUtils.endTurn(this.roomId!)
+      if (this.isUserTurn) {
+        UserInterfaceUtils.endTurn(this.roomId!)
+      }
       this.$emit('endTurn');
     },
     isEndOfTurn(): boolean {
@@ -142,6 +152,32 @@ export default defineComponent({
     },
     getStringState(): string {
       return TurnStatesToStringMap.get(this.turn!.state) as any;
+    },
+  },
+  computed: {
+    elementPoolManager(): ElementPoolManagerModel {
+      return this.gameStore.gameModel.board.elementPool;
+    },
+    roomId(): string {
+      return this.authStore.roomId;
+    },
+    turn(): TurnModel{
+      return this.gameStore.gameModel.turn;
+    },
+    player(): string{
+      return this.authStore.playerId;
+    },
+    isUserTurn(): Boolean {
+      return this.authStore.playerId === this.gameStore.getTurnPlayerId();
+    }
+  },
+  watch: {
+    playerChange() {
+      this.restartTimer = true;
+      // console.log("player change!")
+      this.$nextTick(() => {
+        this.restartTimer = false;
+      })
     }
   }
 })
@@ -203,6 +239,14 @@ export default defineComponent({
   height: 100%;
 }
 
+.turn-timer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: fit-content;
+}
+
 @media screen and (max-width: 785px) {
 
   .wizard-moves-number {
@@ -217,7 +261,7 @@ export default defineComponent({
   }
 }
 
-.non-user-interactor{
+.non-user-interactor {
   pointer-events: none;
 }
 </style>

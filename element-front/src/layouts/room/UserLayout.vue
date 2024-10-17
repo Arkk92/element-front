@@ -1,20 +1,20 @@
 <template>
   <div class="user-layout">
 
-    <div class="list-group" v-if="data_ready">
+    <div class="list-group">
       <a class="list-group-item list-group-item-action disabled user-box border-1" v-for="user in userList" :key="user"
-        :class="getUserBoxClassByUser(user)" :aria-current="(user.uuid === currentUserId) ? 'true' : 'false'">
+        :class="getUserBoxClassByUserId(user.uuid)" :aria-current="(user.uuid === currentUserId) ? 'true' : 'false'">
         <div class="overlay-info">
 
           <h5 class="col">
-            {{ user.name }} <span v-if="isTarget(user.uuid)">💀</span>
+            {{ user.name }} <span v-if="isTarget(getPlayerIdByUserId(user.uuid))">💀</span>
           </h5>
-          <p class="mb-1" v-if="user.uuid === turnUserId">{{ getTurnState() }}</p>
+          <p class="mb-1" v-if="user.uuid === turnPlayerId">{{ getTurnState() }}</p>
           <p class="mb-1" v-else>Waiting...</p>
-          <p class="mb-1">Player number: {{ getPlayerNumberByUserId(user.uuid) }}</p>
+          <p class="mb-1">Player number: {{ getPlayerNumber(getPlayerIdByUserId(user.uuid)) }}</p>
         </div>
         <div class="wizard-wrap">
-          <img class="wizard" :src="getImage(getPlayerNumberByUserId(user.uuid))">
+          <img class="wizard" :src="getImage(getPlayerNumber(getPlayerIdByUserId(user.uuid)))">
         </div>
       </a>
     </div>
@@ -22,17 +22,20 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
-import { UserModel } from '@/game/models/user';
-import { TurnModel, TurnStates } from '@/game/models/turn';
 import { PlayerModel } from '@/game/models/player';
 import { UserToPlayerMap } from '@/game/models/room';
+import { TurnStates } from '@/game/models/turn';
+import { UserModel } from '@/game/models/user';
+import { defineComponent } from 'vue';
 import { useCookies } from "vue3-cookies";
 
-import rockWizardImageUrl from '/assets/RockWizard.png'
-import fireWizardImageUrl from '/assets/FireWizard.png'
-import waterWizardImageUrl from '/assets/WaterWizard.png'
-import windWizardImageUrl from '/assets/WindWizard.png'
+import { useAuthStore } from '@/stores/auth';
+import { useGameStore } from '@/stores/game';
+import { useRoomStore } from '@/stores/room';
+import fireWizardImageUrl from '/assets/FireWizard.png';
+import rockWizardImageUrl from '/assets/RockWizard.png';
+import waterWizardImageUrl from '/assets/WaterWizard.png';
+import windWizardImageUrl from '/assets/WindWizard.png';
 
 export default defineComponent({
   name: 'UserLayout',
@@ -40,32 +43,44 @@ export default defineComponent({
   },
   setup() {
     const { cookies } = useCookies();
-    return { cookies };
+    const roomStore = useRoomStore();
+    const gameStore = useGameStore();
+    const authStore = useAuthStore();
+    return { cookies, roomStore, gameStore, authStore };
   },
-  props: {
-    userList: Array as PropType<Array<UserModel>>,
-    playerList: Array as PropType<Array<PlayerModel>>,
-    userToPlayerMap: Array as PropType<Array<UserToPlayerMap>>,
-    turnUserId: String,
-    turn: TurnModel,
-  },
-  data() {
-    return {
-      username: "Username",
-      data_ready: false,
-      users: new Array<UserModel>(),
-      currentUserId: '',
-    }
-  },
-  mounted() {
-    if (this.userList != null) {
-      this.currentUserId = this.cookies.get('userId');
-      this.data_ready = true;
-    }
+  computed: {
+    currentUserId(): string {
+      return this.authStore.userId;
+    },
+    userList(): Array<UserModel> {
+      return this.roomStore.roomModel.user_list
+    },
+    playerList(): Array<PlayerModel> {
+      return this.gameStore.gameModel.player_list;
+    },
+    userToPlayerMap(): Array<UserToPlayerMap> {
+      return this.roomStore.roomModel.user_to_player_map;
+    },
+    turnPlayerId(): string {
+      return this.gameStore.getTurnPlayerId();
+    },
+    turnState(): TurnStates {
+      return this.gameStore.getTurnState();
+    },
+    playerId(): string {
+      return this.authStore.playerId;
+    },
+
   },
   methods: {
+    getPlayerIdByUserId(userId: string): string {
+      return this.userToPlayerMap.filter(user => user.user_uuid === userId)[0].player_uuid;
+    },
+    getPlayerNumber(playerId: string): number {
+      return this.playerList.filter(player => player.uuid === playerId)[0].player_number;
+    },
     getTurnState(): string {
-      switch (this.turn?.state) {
+      switch (this.turnState) {
         case TurnStates.DrawingElements:
           return 'Drawing elements'
         case TurnStates.MovesAvailables:
@@ -73,12 +88,6 @@ export default defineComponent({
         case TurnStates.EndTurn:
           return 'End turn'
       }
-      return "";
-    },
-    getPlayerNumberByUserId(userId: string): number {
-      const playerId: string = this.userToPlayerMap!.filter(map => map.user_uuid === userId)[0].player_uuid;
-      return this.playerList!.filter(player => player.uuid === playerId)[0].player_number;
-
     },
     getImage(playerNumber: number): any {
       switch (playerNumber) {
@@ -92,19 +101,20 @@ export default defineComponent({
           return windWizardImageUrl
       }
     },
-    isTarget(userId: string): boolean {
-      return this.playerList!.filter(player => player.player_number == this.getPlayerNumberByUserId(this.currentUserId!))[0].target == this.getPlayerNumberByUserId(userId);
-
-
+    isTarget(playerId: string): boolean {
+      return this.playerList.filter(
+        player => player.player_number == this.getPlayerNumber(this.playerId)
+      )[0].target == this.getPlayerNumber(playerId);
     },
-    getUserBoxClassByUser(user: UserModel): string {
+    getUserBoxClassByUserId(userId: string): string {
       let classes = "";
-      if (user.uuid === this.currentUserId) {
+      if (userId === this.currentUserId) {
         classes += 'active active-shinning';
       } else {
         classes += 'no-active'
       }
-      if (user.uuid === this.turnUserId) {
+
+      if (this.getPlayerIdByUserId(userId) === this.turnPlayerId) {
         classes += ' active-user-box';
       }
       return classes;

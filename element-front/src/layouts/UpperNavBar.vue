@@ -38,7 +38,10 @@ export default defineComponent({
     }
   },
   mounted() {
-    Emitter.on('joinGame', () => {
+    Emitter.on('GameAccepted', () => {
+      this.menuButtonShow = true;
+    })
+    Emitter.on('ReJoiningGame', () => {
       this.menuButtonShow = true;
     })
     Emitter.on('restart', () => {
@@ -47,7 +50,7 @@ export default defineComponent({
   },
   methods: {
     handleSelect(option: InGameMenuSelectOptions) {
-      console.log('Selected option:', option);
+      // console.log('Selected option:', option);
       switch (option) {
         case 'Forfeit':
           this.forfeit()
