@@ -50,7 +50,7 @@ export default defineComponent({
   },
   methods: {
     handleSelect(option: InGameMenuSelectOptions) {
-      console.log('Selected option:', option);
+      // console.log('Selected option:', option);
       switch (option) {
         case 'Forfeit':
           this.forfeit()
