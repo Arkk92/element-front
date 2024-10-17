@@ -41,6 +41,9 @@ export default defineComponent({
     Emitter.on('GameAccepted', () => {
       this.menuButtonShow = true;
     })
+    Emitter.on('ReJoiningGame', () => {
+      this.menuButtonShow = true;
+    })
     Emitter.on('restart', () => {
       this.menuButtonShow = false;
     })
