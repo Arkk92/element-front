@@ -1,7 +1,7 @@
 <template>
   <div class="room-container">
     <Background/>
-    <div v-if="data_ready" class="room-layout">
+    <div v-if="roomDataReady" class="room-layout">
   
       <div class="container-fluid full-height-container">
         <div class="row custom-row">
@@ -78,7 +78,7 @@ export default defineComponent({
   data() {
     return {
       username: "Username",
-      data_ready: false,
+      roomDataReady: false,
       roomData: room,
       turn_player_uuid: "",
       error: "",
@@ -94,15 +94,16 @@ export default defineComponent({
       this.roomStore.updateRoomState('Re-Joining'); 
     }
     Emitter.on('RoomUpdate', () =>{
-      const gameStore = useGameStore();  
+      this.gameStore = useGameStore();  
       this.roomData = this.roomStore.roomModel;
-      this.turn_player_uuid = gameStore.turnPlayerId;
-      if(gameStore.winner){
+      this.turn_player_uuid = this.gameStore.turnPlayerId;
+      if(this.gameStore.winner){
         this.isGameOver = true;
-        this.winner = gameStore.winner
+        this.winner = this.gameStore.winner
       }
-      this.data_ready = true;
+      this.roomDataReady = true;
     })
+
     // SocketInstance.on("gameUpdate", (data) => {
     //   console.log("Game update: ")
     //   console.log(data)
@@ -121,7 +122,7 @@ export default defineComponent({
     //       }, 2000);
 
     //     }
-    //     this.data_ready = true;
+    //     this.roomDataReady = true;
     //   }
     // }),
     //   SocketInstance.on('error', async (data) => {
@@ -147,7 +148,7 @@ export default defineComponent({
       return this.playerId === this.gameStore.getTurnPlayerId();
     },
     resetRoomLayout(){
-      this.data_ready = false;
+      this.roomDataReady = false;
       this.isGameOver = false;
       this.authStore.reset();
       this.roomStore.reset();

@@ -11,7 +11,7 @@
       </div>
     </div>
     <div class="turn-timer">
-      <PlayerTimer :restart="restartTimer" :time="turn!.remainingTurnTime" />
+      <PlayerTimer />
     </div>
     <div v-if="isUserTurn" class="button-group-container">
       <DrawingButtonGroup v-if="isDrawingElements()" @add="addElementToList()" @remove="removeElementFromList()"

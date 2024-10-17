@@ -9,6 +9,8 @@
     </div>
 </template>
 <script lang="ts">
+import { Emitter } from '@/main';
+import { useGameStore } from '@/stores/game';
 import { defineComponent } from 'vue';
 
 
@@ -27,12 +29,9 @@ export default defineComponent({
     name: 'PlayerTimerComponent',
     components: {
     },
-    props: {
-        restart: Boolean,
-        time: {
-            type: Number,
-            required: true
-        },
+    setup() {
+        const gameStore = useGameStore()
+        return { gameStore }
     },
     data() {
         return {
@@ -44,13 +43,19 @@ export default defineComponent({
         }
     },
     mounted() {
-        this.startTimer()
-        this.updateTimer();
+        console.log("Player timer mounted!")
         this.interval = setInterval(this.updateTimer, 1000);
+
+        Emitter.on('GameUpdate', () => {
+            const remainingTime = this.gameStore.getRemainingTurnTime();
+            console.log(`Player Timer: ${remainingTime}`)
+            this.startTimer(remainingTime)
+            this.updateTimer();
+        })
     },
     methods: {
         updateTimer() {
-            if(this.stop) return;
+            if (this.stop) return;
             const t = getTimeRemaining(this.deadline);
             if (t.total <= 0) {
                 this.onTimeOut();
@@ -62,11 +67,11 @@ export default defineComponent({
         onTimeOut() {
             this.stopTimer();
         },
-        startTimer() {
-            this.deadline = new Date(Date.parse(new Date().toISOString()) + this.time);
+        startTimer(time: number) {
+            this.deadline = new Date(Date.parse(new Date().toISOString()) + time);
             this.stop = false;
         },
-        stopTimer(){
+        stopTimer() {
             this.stop = true;
         }
     },
@@ -75,13 +80,6 @@ export default defineComponent({
             const minutes = ('0' + this.remainingMinutes).slice(-2);
             const seconds = ('0' + this.remainingSeconds).slice(-2);
             return `${minutes}:${seconds}`;
-        }
-    },
-    watch: {
-        restart(){
-            this.stopTimer();
-            this.startTimer()
-            this.updateTimer();
         }
     }
 })
