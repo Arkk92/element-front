@@ -19,7 +19,7 @@ export class SocketController {
     const authStore = useAuthStore();
 
     this.client.on("gameUpdate", (data: PublicServerResponse | null) => {
-      console.log(data);
+      // console.log(data);
       if (data) {
         roomStore.updateFromServerResponse(data);
       }
