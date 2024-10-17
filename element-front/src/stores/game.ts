@@ -20,7 +20,6 @@ export const useGameStore = defineStore("game", {
     },
     updateGameModel(game: IGameModel) {
       this.gameModel = new GameModelMap().toDomain(game);
-      console.log(this.gameModel.turn.remainingTurnTime);
       setTimeout(() => {
         Emitter.emit("GameUpdate");
       }, 100);

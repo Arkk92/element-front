@@ -44,7 +44,5 @@ export class SocketController {
       roomStore.setRoomId(data.roomId);
       roomStore.updateRoomState("GameFound");
     });
-
-    console.log("Event Listeners Ready!")
   }
 }

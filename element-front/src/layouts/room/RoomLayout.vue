@@ -103,44 +103,6 @@ export default defineComponent({
       }
       this.roomDataReady = true;
     })
-
-    // SocketInstance.on("gameUpdate", (data) => {
-    //   console.log("Game update: ")
-    //   console.log(data)
-
-    //   if (data != null) {
-    //     room = new RoomModelMap().toDomain(data.room);
-    //     this.roomData = room;
-    //     this.turn_player_uuid = data.player_turn_uuid;
-
-    //     if (data.winner != null) {
-    //       this.isGameOver = true;
-    //       this.winner = data.winner!
-    //       setTimeout(() => {
-    //         this.cookies.remove('roomId');
-    //         this.cookies.remove('userId');
-    //       }, 2000);
-
-    //     }
-    //     this.roomDataReady = true;
-    //   }
-    // }),
-    //   SocketInstance.on('error', async (data) => {
-    //     if (data) {
-    //       Emitter.emit('errorLog', data.message)
-    //       Emitter.emit('resetPlayerMenu');
-    //     }
-    //   }),
-
-    //   SocketInstance.on("connect_error", (err) => {
-    //     console.log(`connect_error due to ${err.message}`);
-    //   });
-    
-      // const roomId = this.cookies.get('roomId')
-      // if(roomId != null){
-      //   SocketInstance.emit('forceGameUpdate', {})
-      //   Emitter.emit("joinGame");
-      // }
   },
 
   methods: {
