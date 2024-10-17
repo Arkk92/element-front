@@ -20,13 +20,13 @@
           <div class="select-wrapper">
             <select v-model="selectedPlayers" id="num-players">
               <option value="2">
-                <span>🔥💧</span> Duel (1 vs 1)
+                🔥💧 Duel (1 vs 1)
               </option>
               <option value="3">
-                <span>🔥💧🌿</span> Tri-Royale (1 vs 2)
+                🔥💧🌿 Tri-Royale (1 vs 2)
               </option>
               <option value="4">
-                <span>🔥💧🌿💨</span> Full Royale (1 vs 3)
+                🔥💧🌿💨 Full Royale (1 vs 3)
               </option>
             </select>
           </div>
@@ -54,7 +54,6 @@ export default defineComponent({
     },
     isCompetitive: {
       type: Boolean,
-      default: false,
     }
   },
   setup(props, { emit }) {
