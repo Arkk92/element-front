@@ -3,14 +3,15 @@ import { defineStore } from "pinia";
 
 import GameUpdateUseCase from "@/application/use-cases/GameUpdateUseCase";
 import { PublicServerResponse } from "@/infra/schemas/server_response";
-import { emitGameUpdateRequest, onGameUpdated } from "@/infra/sockets/services/game/gameUpdateSocket";
+import {
+  emitGameUpdateRequest,
+  onGameUpdated,
+} from "@/infra/sockets/services/game/gameUpdateSocket";
 import { Queue } from "@/infra/sockets/socketUtils";
 import { useCookies } from "vue3-cookies";
 import { useAuthStore } from "./auth";
-import { Emitter } from "@/main";
 import { usePlayerActionStore } from "./playerAction";
-import { GridModel } from "@/domain/game/models/grid";
-import { useQueueStore } from "./queue";
+import { useRiverStore } from "./river";
 
 export type GameType = "Quick Match" | "Ranked Match" | "Custom Match";
 
@@ -51,7 +52,9 @@ export const useRoomStore = defineStore("room", {
     },
     updateRoomFromSocket(roomData: PublicServerResponse | null) {
       const playerActionStore = usePlayerActionStore();
-      if(roomData == null) return;
+      const riverStore = useRiverStore();
+      riverStore.reset();
+      if (roomData == null) return;
       const roomModel = gameUpdateUseCase.execute(roomData);
       this.model = roomModel;
       this.turnPlayerId = roomData.player_turn_uuid;
@@ -65,14 +68,13 @@ export const useRoomStore = defineStore("room", {
           cookies.remove("userId");
         }, 2000);
       }
-      // Emitter.emit("GameUpdate");
     },
     setRoomId(roomId: string) {
       this.model.uuid = roomId;
     },
-    checkForReconnection(){
+    checkForReconnection() {
       const authStore = useAuthStore();
-      if(authStore.roomId != null){
+      if (authStore.roomId != null) {
         /* Existing session try to reconnect */
         emitGameUpdateRequest();
       }
