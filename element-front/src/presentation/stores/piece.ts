@@ -67,7 +67,7 @@ export const usePieceStore = defineStore("piece", {
             playerActionStore.elementSelected!.element_type
           );
         }
-      } else {
+      } else if(riverStore.state === 'PlacingNewRiver'){
         /* Building river */
         riverStore.buildRiver(piece);
       }
