@@ -11,6 +11,7 @@ import { Queue } from "@/infra/sockets/socketUtils";
 import { useCookies } from "vue3-cookies";
 import { useAuthStore } from "./auth";
 import { usePlayerActionStore } from "./playerAction";
+import { useQueueStore } from "./queue";
 import { useRiverStore } from "./river";
 
 export type GameType = "Quick Match" | "Ranked Match" | "Custom Match";
@@ -52,7 +53,9 @@ export const useRoomStore = defineStore("room", {
     },
     updateRoomFromSocket(roomData: PublicServerResponse | null) {
       const playerActionStore = usePlayerActionStore();
+      const queueStore = useQueueStore();
       const riverStore = useRiverStore();
+      queueStore.playing();
       riverStore.reset();
       if (roomData == null) return;
       const roomModel = gameUpdateUseCase.execute(roomData);
