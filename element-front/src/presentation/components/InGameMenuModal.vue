@@ -51,7 +51,7 @@ export default defineComponent({
   },
   computed: {
     isGameSet(){
-      return this.queueStore.queueState === 'Game Joined';
+      return this.queueStore.queueState === 'Playing';
     }
   }
 });
