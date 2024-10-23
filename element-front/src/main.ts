@@ -1,8 +1,8 @@
-import App from "@/App.vue";
+import App from "./presentation/App.vue";
 import mitt from "mitt";
 import { createApp } from "vue";
 import enums from "vue-enums";
-import ClientSocket from "./sockets/client";
+import ClientSocket from "@/infra/sockets/client";
 
 import "bootstrap";
 import "bootstrap-icons/font/bootstrap-icons";
