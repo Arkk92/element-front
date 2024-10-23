@@ -72,7 +72,7 @@ export default defineComponent({
   },
   computed: {
     isGameStarted() {
-      return this.queueStore.queueState === 'Game Joined';
+      return this.queueStore.queueState === 'Playing';
     },
     isGameOver() {
       return this.roomStore.winner !== null;

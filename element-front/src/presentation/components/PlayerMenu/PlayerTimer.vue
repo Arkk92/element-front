@@ -50,12 +50,9 @@ export default defineComponent({
     },
     mounted() {
         this.interval = setInterval(this.updateTimer, 1000);
+        this.startTimer(this.remainingTurnTime)
+        this.updateTimer();
 
-        // Emitter.on('GameUpdate', () => {
-        //     const remainingTime = this.roomStore.model.game.turn.remainingTurnTime;
-        //     this.startTimer(remainingTime)
-        //     this.updateTimer();
-        // })
     },
     methods: {
         updateTimer() {
@@ -79,11 +76,11 @@ export default defineComponent({
             this.stop = true;
         },
         getTimerClass(): string {
-            if(this.isDangerTime){
+            if (this.isDangerTime) {
                 return 'danger-time-color pulse-animation'
-            }else if(this.isWarningTime){
+            } else if (this.isWarningTime) {
                 return 'warning-time-color'
-            }else {
+            } else {
                 return ''
             }
         },
@@ -105,7 +102,7 @@ export default defineComponent({
         }
     },
     watch: {
-        remainingTurnTime(){
+        remainingTurnTime() {
             this.startTimer(this.remainingTurnTime)
             this.updateTimer();
         }

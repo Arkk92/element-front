@@ -51,6 +51,8 @@ export const useRoomStore = defineStore("room", {
     },
     updateRoomFromSocket(roomData: PublicServerResponse | null) {
       const playerActionStore = usePlayerActionStore();
+      const queueStore = useQueueStore();
+      queueStore.playing()
       if(roomData == null) return;
       const roomModel = gameUpdateUseCase.execute(roomData);
       this.model = roomModel;
