@@ -258,7 +258,7 @@ select option span {
   transform: scale(1.05);
 }
 
-@media screen and (max-width: 785px) {
+@media screen and (max-width: 785px) , screen and (max-height: 400px) {
   h2 {
     margin-bottom: 20px;
     font-size: 1rem !important;

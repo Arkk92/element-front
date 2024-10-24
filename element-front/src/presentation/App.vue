@@ -30,14 +30,26 @@ export default defineComponent({
     const checkOrientation = () => {
       isPortrait.value = window.innerHeight > window.innerWidth;
     };
+    // const disableContextMenu = (event: MouseEvent) => {
+    //   event.preventDefault();
+    // };
+
+    // const preventDefaultTouch = (event: TouchEvent) => {
+    //   event.preventDefault();
+    // };
 
     onMounted(() => {
       checkOrientation();
       window.addEventListener('resize', checkOrientation);
+      // document.addEventListener('contextmenu', disableContextMenu);
+      // document.addEventListener('touchstart', preventDefaultTouch);
     });
 
     onBeforeUnmount(() => {
       window.removeEventListener('resize', checkOrientation);
+      // Clean up event listeners
+      // document.removeEventListener('contextmenu', disableContextMenu);
+      // document.removeEventListener('touchstart', preventDefaultTouch);
     });
 
     return {

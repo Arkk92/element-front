@@ -1,7 +1,14 @@
 <template>
   <div class="empty-piece cells" style="padding: 0;" v-if="data_ready">
-    <div class="cells" :class="getEmptyType()" @click.stop="emptySelected">
-      <img class="boxMarker" :src="getImage()">
+    <div class="cells" :class="getEmptyType()" 
+    v-on:touchstart="onPressingCell()"
+    v-on:touchend="emptySelected()"
+    v-on:touchcancel="cancelPressingCell()"
+    v-on:mousedown="onPressingCell()"
+    v-on:mouseup="emptySelected()"
+    v-on:mouseleave="cancelPressingCell()"
+    >
+      <img draggable="false" class="boxMarker" :src="getImage()">
     </div>
   </div>
 </template>
@@ -16,6 +23,7 @@ import { usePlayerActionStore } from '@/presentation/stores/playerAction';
 import { useRiverStore } from '@/presentation/stores/river';
 import { useRoomStore } from '@/presentation/stores/room';
 import boxMarkerImageUrl from '/assets/boxMarker.png';
+import { usePieceStore } from '@/presentation/stores/piece';
 
 type EmptyType = 'None' | 'Red' | 'Blue' | 'Yellow'
 
@@ -28,8 +36,9 @@ export default defineComponent({
     const playerActionStore = usePlayerActionStore();
     const roomStore = useRoomStore();
     const riverStore = useRiverStore();
+    const pieceStore = usePieceStore();
     return {
-      playerActionStore, roomStore, riverStore
+      playerActionStore, roomStore, riverStore, pieceStore
     }
   },
   data() {
@@ -48,6 +57,9 @@ export default defineComponent({
       if (this.isAllowedToBuildRiver) {
         return 'Yellow'
       }
+      if(this.isNextToClickedPosition){
+        return 'Yellow'
+      }
       return 'None'
     },
     isAllowedToMoveOn(): boolean {
@@ -63,6 +75,10 @@ export default defineComponent({
     isAllowedToBuildRiver(): boolean {
       if(this.riverStore.state!=='PlacingNewRiver') return false;
       return PositionUtils.isStrictOrthogonalPosition(this.riverStore.model.lastWaterPlaced, this.piece!.position);
+    },
+    isNextToClickedPosition(): boolean {
+      if(this.pieceStore.currentClickedPosition==null) return false;
+      return PositionUtils.isStrictOrthogonalPosition(this.piece!.position, this.pieceStore.currentClickedPosition);
     }
   },
   mounted() {
@@ -73,6 +89,7 @@ export default defineComponent({
       return boxMarkerImageUrl;
     },
     emptySelected(): void {
+      this.cancelPressingCell();
       this.$emit('clicked', this.piece);
     },
     getEmptyType(): string {
@@ -84,7 +101,12 @@ export default defineComponent({
       }
       return stateToCssClassMap[this.state]
     },
-    
+    onPressingCell(){
+      this.pieceStore.onCurrentClickedPosition(this.piece!.position);
+    },
+    cancelPressingCell(){
+      this.pieceStore.onCurrentClickedPosition(null)
+    }
   }
 })
 </script>
@@ -96,8 +118,9 @@ export default defineComponent({
   height: 100%;
   text-align: center;
   position: relative;
+  user-select: none;
   aspect-ratio: 1/1;
-
+  z-index: 10000;
 }
 
 .oldRiver {
@@ -137,7 +160,6 @@ export default defineComponent({
   opacity: 1;
   animation: hoverResizing 1s;
   animation-iteration-count: infinite;
-
 }
 
 .boxMarker:active {

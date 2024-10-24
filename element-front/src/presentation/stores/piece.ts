@@ -4,7 +4,7 @@ import { ElementTypes } from "@/domain/game/models/elements/elements";
 import { WaterModel } from "@/domain/game/models/elements/water";
 import { PieceModel } from "@/domain/game/models/pieces/pieces";
 import { SageModel } from "@/domain/game/models/pieces/sage";
-import { PositionUtils } from "@/domain/game/utils/position_utils";
+import { Position, PositionUtils } from "@/domain/game/utils/position_utils";
 import { defineStore } from "pinia";
 import { useAuthStore } from "./auth";
 import { usePlayerActionStore } from "./playerAction";
@@ -14,7 +14,9 @@ import { useRoomStore } from "./room";
 const placeElementUseCase = new PlaceElementUseCase();
 const placeWizardUseCase = new PlaceWizardUseCase();
 
-const defaultState = {};
+const defaultState = {
+  currentClickedPosition: null as null | Position
+};
 
 export const usePieceStore = defineStore("piece", {
   state: () => {
@@ -71,6 +73,10 @@ export const usePieceStore = defineStore("piece", {
         /* Building river */
         riverStore.buildRiver(piece);
       }
+    },
+
+    onCurrentClickedPosition(position: Position | null){
+      this.currentClickedPosition = position;
     },
 
     // Water-specific logic for placing a water piece

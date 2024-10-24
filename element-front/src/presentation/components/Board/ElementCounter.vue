@@ -91,7 +91,7 @@ export default defineComponent({
 
 }
 
-@media screen and (max-width: 785px) {
+@media screen and (max-width: 785px) , screen and (max-height: 400px) {
     .counter {
         color: yellow;
         font-size: 1.4rem;

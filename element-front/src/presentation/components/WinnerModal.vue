@@ -139,18 +139,12 @@ export default defineComponent({
     transform: scale(1.05);
 }
 
-@media screen and (max-width: 785px) {
+@media screen and (max-width: 785px) , screen and (max-height: 400px) {
     .winner-title {
         font-size: 1rem;
         color: #f4e0b7;
         text-shadow: 0 0 15px #ff7043, 0 0 25px #ff7043;
         margin-bottom: 20px;
-    }
-
-    .victory-icon {
-        font-size: 1rem;
-        margin: 30px 0;
-        animation: glowTrophy 1.5s infinite alternate;
     }
 
     .return-button {

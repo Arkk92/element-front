@@ -48,7 +48,7 @@ export default defineComponent({
   /* Vertical centering */
 }
 
-@media screen and (max-width: 785px) {
+@media screen and (max-width: 785px), screen and (max-height: 400px) {
   .mystical-link {
     position: relative;
     font-family: 'Palatino', 'Garamond', 'Georgia', 'Times New Roman', serif;

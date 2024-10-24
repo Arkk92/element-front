@@ -1,8 +1,8 @@
 <template>
   <div class="wizard-piece col cells" style="padding: 0;" v-on:click.stop="wizardClicked()">
-    <img class="boxMarker" :src="getBoxMarkerImage()">
+    <img draggable="false" class="boxMarker" :src="getBoxMarkerImage()">
     <div v-if="isPlayerWizard" class="wizard-shadow shinning-fade"></div>
-    <img class="pieces wizard-image" :src="getWizardImage()" tabindex="-1">
+    <img draggable="false" class="pieces wizard-image" :src="getWizardImage()" tabindex="-1">
 
 
   </div>

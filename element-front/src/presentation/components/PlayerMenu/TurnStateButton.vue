@@ -18,21 +18,19 @@ export default defineComponent({
         state: String
     },
     methods: {
-        
+
     }
 })
 </script>
 <style scoped>
 .turn-state-button-group {
-
+    position: inherit;
     width: 100%;
     height: 100%;
-    max-height: 15%;
-    min-height: 15%;
-
 }
+
 .turn-state-button {
-  max-width: 100%;
-  min-width: 100%;
+    max-width: 100%;
+    min-width: 100%;
 }
 </style>

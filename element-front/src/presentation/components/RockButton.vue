@@ -64,11 +64,11 @@ export default defineComponent({
   transform: translate(-50%, -50%);
 }
 
-@media screen and (max-width: 785px) {
+@media screen and (max-width: 785px), screen and (max-height: 400px) {
   .button-overlay {
     position: absolute;
     color: black;
-    font-size: 1rem !important;
+    font-size: 0.8rem !important;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);

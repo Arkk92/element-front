@@ -96,6 +96,7 @@ export default defineComponent({
 
 .menu-container {
   position: absolute;
+  top: 25%;
   width: 10%;
   height: 100%;
   right: 0%;
@@ -131,7 +132,7 @@ export default defineComponent({
   cursor: default;
 }
 
-@media screen and (max-width: 785px) {
+@media screen and (max-width: 785px) , screen and (max-height: 400px) {
   .mystical-link {
     position: relative;
     font-family: 'Palatino', 'Garamond', 'Georgia', 'Times New Roman', serif;

@@ -23,12 +23,9 @@ export default defineComponent({
 </script>
 <style scoped>
 .draw-button-group {
-
+    position: inherit;
     width: 100%;
     height: 100%;
-    max-height: 15%;
-    min-height: 15%;
-
 }
 .end-turn-button {
   max-width: 100%;
