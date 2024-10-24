@@ -27,8 +27,10 @@ export default defineComponent({
   overflow: hidden;
   position: fixed;
   top: 0%;
-  width: 100vw;
-  height: 100vh;
+  width: 100dvw;
+  /* height: 100dvh; */
+  min-height: 100vh;
+  height: 100%;
   /* min-height: calc(100vh - 120px); 
   max-height: calc(100vh - 120px);  */
 }
