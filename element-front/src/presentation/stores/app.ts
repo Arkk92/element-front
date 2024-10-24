@@ -1,38 +1,34 @@
-import { SocketInstance } from '@/main';
-import { DomainToSocketGateway } from '@/infra/sockets/DomainToSocketGateway';
-import { SocketController } from '@/infra/sockets/SocketController';
-import { defineStore } from 'pinia';
+import { defineStore } from "pinia";
 
-type AppStates = 'Loading' | 'MainMenu' | 'InGame';
+type AppStates = "Loading" | "MainMenu" | "InGame";
 
-export const useAppStore = defineStore('app', {
+const defaultState = {
+  state: "Loading" as AppStates,
+};
+
+export const useAppStore = defineStore("app", {
   state: () => {
     return {
-        state: 'Loading' as AppStates
-    }
+      ...defaultState,
+    };
   },
   getters: {
     getState(): AppStates {
-        return this.state;
-    }
+      return this.state;
+    },
   },
   actions: {
-    reset(){
-      this.state = 'Loading';
+    reset() {
+      this.state = "Loading";
     },
-    onLoadingFinished(){
-      // const socketController = new SocketController(SocketInstance);
-      // const domainToSocketGateway = new DomainToSocketGateway(SocketInstance);
-      // socketController.execute();
-      // domainToSocketGateway.execute();
-      this.state = 'MainMenu';
+    onLoadingFinished() {
+      this.state = "MainMenu";
     },
-    onGameStart(){
-      this.state = 'InGame';
+    onGameStart() {
+      this.state = "InGame";
     },
-    onGameEnd(){
-      this.state = 'MainMenu';
-    }
-    
-  }
-})
+    onGameEnd() {
+      this.state = "MainMenu";
+    },
+  },
+});
