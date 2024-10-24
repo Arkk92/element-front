@@ -47,7 +47,7 @@ const output = {
 };
 
 // Save the JSON to the src/assets folder (or any preferred location)
-const outputPath = path.resolve(__dirname, '../src/assets/assets.json');
+const outputPath = path.resolve(__dirname, '../src/presentation/assets/assets.json');
 fs.writeFileSync(outputPath, JSON.stringify(output, null, 2));
 
 console.log('Asset paths written to assets.json:', assetPaths);
