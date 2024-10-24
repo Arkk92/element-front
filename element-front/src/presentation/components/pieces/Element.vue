@@ -37,9 +37,10 @@ import fireImageUrl from '/assets/Fire.png';
 import mountainImageUrl from '/assets/Mountain.png';
 import waterImageUrl from '/assets/Water.png';
 import windImageUrl from '/assets/Wind.png';
+import { usePieceStore } from '@/presentation/stores/piece';
 
 type WaterType = 'RiverHead' | 'River' | 'RiverOrigin';
-type ElementFrontType = 'None' | WaterType | 'ReplaceableFire';
+type ElementFrontType = 'None' | WaterType | 'ReplaceableFire' | 'NoSelectable';
 
 export default defineComponent({
   name: 'ElementPieceComponent',
@@ -50,8 +51,9 @@ export default defineComponent({
   },
   setup() {
     const riverStore = useRiverStore();
+    const pieceStore = usePieceStore();
     return {
-      riverStore
+      riverStore, pieceStore
     }
   },
   props: {
@@ -77,6 +79,9 @@ export default defineComponent({
       }
       if (this.isFireReplaceableByRiver) {
         state = 'ReplaceableFire';
+      }
+      if(this.isNextToClickedPosition){
+        state = 'NoSelectable';
       }
       return state
     },
@@ -110,6 +115,10 @@ export default defineComponent({
     isWater(): boolean {
       return (this.piece as ElementModel).element_type == ElementTypes.Water
     },
+    isNextToClickedPosition(): boolean {
+      if(this.pieceStore.currentClickedPosition==null) return false;
+      return PositionUtils.isStrictOrthogonalPosition(this.piece!.position, this.pieceStore.currentClickedPosition);
+    }
   },
   methods: {
     getBoxMarkerImage(): string {
@@ -137,6 +146,7 @@ export default defineComponent({
         'River': 'moveAvailable',
         'ReplaceableFire': 'replaceable-fire',
         'RiverOrigin': 'river-origin',
+        'NoSelectable': 'no-selectable'
       }
       return stateToCssClass[this.state];
     },
@@ -200,6 +210,10 @@ export default defineComponent({
 
 .replaceable-fire {
   background-color: rgba(255, 255, 0, 0.2);
+}
+
+.no-selectable {
+  background-color: rgba(255, 0, 0, 0.2);
 }
 
 .shinning-fade {
