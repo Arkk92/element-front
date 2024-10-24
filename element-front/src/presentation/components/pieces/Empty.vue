@@ -8,7 +8,7 @@
     v-on:mouseup="emptySelected()"
     v-on:mouseleave="cancelPressingCell()"
     >
-      <img class="boxMarker" :src="getImage()">
+      <img draggable="false" class="boxMarker" :src="getImage()">
     </div>
   </div>
 </template>
@@ -120,6 +120,7 @@ export default defineComponent({
   position: relative;
   user-select: none;
   aspect-ratio: 1/1;
+  z-index: 10000;
 }
 
 .oldRiver {

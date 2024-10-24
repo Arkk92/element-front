@@ -2,8 +2,8 @@
   <div class="element">
     <div class="element-piece col cells" style="padding: 0;" v-if="data_ready" :class="getCssClass()"
       v-on:click="clicked">
-      <img class="boxMarker" :src="getBoxMarkerImage()">
-      <img class="pieces" :src="getImage()" style="opacity: 100%;" :class="state == 'RiverHead' ? 'river-head' : ''">
+      <img draggable="false" class="boxMarker" :src="getBoxMarkerImage()">
+      <img draggable="false" class="pieces" :src="getImage()" style="opacity: 100%;" :class="state == 'RiverHead' ? 'river-head' : ''">
       <span v-if="isWind" class="wind-counter">
         {{ (piece as any).stacked_winds }}
       </span>
