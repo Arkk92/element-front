@@ -6,7 +6,7 @@
 
         <!-- Modal Buttons -->
         <div class="buttons-wrapper">
-          <button class="action-button forfeit" @click="handleAction('Forfeit')" :disabled="!isGameSet">
+          <button v-if="isGameSet" class="action-button forfeit" @click="handleAction('Forfeit')">
             💀 Forfeit
           </button>
           <button class="action-button options" @click="handleAction('Options')">
