@@ -9,7 +9,7 @@
           <h5 class="col">
             {{ user.name }} <span v-if="isTarget(getPlayerIdByUserId(user.uuid))">💀</span>
           </h5>
-          <p class="mb-1" v-if="user.uuid === turnPlayerId">{{ getTurnState() }}</p>
+          <p class="mb-1" v-if="isUserTurn(user.uuid)">{{ getTurnState() }}</p>
           <p class="mb-1" v-else>Waiting...</p>
           <p class="mb-1">Player number: {{ getPlayerNumber(getPlayerIdByUserId(user.uuid)) }}</p>
         </div>
@@ -68,6 +68,7 @@ export default defineComponent({
     playerId(): string {
       return this.authStore.playerId;
     },
+    
 
   },
   methods: {
@@ -98,6 +99,11 @@ export default defineComponent({
         case 3:
           return windWizardImageUrl
       }
+    },
+    isUserTurn(userId: string): boolean {
+      const userModels = this.roomStore.model.user_to_player_map.filter(user => user.player_uuid === this.playerId);
+      if(userModels.length < 1) return false;
+      return this.roomStore.model.user_to_player_map.filter(user => user.player_uuid === this.playerId)[0].user_uuid === userId;
     },
     isTarget(playerId: string): boolean {
       return this.playerList.filter(
