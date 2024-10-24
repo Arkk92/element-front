@@ -1,6 +1,5 @@
 <template>
   <div class="main-menu-wrapper">
-    <!-- <a href="https://ratherdashinggames.com/games/element.html" target="_blank">Find the rules here!</a> -->
     <ul class="menu-container">
       <li class="menu-item">
         <QueueVue :game-type="'Quick'" class="play-button" />
