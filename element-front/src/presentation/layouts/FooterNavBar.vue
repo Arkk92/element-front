@@ -1,8 +1,16 @@
 <template>
   <div class="footer-nav-bar">
-    <div class="row align-items-center" style="height: 100%;">
-      <div class="col">
+    <div class="row align-items-center justify-content-between" style="height: 100%;">
+      <div class="col-4" align="start">
         <span class="welcome-message mystical-link font-size">Element Online v2.1.0</span>
+      </div>
+      <div class="col-4" align="center">
+        <span class="users-connected mystical-link font-size">Connected Users: {{ activeUsers }}</span>
+      </div>
+      <div class="col-4 px-5" align="right">
+        <span class="users-connected mystical-link font-size">Server Status: </span>
+        <span v-if="serverUp" class="server-up">🟢 Online</span>
+        <span v-else class="server-down">🔴 Offline</span>
       </div>
     </div>
 
@@ -11,6 +19,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { useServerStore } from '../stores/server';
 
 export default defineComponent({
   name: 'UpperNavBarComponent',
@@ -22,9 +31,21 @@ export default defineComponent({
       forfeitBtnShow: false,
     }
   },
-  mounted() {
-
+  setup() {
+    const serverStore = useServerStore();
+    return {
+      serverStore
+    }
   },
+  computed: {
+    activeUsers() {
+      return this.serverStore.numOfActiveUsers;
+    },
+    serverUp(): boolean {
+      return this.serverStore.serverUp;
+    }
+
+  }
 })
 </script>
 
@@ -57,6 +78,14 @@ export default defineComponent({
   text-shadow: 0 0 8px rgba(212, 175, 55, 0.8), 0 0 15px rgba(255, 255, 255, 0.2);
   letter-spacing: 1px;
   cursor: default;
+}
+
+.server-up {
+  color: #28a745;
+}
+
+.server-down {
+  color: #dc3545;
 }
 
 .font-size {
