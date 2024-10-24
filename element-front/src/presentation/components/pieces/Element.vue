@@ -326,7 +326,7 @@ export default defineComponent({
   transform: scale(0.95);
 }
 
-@media screen and (max-width: 785px) {
+@media screen and (max-width: 785px) , screen and (max-height: 400px) {
   .wind-counter {
     position: absolute;
     bottom: 0;

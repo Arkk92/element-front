@@ -223,7 +223,7 @@ p {
   transform: translate(-50%, -50%);
 }
 
-@media screen and (max-width: 785px) {
+@media screen and (max-width: 785px) , screen and (max-height: 400px) {
   .form-control {
     position: absolute;
     display: block;

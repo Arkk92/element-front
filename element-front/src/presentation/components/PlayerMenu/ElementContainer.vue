@@ -132,7 +132,6 @@ export default defineComponent({
     }
 }
 
-/* Positioning each image in its orbit position */
 .image {
     width: 70%;
     top: 0%;
@@ -141,13 +140,27 @@ export default defineComponent({
 
 }
 
-/* Positioning each image in its orbit position */
 .image-selected {
     width: 100%;
     top: 0%;
 
     transform: translate(-50%, -50%);
+}
 
+@media screen and (max-width: 785px),
+screen and (max-height: 400px) {
+    .image {
+        width: 60%;
+        top: 0%;
+        transform: translate(-50%, -50%);
+
+    }
+
+    .image-selected {
+        width: 90%;
+        top: 0%;
+        transform: translate(-50%, -50%);
+    }
 }
 
 /* Floating animation */

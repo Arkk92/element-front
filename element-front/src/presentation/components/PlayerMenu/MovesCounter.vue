@@ -74,7 +74,7 @@ export default defineComponent({
     z-index: 1;
 }
 
-@media screen and (max-width: 785px) {
+@media screen and (max-width: 785px) , screen and (max-height: 400px) {
     .moves-number {
         color: yellow;
         font-size: 1.5rem;

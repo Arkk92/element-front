@@ -7,9 +7,9 @@
       <div class="moves-counter-wrap">
         <MovesCounter :counter="sageMovements" />
       </div>
-    </div>
-    <div class="turn-timer">
-      <PlayerTimer />
+      <div class="turn-timer">
+        <PlayerTimer />
+      </div>
     </div>
     <div v-if="isUserTurn" class="button-group-container">
       <DrawingButtonGroup v-if="isDrawingElements" />
@@ -127,9 +127,11 @@ export default defineComponent({
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .button-group-container {
+  position: relative;
   width: 100%;
-  height: 100%;
+  height: 15%;
   z-index: 100;
+  overflow: visible;
 }
 
 .elements-and-moves-container {
@@ -160,21 +162,6 @@ export default defineComponent({
   z-index: 1;
 }
 
-.wizard-moves-number {
-  color: wheat;
-  font-size: 2.5rem;
-  -webkit-text-stroke: 1px black;
-  /* width and color */
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.wizard-miniature {
-  width: 60px;
-}
-
 .user-interactor {
   width: 100%;
   height: 100%;
@@ -186,20 +173,6 @@ export default defineComponent({
   right: 0;
   width: 100%;
   height: fit-content;
-}
-
-@media screen and (max-width: 785px) {
-
-  .wizard-moves-number {
-    color: wheat;
-    font-size: 1rem;
-    -webkit-text-stroke: 1px black;
-    /* width and color */
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
 }
 
 .non-user-interactor {

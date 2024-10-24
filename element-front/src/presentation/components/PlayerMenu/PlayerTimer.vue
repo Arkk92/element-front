@@ -1,13 +1,14 @@
 <template>
     <div class="player-timer">
         <div class="player-timer-container">
-            <div class="timer-digits" :class="getTimerClass()">
+            <div class="timer-digits font-size" :class="getTimerClass()">
                 {{ remainingTime }}
             </div>
-            <div v-if="isWarningTime" class="spinning-sand-clock pulse-animation">
+            <div v-if="isWarningTime"
+                class="font-size spinning-sand-clock pulse-animation spinning-sand-clock-position">
                 ⌛
             </div>
-            <div v-else class="spinning-sand-clock">
+            <div v-else class="font-size spinning-sand-clock spinning-sand-clock-position">
                 ⏳
             </div>
         </div>
@@ -130,7 +131,6 @@ export default defineComponent({
     color: yellow;
     width: fit-content;
     height: fit-content;
-    font-size: 2.5rem;
     right: 0;
     transform: translateX(-5%);
     font-weight: bold;
@@ -141,7 +141,10 @@ export default defineComponent({
     align-items: center;
     text-decoration: none;
     z-index: 2;
+}
 
+.font-size {
+    font-size: 2.5rem;
 }
 
 .warning-time-color {
@@ -153,15 +156,17 @@ export default defineComponent({
 }
 
 .spinning-sand-clock {
-    position: absolute;
-    right: 0;
-    top: 2.5rem;
-    font-size: 2rem;
     width: fit-content;
     animation-name: spin;
     animation-duration: 5000ms;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
+}
+
+.spinning-sand-clock-position {
+    position: absolute;
+    right: 0;
+    top: 2.5rem;
 }
 
 .pulse-animation {
@@ -195,23 +200,16 @@ export default defineComponent({
     }
 }
 
-@media screen and (max-width: 785px) {
-    .timer-digits {
-        color: yellow;
-        font-size: 1.5rem;
-        font-weight: bold;
-        -webkit-text-stroke: 1px black;
-        /* width and color */
-        position: absolute;
-        top: 0;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-decoration: none;
-        z-index: 2;
+@media screen and (max-width: 785px),
+screen and (max-height: 400px) {
+    .font-size {
+        font-size: 1rem;
+    }
 
+    .spinning-sand-clock-position {
+        position: absolute;
+        right: 0;
+        top: 1rem;
     }
 }
 </style>

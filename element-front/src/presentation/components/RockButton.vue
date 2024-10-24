@@ -64,7 +64,7 @@ export default defineComponent({
   transform: translate(-50%, -50%);
 }
 
-@media screen and (max-width: 785px) {
+@media screen and (max-width: 785px), screen and (max-height: 400px) {
   .button-overlay {
     position: absolute;
     color: black;

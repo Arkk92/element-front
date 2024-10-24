@@ -9,8 +9,8 @@
       </div>
       <div class="col-4 px-5" align="right">
         <span class="users-connected mystical-link font-size">Server Status: </span>
-        <span v-if="serverUp" class="server-up">🟢 Online</span>
-        <span v-else class="server-down">🔴 Offline</span>
+        <span v-if="serverUp" class="server-up font-size">🟢 Online</span>
+        <span v-else class="server-down font-size">🔴 Offline</span>
       </div>
     </div>
 
@@ -92,9 +92,9 @@ export default defineComponent({
   font-size: 1rem;
 }
 
-@media screen and (max-width: 785px) {
+@media screen and (max-width: 785px) , screen and (max-height: 400px) {
   .font-size {
-    font-size: 1rem;
+    font-size: 0.75rem;
   }
 }
 </style>
