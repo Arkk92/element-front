@@ -13,12 +13,18 @@
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { SoundManager } from '@/services/soundManager';
+import { useSoundStore } from '@/presentation/stores/sound';
 
 export default defineComponent({
   name: 'BackgroundComponent',
+  setup(){
+    const soundStore = useSoundStore()
+    return {
+      soundStore
+    }
+  },
   mounted() {
-    SoundManager.playBackgroundMusic('backgroundMusic');
+    this.soundStore.playBackgroundMusic('backgroundMusic');
   }
 })
 

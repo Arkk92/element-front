@@ -1,5 +1,5 @@
-import { SoundManager } from '@/services/soundManager';
-import soundAssets from '@/assets/sounds.json';
+import { useSoundStore } from '@/presentation/stores/sound';
+import soundAssets from '@/presentation/assets/sounds.json';
 
 export const preloadImage = (src: string): Promise<void> => {
   return new Promise((resolve, reject) => {
@@ -23,9 +23,10 @@ export const preloadAssets = (
   assetList: string[],
   onProgress: (loaded: number, total: number) => void
 ): Promise<void[]> => {
+  const soundStore = useSoundStore()
   let loaded = 0;
   const total = assetList.length;
-  SoundManager.loadSounds(soundAssets);
+  soundStore.loadSounds(soundAssets);
 
   const updateProgress = () => {
     loaded += 1;

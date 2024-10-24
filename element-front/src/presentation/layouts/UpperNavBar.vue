@@ -8,6 +8,7 @@
     </div>
   </div>
   <InGameMenuModal :isOpen="isMenuOpen" @close="isMenuOpen = false" @select="handleSelect" />
+  <SettingsModal :isOpen="isOptionsOpen" @close="isOptionsOpen = false"/>
 </template>
 
 <script lang="ts">
@@ -17,6 +18,7 @@ import NavButton from '@/presentation/components/NavButton.vue';
 import InGameMenuModal from '@/presentation/components/InGameMenuModal.vue';
 import { ForfeitData } from '@/infra/sockets/socketUtils';
 import { useCookies } from 'vue3-cookies';
+import SettingsModal from '../components/SettingsModal.vue';
 
 type InGameMenuSelectOptions = 'Forfeit' | 'Options' | 'Exit';
 
@@ -24,7 +26,8 @@ export default defineComponent({
   name: 'UpperNavBarComponent',
   components: {
     NavButton,
-    InGameMenuModal
+    InGameMenuModal,
+    SettingsModal
   },
   setup() {
     const { cookies } = useCookies();
@@ -35,6 +38,7 @@ export default defineComponent({
       username: "Guest",
       menuButtonShow: false,
       isMenuOpen: false,
+      isOptionsOpen: false,
     }
   },
   mounted() {
@@ -56,6 +60,7 @@ export default defineComponent({
           this.forfeit()
           break;
         case 'Options':
+          this.isOptionsOpen = true;
           break;
 
         default:

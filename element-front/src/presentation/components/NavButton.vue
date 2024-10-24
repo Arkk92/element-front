@@ -5,14 +5,15 @@
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { SoundManager } from '@/services/soundManager';
+import { useSoundStore } from '@/presentation/stores/sound';
 
 export default defineComponent({
   name: 'NavButtonComponent',
   components: {
   },
   setup() {
-
+    const soundStore = useSoundStore();
+    return { soundStore }
   },
   props: {
     text: String,
@@ -32,9 +33,9 @@ export default defineComponent({
     onButtonPressed() {
       this.$emit('clicked');
     },
-    playSound(){
-      if(!this.disabled){
-        SoundManager.playSound('hoverNav');
+    playSound() {
+      if (!this.disabled) {
+        this.soundStore.playSound('hoverNav');
       }
     }
 
@@ -55,7 +56,8 @@ export default defineComponent({
   /* Vertical centering */
 }
 
-@media screen and (max-width: 785px), screen and (max-height: 400px) {
+@media screen and (max-width: 785px),
+screen and (max-height: 400px) {
   .mystical-link {
     position: relative;
     font-family: 'Palatino', 'Garamond', 'Georgia', 'Times New Roman', serif;

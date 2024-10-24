@@ -11,6 +11,12 @@
         <!-- Music Volume Control Slider -->
         <input id="volume" type="range" class="volume-slider" v-model="musicVolume" min="0" max="1" step="0.01"/>
 
+        <!-- Sound Volume Control Label -->
+        <label for="volume" class="volume-label">Sound Volume</label>
+
+        <!-- Sound Volume Control Slider -->
+        <input id="volume" type="range" class="volume-slider" v-model="soundVolume" min="0" max="1" step="0.01"/>
+
         <button class="close-button" @click="closeModal">
           <!-- <span class="button-icon">⚡</span> -->
           Close
@@ -19,7 +25,6 @@
     </div>
   </Teleport>
 </template>
-
 <script lang="ts">
 import { computed, defineComponent } from 'vue';
 import { useSoundStore } from '../stores/sound';
@@ -42,17 +47,17 @@ export default defineComponent({
       get: () => soundStore.musicVolume,
       set: newValue => soundStore.setMusicVolume(newValue)
     })
-    
+
+    const soundVolume = computed({
+      get: () => soundStore.effectsVolume,
+      set: newValue => soundStore.setEffectsVolume(newValue)
+    })
     
     return {
       closeModal,
       musicVolume,
-      soundStore
-
+      soundVolume,
     };
-  },
-  computed: {
-    
   },
 });
 </script>
