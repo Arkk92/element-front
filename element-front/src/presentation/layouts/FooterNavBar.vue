@@ -2,7 +2,7 @@
   <div class="footer-nav-bar">
     <div class="row align-items-center justify-content-between" style="height: 100%;">
       <div class="col-4" align="start">
-        <span class="welcome-message mystical-link font-size">Element Online v2.1.0</span>
+        <span class="welcome-message mystical-link font-size">Element Online v3.0.0-alpha</span>
       </div>
       <div class="col-4" align="center">
         <span class="users-connected mystical-link font-size">Connected Users: {{ activeUsers }}</span>
